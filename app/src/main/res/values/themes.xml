@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Tacoling" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Tacoling" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -20,4 +20,23 @@
         <item name="windowSplashScreenAnimationDuration">200</item>
         <item name="postSplashScreenTheme">@style/Theme.Tacoling</item>
     </style>
+
+    <style name="pinkLightButton">
+        <item name="android:layout_height">47dp</item>
+        <item name="android:layout_width">115dp</item>
+        <item name="background">@drawable/bg_pink_light_4</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="pinkButton">
+        <item name="android:layout_height">63dp</item>
+        <item name="android:layout_width">24dp</item>
+        <item name="background">@drawable/bg_pink_4</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 </resources>
