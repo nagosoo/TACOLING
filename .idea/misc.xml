@@ -3,7 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/splash_taco.xml" value="0.198" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1381340579710145" />
+        <entry key="app/src/main/res/layout/splash.xml" value="0.19610507246376813" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_channel.xml" value="0.198" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_splash_round.xml" value="0.198" />
       </map>
     </option>
   </component>
