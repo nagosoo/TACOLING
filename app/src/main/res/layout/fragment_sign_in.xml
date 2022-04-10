@@ -2,46 +2,43 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@color/backgroundGrey"
     android:gravity="center"
-    android:background="@color/backgroundGrey">
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:text="로그인 해주세요"
         android:textColor="@color/black"
         android:textSize="18sp"
-        android:textStyle="bold"/>
-
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"/>
+        android:textStyle="bold" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/ic_taco"/>
-
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="25dp"/>
+        android:layout_marginBottom="25dp"
+        android:src="@drawable/ic_taco" />
 
     <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/buttonKakao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
         android:src="@drawable/ic_kakao_sign_in"
-        android:id="@+id/buttonKakao"/>
-
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="5dp"/>
+        android:layout_marginBottom="5dp"/>
 
     <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/buttonGoogle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_google_sign_in"
-        android:id="@+id/buttonGoogle"/>
+        android:background="@color/transparent"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:src="@drawable/ic_google_sign_in" />
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>

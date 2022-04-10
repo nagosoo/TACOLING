@@ -9,12 +9,12 @@ plugins {
 android {
     compileSdk 31
 
-    buildFeatures{dataBinding = true}
+    buildFeatures{viewBinding = true}
 
     defaultConfig {
         applicationId "com.eundmswlji.tacoling"
         minSdk 23
-        targetSdk 31
+        targetSdk 30
         versionCode 1
         versionName "1.0"
 
@@ -35,6 +35,16 @@ android {
         jvmTarget = '1.8'
     }
     namespace 'com.eundmswlji.tacoling'
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'armeabi-v7a', 'x86_64'
+            universalApk true
+        }
+
+    }
 }
 
 dependencies {
@@ -53,5 +63,17 @@ dependencies {
 
     //splash
     implementation 'androidx.core:core-splashscreen:1.0.0-beta01'
+
+    //navigation
+    def nav_version = "2.4.1"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    //kakao login
+    implementation "com.kakao.sdk:v2-user:2.9.0"
+
+    //kakao map
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation files('libs/libDaumMapAndroid.jar')
 
 }

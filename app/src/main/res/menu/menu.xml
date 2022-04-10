@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_map"
+        android:icon="@drawable/ic_food_truck"
+        android:title="지도보기"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_setting"
+        android:icon="@drawable/ic_taco_line"
+        android:title="마이페이지"
+        app:showAsAction="ifRoom" />
+</menu>

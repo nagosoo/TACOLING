@@ -4,17 +4,30 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable-mdpi/bg_pink_25.xml" value="0.198" />
+        <entry key="app/src/main/res/drawable-mdpi/bg_pink_4.xml" value="0.153" />
         <entry key="app/src/main/res/drawable-mdpi/bg_pink__4.xml" value="0.198" />
         <entry key="app/src/main/res/drawable-mdpi/bg_pink_light_4.xml" value="0.198" />
+        <entry key="app/src/main/res/drawable-mdpi/bg_white_4.xml" value="0.153" />
         <entry key="app/src/main/res/drawable-mdpi/bg_white_4_rec.xml" value="0.198" />
         <entry key="app/src/main/res/drawable-mdpi/bg_white_8.xml" value="0.198" />
+        <entry key="app/src/main/res/drawable-mdpi/bg_white_top_16.xml" value="0.153" />
+        <entry key="app/src/main/res/drawable-mdpi/bg_white_top_20.xml" value="0.125" />
+        <entry key="app/src/main/res/drawable-mdpi/bg_white_top_4.xml" value="0.153" />
         <entry key="app/src/main/res/drawable/bg_white_25.xml" value="0.198" />
+        <entry key="app/src/main/res/drawable/ic_food_truck_selected.xml" value="0.153" />
+        <entry key="app/src/main/res/drawable/selector_map.xml" value="0.198" />
         <entry key="app/src/main/res/drawable/splash_taco.xml" value="0.198" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1381340579710145" />
-        <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.19108611560258706" />
+        <entry key="app/src/main/res/layout/fragment_blank.xml" value="0.11822916666666666" />
+        <entry key="app/src/main/res/layout/fragment_map.xml" value="0.13125" />
+        <entry key="app/src/main/res/layout/fragment_setting.xml" value="0.13229166666666667" />
+        <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.335" />
         <entry key="app/src/main/res/layout/splash.xml" value="0.19610507246376813" />
+        <entry key="app/src/main/res/menu/menu.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_channel.xml" value="0.198" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.198" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_splash_round.xml" value="0.198" />
+        <entry key="app/src/main/res/xml/network_security_config.xml" value="0.19610507246376813" />
       </map>
     </option>
   </component>
