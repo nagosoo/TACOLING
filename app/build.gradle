@@ -76,4 +76,6 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/libDaumMapAndroid.jar')
 
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+
 }
