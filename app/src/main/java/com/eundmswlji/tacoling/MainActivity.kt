@@ -6,16 +6,21 @@ import android.content.Intent
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.eundmswlji.tacoling.databinding.ActivityMainBinding
+import com.google.android.material.navigation.NavigationBarView
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
+    private val sharedPref by lazy { this.getPreferences(Context.MODE_PRIVATE)  }
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -24,13 +29,28 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-        //  navController.navigate(startdes)
+        navController = navHostFragment.navController
         checkGPSOn()
-        val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
         val doneFirstRequest = sharedPref.getBoolean("firstRequest", false)
         if (!doneFirstRequest) checkPermission()
+
+        binding.bottomNavView.setOnItemSelectedListener(this)
     }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_setting -> {
+                navController.navigate(R.id.action_mapFragment_to_settingFragment)
+                return true
+            }
+            R.id.menu_map -> {
+                navController.navigate(R.id.action_settingFragment_to_mapFragment)
+                return true
+            }
+        }
+        return false
+    }
+
 
     private fun checkPermission() {
         applyFirstRequest()
@@ -69,7 +89,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun applyFirstRequest() {
-        val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
         with(sharedPref.edit()) {
             this.putBoolean("firstRequest", true)
             apply()

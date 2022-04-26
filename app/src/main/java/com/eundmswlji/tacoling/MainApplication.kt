@@ -11,5 +11,6 @@ class MainApplication:Application()  {
         super.onCreate()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         KakaoSdk.init(this, "563fe1f966e961f52948242b73c19cca")
+        //  Log.d("keyhash","${  KakaoSdk.keyHash}")
     }
 }

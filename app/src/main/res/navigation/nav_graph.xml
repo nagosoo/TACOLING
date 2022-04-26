@@ -14,7 +14,20 @@
         tools:layout="@layout/fragment_map"
         android:id="@+id/mapFragment"
         android:name="com.eundmswlji.tacoling.map.MapFragment"
-        android:label="MapFragment" />
+        android:label="MapFragment" >
+        <action
+            android:id="@+id/action_mapFragment_to_settingFragment"
+            app:destination="@id/settingFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_setting"
+        android:id="@+id/settingFragment"
+        android:name="com.eundmswlji.tacoling.setting.SettingFragment"
+        android:label="SettingFragment" >
+        <action
+            android:id="@+id/action_settingFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
 
 
 </navigation>
