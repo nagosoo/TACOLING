@@ -14,16 +14,26 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.databinding.FragmentMapBinding
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
+@AndroidEntryPoint
 class MapFragment : Fragment(), MapView.MapViewEventListener {
     private lateinit var binding: FragmentMapBinding
     private lateinit var locationResultLauncher: ActivityResultLauncher<Array<String>>
+    private var job: Job? = null
+    private val viewModel : MapViewModel by viewModels()
+    private lateinit var mapView : MapView
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,13 +45,21 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mapView = MapView(activity)
+        binding.mapViewContainer.addView(mapView)
         settingMap()
         checkGPSOn() //gps 는 항상체크
         setOnClickListener()
         if (onlyCheckPermissions()) {
             showMyLocation()
         }
-        test()
+      //  test()
+        job?.cancel()
+        job = lifecycleScope.launch {
+            viewModel.getJuso("영송로").collectLatest {
+              //  adapter.submitData(it)
+            }
+        }
 
         locationResultLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -53,14 +71,14 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
 
 
         val mapPoint = MapPoint.mapPointWithGeoCoord(35.85881638638933,128.6356195137821)
-        binding.mapView.setMapCenterPoint(mapPoint, true)
+        mapView.setMapCenterPoint(mapPoint, true)
     }
 
     private fun test() {
         val mapPOIItem = mutableListOf<MapPOIItem>()
         mapPOIItem.add(getMapPOIItem("ㅌㅅㅌ", 35.86401751026963, 128.6485239265323))
         mapPOIItem.add(getMapPOIItem("ㅌㅅㅌ", 35.85881638638933, 128.6356195137821))
-        binding.mapView.addPOIItems(mapPOIItem.toTypedArray())
+        mapView.addPOIItems(mapPOIItem.toTypedArray())
     }
 
     private fun getMapPOIItem(name: String, latitude: Double, longitude: Double): MapPOIItem {
@@ -74,10 +92,10 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
     }
 
     private fun settingMap() {
-        binding.mapView.setZoomLevel(2, true)
-        binding.mapView.setMapViewEventListener(this)
-        binding.mapView.setCustomCurrentLocationMarkerImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(108, 0))
-        binding.mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(108, 0))
+        mapView.setZoomLevel(2, true)
+        mapView.setMapViewEventListener(this)
+        mapView.setCustomCurrentLocationMarkerImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(108, 0))
+        mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(108, 0))
     }
 
     override fun onMapViewInitialized(p0: MapView?) {
@@ -85,7 +103,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
     }
 
     override fun onMapViewCenterPointMoved(p0: MapView?, p1: MapPoint?) {
-        binding.mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
+        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
     }
 
     override fun onMapViewZoomLevelChanged(p0: MapView?, p1: Int) {
@@ -172,7 +190,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
     }
 
     private fun showMyLocation() {
-        binding.mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
+        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
     }
 
 }

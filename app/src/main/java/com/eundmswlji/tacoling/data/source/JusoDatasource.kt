@@ -7,6 +7,5 @@ import retrofit2.Response
 import java.util.concurrent.Flow
 
 interface JusoDatasource {
-    suspend fun apiGetJuso(query: String): Response<Juso>
-    suspend fun getJuso(query: String, size: Int, page: Int) : Response<Juso>
+    suspend fun apiGetJuso(query: String, size: Int, page: Int): Response<Juso>
 }

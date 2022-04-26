@@ -19,7 +19,7 @@ import com.google.android.material.navigation.NavigationBarView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener, NavigationBarView.OnItemReselectedListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private val sharedPref by lazy { this.getPreferences(Context.MODE_PRIVATE)  }
@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         if (!doneFirstRequest) checkPermission()
 
         binding.bottomNavView.setOnItemSelectedListener(this)
+        binding.bottomNavView.setOnItemReselectedListener(this)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -53,6 +54,16 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         return false
     }
 
+    override fun onNavigationItemReselected(item: MenuItem) {
+        when (item.itemId) {
+            R.id.menu_setting -> {
+                return
+            }
+            R.id.menu_map -> {
+                return
+            }
+        }
+    }
 
     private fun checkPermission() {
         applyFirstRequest()
