@@ -1,4 +1,4 @@
-package com.eundmswlji.tacoling.sign_in
+package com.eundmswlji.tacoling.ui.sign_in
 
 import android.os.Bundle
 import android.view.LayoutInflater

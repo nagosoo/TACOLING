@@ -8,12 +8,12 @@
     <fragment
         tools:layout="@layout/fragment_sign_in"
         android:id="@+id/signInFragment"
-        android:name="com.eundmswlji.tacoling.sign_in.SignInFragment"
+        android:name="com.eundmswlji.tacoling.ui.sign_in.SignInFragment"
         android:label="SignInFragment" />
     <fragment
         tools:layout="@layout/fragment_map"
         android:id="@+id/mapFragment"
-        android:name="com.eundmswlji.tacoling.map.MapFragment"
+        android:name="com.eundmswlji.tacoling.ui.map.MapFragment"
         android:label="MapFragment" >
         <action
             android:id="@+id/action_mapFragment_to_settingFragment"
@@ -22,7 +22,7 @@
     <fragment
         tools:layout="@layout/fragment_setting"
         android:id="@+id/settingFragment"
-        android:name="com.eundmswlji.tacoling.setting.SettingFragment"
+        android:name="com.eundmswlji.tacoling.ui.setting.SettingFragment"
         android:label="SettingFragment" >
         <action
             android:id="@+id/action_settingFragment_to_mapFragment"

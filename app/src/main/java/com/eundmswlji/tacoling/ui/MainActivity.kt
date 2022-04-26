@@ -1,4 +1,4 @@
-package com.eundmswlji.tacoling
+package com.eundmswlji.tacoling.ui
 
 import android.Manifest
 import android.content.Context
@@ -13,10 +13,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationBarView
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController

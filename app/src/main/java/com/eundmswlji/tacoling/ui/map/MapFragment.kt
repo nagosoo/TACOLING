@@ -1,4 +1,4 @@
-package com.eundmswlji.tacoling.map
+package com.eundmswlji.tacoling.ui.map
 
 import android.Manifest
 import android.content.Intent
@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.databinding.FragmentMapBinding
-import com.eundmswlji.tacoling.dialog.NormalDialog
+import com.eundmswlji.tacoling.ui.dialog.NormalDialog
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
@@ -50,6 +50,10 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
                 showMyLocation()
             }
         }
+
+
+        val mapPoint = MapPoint.mapPointWithGeoCoord(35.85881638638933,128.6356195137821)
+        binding.mapView.setMapCenterPoint(mapPoint, true)
     }
 
     private fun test() {
