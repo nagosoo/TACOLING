@@ -1,12 +1,17 @@
 package com.eundmswlji.tacoling.ui
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
 import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -22,7 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener, NavigationBarView.OnItemReselectedListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    private val sharedPref by lazy { this.getPreferences(Context.MODE_PRIVATE)  }
+    private val sharedPref by lazy { this.getPreferences(Context.MODE_PRIVATE) }
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -38,6 +43,20 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
 
         binding.bottomNavView.setOnItemSelectedListener(this)
         binding.bottomNavView.setOnItemReselectedListener(this)
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.action == MotionEvent.ACTION_DOWN) {
+            val v: View? = currentFocus
+            if (v is EditText) {
+                val outRect = Rect()
+                v.getGlobalVisibleRect(outRect)
+                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                    v.clearFocus()
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

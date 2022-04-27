@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +15,17 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import com.eundmswlji.tacoling.BuildConfig
 import com.eundmswlji.tacoling.R
+import com.eundmswlji.tacoling.Util
+import com.eundmswlji.tacoling.Util.hideKeyboard
+import com.eundmswlji.tacoling.Util.toast
 import com.eundmswlji.tacoling.databinding.FragmentMapBinding
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,15 +34,18 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
+import net.daum.mf.map.api.MapReverseGeoCoder
 import net.daum.mf.map.api.MapView
+
 
 @AndroidEntryPoint
 class MapFragment : Fragment(), MapView.MapViewEventListener {
     private lateinit var binding: FragmentMapBinding
     private lateinit var locationResultLauncher: ActivityResultLauncher<Array<String>>
     private var job: Job? = null
-    private val viewModel : MapViewModel by viewModels()
-    private lateinit var mapView : MapView
+    private val viewModel: MapViewModel by viewModels()
+    private lateinit var mapView: MapView
+    private val adapter by lazy { MapAdapter(::itemClickListener) }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,19 +59,10 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
         super.onViewCreated(view, savedInstanceState)
         mapView = MapView(activity)
         binding.mapViewContainer.addView(mapView)
+        binding.tvJuso.recyclerView.adapter = adapter
         settingMap()
-        checkGPSOn() //gps 는 항상체크
         setOnClickListener()
-        if (onlyCheckPermissions()) {
-            showMyLocation()
-        }
-      //  test()
-        job?.cancel()
-        job = lifecycleScope.launch {
-            viewModel.getJuso("영송로").collectLatest {
-              //  adapter.submitData(it)
-            }
-        }
+        test()
 
         locationResultLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -68,10 +71,6 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
                 showMyLocation()
             }
         }
-
-
-        val mapPoint = MapPoint.mapPointWithGeoCoord(35.85881638638933,128.6356195137821)
-        mapView.setMapCenterPoint(mapPoint, true)
     }
 
     private fun test() {
@@ -98,38 +97,15 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
         mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(108, 0))
     }
 
-    override fun onMapViewInitialized(p0: MapView?) {
-        //     TODO("Not yet implemented")
-    }
-
-    override fun onMapViewCenterPointMoved(p0: MapView?, p1: MapPoint?) {
+    private fun itemClickListener(x: Double, y: Double, address: String) {
         mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
-    }
-
-    override fun onMapViewZoomLevelChanged(p0: MapView?, p1: Int) {
-        //    TODO("Not yet implemented")
-    }
-
-    override fun onMapViewSingleTapped(p0: MapView?, p1: MapPoint?) {
-    }
-
-    override fun onMapViewDoubleTapped(p0: MapView?, p1: MapPoint?) {
-        // TODO("Not yet implemented")
-    }
-
-    override fun onMapViewLongPressed(p0: MapView?, p1: MapPoint?) {
-        //   TODO("Not yet implemented")
-    }
-
-    override fun onMapViewDragStarted(p0: MapView?, p1: MapPoint?) {
-    }
-
-    override fun onMapViewDragEnded(p0: MapView?, p1: MapPoint?) {
-        //   TODO("Not yet implemented")
-    }
-
-    override fun onMapViewMoveFinished(p0: MapView?, p1: MapPoint?) {
-
+        binding.tvJuso.recyclerView.isVisible = false
+        with(binding.tvJuso.editText) {
+            this.setText(address)
+            this.clearFocus()
+        }
+        val mapPoint = MapPoint.mapPointWithGeoCoord(y, x)
+        mapView.setMapCenterPoint(mapPoint, true)
     }
 
     private fun setOnClickListener() {
@@ -137,8 +113,47 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
             checkGPSOn()
             checkLocationPermission()
         }
-    }
 
+        val debounce = Util.debounce<String>(coroutineScope = lifecycleScope) { query ->
+            job?.cancel()
+            job = lifecycleScope.launch {
+                viewModel.getJuso(query).collectLatest {
+                    adapter.submitData(it)
+                }
+            }
+            lifecycleScope.launch {
+                adapter.loadStateFlow.collectLatest { loadState ->
+                    val isListEmpty = loadState.refresh is LoadState.NotLoading && adapter.itemCount == 0
+                    binding.tvNoData.isVisible = isListEmpty
+                }
+            }
+        }
+
+        binding.tvJuso.editText.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                job?.cancel()
+                job = lifecycleScope.launch {
+                    adapter.submitData(PagingData.empty())
+                }
+                binding.tvJuso.editText.setText("")
+                binding.tvJuso.recyclerView.isVisible = true
+            } else {
+                hideKeyboard(v)
+            }
+        }
+
+        binding.tvJuso.editText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(query: CharSequence?, start: Int, before: Int, count: Int) {
+                if (!query.isNullOrEmpty()) debounce(query.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+    }
 
     private fun checkLocationPermission() {
         when {
@@ -191,6 +206,55 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
 
     private fun showMyLocation() {
         mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
+        val mapPointGeoCoord = mapView.mapCenterPoint.mapPointGeoCoord
+        val currentMapPoint = MapPoint.mapPointWithGeoCoord(mapPointGeoCoord.latitude, mapPointGeoCoord.longitude)
+        MapReverseGeoCoder(BuildConfig.appKey, currentMapPoint, object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
+            override fun onReverseGeoCoderFoundAddress(p0: MapReverseGeoCoder?, address: String) {
+                binding.tvJuso.editText.setText(address)
+                binding.tvJuso.editText.clearFocus()
+            }
+
+            override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
+                toast("주소를 찾을 수 없습니다.")
+            }
+        }, activity).startFindingAddress()
+    }
+
+
+    override fun onMapViewInitialized(p0: MapView?) {
+    }
+
+    override fun onMapViewCenterPointMoved(p0: MapView?, p1: MapPoint?) {
+        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
+    }
+
+    override fun onMapViewZoomLevelChanged(p0: MapView?, p1: Int) {
+    }
+
+    override fun onMapViewSingleTapped(p0: MapView?, p1: MapPoint?) {
+    }
+
+    override fun onMapViewDoubleTapped(p0: MapView?, p1: MapPoint?) {
+    }
+
+    override fun onMapViewLongPressed(p0: MapView?, p1: MapPoint?) {
+    }
+
+    override fun onMapViewDragStarted(p0: MapView?, p1: MapPoint?) {
+    }
+
+    override fun onMapViewDragEnded(p0: MapView?, p1: MapPoint?) {
+    }
+
+    override fun onMapViewMoveFinished(p0: MapView?, p1: MapPoint?) {
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkGPSOn() //gps 는 항상체크
+        if (onlyCheckPermissions()) {
+            showMyLocation()
+        }
     }
 
 }

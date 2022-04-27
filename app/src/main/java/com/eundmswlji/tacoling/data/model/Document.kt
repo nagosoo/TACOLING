@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Document(
     @SerializedName("address")
-    val address: Any,
+    val address: Address,
     @SerializedName("address_name")
     val addressName: String,
     @SerializedName("address_type")

@@ -21,16 +21,18 @@ class JusoPagingSource(
     override suspend fun load(params: LoadParams<Int>): PagingSource.LoadResult<Int, Document> {
         val key = params.key ?: 1
         return try {
-            val response = jusoRepository.apiGetJuso(query, key, 10).body()!!.documents
-            return PagingSource.LoadResult.Page(
-                data = response,
+            val response = jusoRepository.apiGetJuso(query, key, 10)
+            val document = response.body()?.documents!!
+            val isEnd = response.body()?.meta?.isEnd
+            PagingSource.LoadResult.Page(
+                data = document,
                 prevKey = null,
-                nextKey = if (response.isNullOrEmpty()) null else key.plus(1)
+                nextKey = if (isEnd==true) null else key.plus(1)
             )
         } catch (exception: IOException) {
-            return LoadResult.Error(exception)
+            LoadResult.Error(exception)
         } catch (exception: HttpException) {
-            return LoadResult.Error(exception)
+            LoadResult.Error(exception)
         }
     }
 }

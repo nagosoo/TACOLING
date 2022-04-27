@@ -15,15 +15,22 @@
         <entry key="app/src/main/res/drawable-mdpi/bg_white_top_4.xml" value="0.153" />
         <entry key="app/src/main/res/drawable-xhdpi/bg_gray_4.xml" value="0.2235" />
         <entry key="app/src/main/res/drawable/bg_white_25.xml" value="0.198" />
+        <entry key="app/src/main/res/drawable/bg_white_4.xml" value="0.2695" />
+        <entry key="app/src/main/res/drawable/bg_white_4_stroke_subRed.xml" value="0.2695" />
+        <entry key="app/src/main/res/drawable/bg_white_4_stroke_sub_red.xml" value="0.2175" />
         <entry key="app/src/main/res/drawable/ic_food_truck_selected.xml" value="0.153" />
         <entry key="app/src/main/res/drawable/selector_map.xml" value="0.198" />
+        <entry key="app/src/main/res/drawable/selector_search_juso.xml" value="0.2695" />
         <entry key="app/src/main/res/drawable/splash_taco.xml" value="0.198" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.15" />
+        <entry key="app/src/main/res/layout/container_juso_search.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/custom_juso_search.xml" value="0.18" />
         <entry key="app/src/main/res/layout/dialog_normal.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_blank.xml" value="0.11822916666666666" />
-        <entry key="app/src/main/res/layout/fragment_map.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/fragment_map.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_setting.xml" value="0.13229166666666667" />
         <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/item_juso.xml" value="0.14" />
         <entry key="app/src/main/res/layout/splash.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/menu/menu.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_channel.xml" value="0.198" />
