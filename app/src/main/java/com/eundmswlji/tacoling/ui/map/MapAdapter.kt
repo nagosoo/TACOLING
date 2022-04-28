@@ -14,7 +14,7 @@ class MapAdapter(private val clickListener: (x: Double, y: Double, address:Strin
         holder.bind()
         holder.itemView.setOnClickListener {
             val item = getItem(position)!!
-            clickListener(item.roadAddress.x.toDouble(), item.roadAddress.y.toDouble(), item.roadAddress.addressName)
+            clickListener(item.x.toDouble(), item.y.toDouble(), item.addressName)
         }
     }
 
@@ -27,8 +27,8 @@ class MapAdapter(private val clickListener: (x: Double, y: Double, address:Strin
     inner class MyViewHolder(private val binding: ItemJusoBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind() {
             val item = getItem(absoluteAdapterPosition)
-            binding.tv.isVisible= item?.roadAddress?.addressName.isNullOrEmpty().not()
-            binding.tv.text = item?.roadAddress?.addressName
+            binding.tv.isVisible= item?.addressName.isNullOrEmpty().not()
+            binding.tv.text = item?.addressName
         }
     }
 

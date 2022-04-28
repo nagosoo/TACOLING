@@ -22,6 +22,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import com.eundmswlji.tacoling.BuildConfig
+import com.eundmswlji.tacoling.MapUtil.getMapPOIItem
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.Util
 import com.eundmswlji.tacoling.Util.hideKeyboard
@@ -39,7 +40,7 @@ import net.daum.mf.map.api.MapView
 
 
 @AndroidEntryPoint
-class MapFragment : Fragment(), MapView.MapViewEventListener {
+class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLocationEventListener {
     private lateinit var binding: FragmentMapBinding
     private lateinit var locationResultLauncher: ActivityResultLauncher<Array<String>>
     private var job: Job? = null
@@ -57,10 +58,8 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mapView = MapView(activity)
-        binding.mapViewContainer.addView(mapView)
-        binding.tvJuso.recyclerView.adapter = adapter
         settingMap()
+        setRecyclerView()
         setOnClickListener()
         test()
 
@@ -73,6 +72,10 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
         }
     }
 
+    private fun setRecyclerView() {
+        binding.tvJuso.recyclerView.adapter = adapter
+    }
+
     private fun test() {
         val mapPOIItem = mutableListOf<MapPOIItem>()
         mapPOIItem.add(getMapPOIItem("ㅌㅅㅌ", 35.86401751026963, 128.6485239265323))
@@ -80,19 +83,13 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
         mapView.addPOIItems(mapPOIItem.toTypedArray())
     }
 
-    private fun getMapPOIItem(name: String, latitude: Double, longitude: Double): MapPOIItem {
-        return MapPOIItem().apply {
-            this.itemName = name
-            this.mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude)
-            this.markerType = MapPOIItem.MarkerType.CustomImage
-            this.customImageResourceId = R.drawable.ic_takoyaki
-            this.isShowDisclosureButtonOnCalloutBalloon = false
-        }
-    }
-
     private fun settingMap() {
+        MapView.setMapTilePersistentCacheEnabled(true)
+        mapView = MapView(activity)
+        binding.mapViewContainer.addView(mapView)
         mapView.setZoomLevel(2, true)
         mapView.setMapViewEventListener(this)
+        mapView.setCurrentLocationEventListener(this)
         mapView.setCustomCurrentLocationMarkerImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(108, 0))
         mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(108, 0))
     }
@@ -153,6 +150,11 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
             override fun afterTextChanged(s: Editable?) {
             }
         })
+
+        binding.buttonResearch.setOnClickListener {
+            val centerPoint = mapView.mapCenterPoint
+            getJusoFromGeoCord(centerPoint)
+        }
     }
 
     private fun checkLocationPermission() {
@@ -206,20 +208,23 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
 
     private fun showMyLocation() {
         mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
-        val mapPointGeoCoord = mapView.mapCenterPoint.mapPointGeoCoord
-        val currentMapPoint = MapPoint.mapPointWithGeoCoord(mapPointGeoCoord.latitude, mapPointGeoCoord.longitude)
-        MapReverseGeoCoder(BuildConfig.appKey, currentMapPoint, object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
-            override fun onReverseGeoCoderFoundAddress(p0: MapReverseGeoCoder?, address: String) {
-                binding.tvJuso.editText.setText(address)
-                binding.tvJuso.editText.clearFocus()
-            }
-
-            override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
-                toast("주소를 찾을 수 없습니다.")
-            }
-        }, activity).startFindingAddress()
     }
 
+    private fun getJusoFromGeoCord(mapPoint: MapPoint?) {
+        mapPoint?.let {
+            val currentMapPoint = MapPoint.mapPointWithGeoCoord(mapPoint.mapPointGeoCoord.latitude, mapPoint.mapPointGeoCoord.longitude)
+            MapReverseGeoCoder(BuildConfig.appKey, currentMapPoint, object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
+                override fun onReverseGeoCoderFoundAddress(p0: MapReverseGeoCoder?, address: String) {
+                    binding.tvJuso.editText.setText(address)
+                    binding.tvJuso.editText.clearFocus()
+                }
+
+                override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
+                    toast("주소를 찾을 수 없습니다.")
+                }
+            }, activity).startFindingAddress()
+        }
+    }
 
     override fun onMapViewInitialized(p0: MapView?) {
     }
@@ -247,6 +252,20 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
     }
 
     override fun onMapViewMoveFinished(p0: MapView?, p1: MapPoint?) {
+    }
+
+    override fun onCurrentLocationUpdate(p0: MapView?, currentPoint: MapPoint?, p2: Float) {
+        getJusoFromGeoCord(currentPoint)
+    }
+
+    override fun onCurrentLocationDeviceHeadingUpdate(p0: MapView?, p1: Float) {
+    }
+
+    override fun onCurrentLocationUpdateFailed(p0: MapView?) {
+        toast("주소를 찾을 수 없습니다.")
+    }
+
+    override fun onCurrentLocationUpdateCancelled(p0: MapView?) {
     }
 
     override fun onResume() {
