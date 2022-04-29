@@ -1,13 +1,9 @@
 package com.eundmswlji.tacoling.ui
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.graphics.Rect
-import android.location.LocationManager
 import android.os.Bundle
-import android.provider.Settings
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
@@ -18,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.eundmswlji.tacoling.MapUtil
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationBarView
@@ -113,11 +110,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
     }
 
     private fun checkGPSOn() {
-        val lm = this.getSystemService(LOCATION_SERVICE) as LocationManager
-        if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-            startActivity(intent)
-        }
+        MapUtil.checkGPS(this)
     }
 
     private fun applyFirstRequest() {

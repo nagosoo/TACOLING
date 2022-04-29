@@ -1,11 +1,8 @@
 package com.eundmswlji.tacoling.ui.map
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.LocationManager
 import android.os.Bundle
-import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -13,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -22,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import com.eundmswlji.tacoling.BuildConfig
+import com.eundmswlji.tacoling.MapUtil.checkGPS
 import com.eundmswlji.tacoling.MapUtil.getMapPOIItem
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.Util
@@ -163,8 +160,6 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
                 //둘다 혀용 되어 있음
                 showMyLocation()
             }
-            //사용자가 권한 요청을 명시적으로 거부한 경우 true를 반환한다.
-            //사용자가 권한 요청을 처음 보거나, 다시 묻지 않음 선택한 경우, 권한을 허용한 경우 false를 반환한다.
             (shouldShowDialog()) -> {
                 NormalDialog(title = "위치권한 설정", message = "위치권한 설정을 허용해주세요.", positiveMessage = "네", negativeMessage = "아니요", positiveButtonListener = ::turnOnLocationPermission).show(
                     childFragmentManager,
@@ -180,6 +175,8 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
     }
 
     private fun shouldShowDialog(): Boolean {
+        //사용자가 권한 요청을 명시적으로 거부한 경우 true를 반환한다.
+        //사용자가 권한 요청을 처음 보거나, 다시 묻지 않음 선택한 경우, 권한을 허용한 경우 false를 반환한다.
         return shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) || shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
     }
 
@@ -199,11 +196,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
     }
 
     private fun checkGPSOn() {
-        val lm = requireActivity().getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
-        if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-            startActivity(intent)
-        }
+        checkGPS(requireContext())
     }
 
     private fun showMyLocation() {
