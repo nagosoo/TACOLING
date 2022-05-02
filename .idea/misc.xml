@@ -19,6 +19,7 @@
         <entry key="app/src/main/res/drawable/selector_map.xml" value="0.198" />
         <entry key="app/src/main/res/drawable/splash_taco.xml" value="0.198" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/container_juso_search.xml" value="0.3333333333333333" />
         <entry key="app/src/main/res/layout/dialog_normal.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_blank.xml" value="0.11822916666666666" />
         <entry key="app/src/main/res/layout/fragment_map.xml" value="0.18" />

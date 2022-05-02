@@ -48,7 +48,10 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMapBinding.inflate(inflater)
+        binding = FragmentMapBinding.inflate(inflater).apply {
+            lifecycleOwner=viewLifecycleOwner
+            viewModel=this@MapFragment.viewModel
+        }
         return binding.root
     }
 
