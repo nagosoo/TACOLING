@@ -9,7 +9,7 @@ plugins {
 android {
     compileSdk 31
 
-    buildFeatures { viewBinding = true }
+    buildFeatures { dataBinding = true }
 
     defaultConfig {
         buildConfigField "String", "baseUrl", '"https://dapi.kakao.com"'

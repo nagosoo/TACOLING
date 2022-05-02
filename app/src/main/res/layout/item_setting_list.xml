@@ -8,22 +8,22 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:background="@color/white"
+        <androidx.appcompat.widget.AppCompatButton
+            android:maxLines="1"
+            android:ellipsize="end"
             android:id="@+id/tv"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:ellipsize="end"
+            android:layout_height="50dp"
+            android:background="@color/white"
             android:gravity="center_vertical"
-            android:maxLines="2"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
             android:textColor="@color/black"
-            android:textSize="14sp"
-            tools:text="영송로 85 한신중앙 아파트" />
+            android:textSize="13sp"
+            tools:text="엄청긴 마이페이지 엄청긴 마이페이지 엄청긴 마이페이지 엄청긴 마이페이지 엄청긴 마이페이지" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>
