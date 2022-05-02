@@ -1,6 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <include
+        android:id="@+id/appBar"
+        layout="@layout/app_bar" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="40dp" />
+
+    <include
+        android:id="@+id/logout"
+        layout="@layout/item_setting_list" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="12dp" />
+
+    <include
+        android:id="@+id/alarm"
+        layout="@layout/item_setting_list" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="12dp" />
+
+    <include
+        android:id="@+id/myZzim"
+        layout="@layout/item_setting_list" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="12dp" />
+
+    <include
+        android:id="@+id/suggest"
+        layout="@layout/item_setting_list" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="12dp" />
+
+    <include
+        android:id="@+id/withdrawal"
+        layout="@layout/item_setting_list" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>
