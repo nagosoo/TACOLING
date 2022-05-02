@@ -17,7 +17,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
-import com.eundmswlji.tacoling.BuildConfig
+import com.eundmswlji.tacoling.EventObserver
 import com.eundmswlji.tacoling.MapUtil.checkGPS
 import com.eundmswlji.tacoling.MapUtil.getMapPOIItem
 import com.eundmswlji.tacoling.R
@@ -32,7 +32,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
-import net.daum.mf.map.api.MapReverseGeoCoder
 import net.daum.mf.map.api.MapView
 
 
@@ -58,6 +57,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         settingMap()
         setRecyclerView()
         setOnClickListener()
+        setObserver()
         test()
 
         locationResultLauncher = registerForActivityResult(
@@ -67,6 +67,18 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
                 showMyLocation()
             }
         }
+    }
+
+    private fun setObserver() {
+        viewModel.toastEvent.observe(viewLifecycleOwner, EventObserver {
+            toast(it)
+        })
+
+        viewModel.currentAddress.observe(viewLifecycleOwner, EventObserver {
+           // binding.tvJuso.editText.setText(it)
+            binding.tvJuso.editText.clearFocus()
+            toast("hey")
+        })
     }
 
     private fun setRecyclerView() {
@@ -204,19 +216,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
     }
 
     private fun getJusoFromGeoCord(mapPoint: MapPoint?) {
-        mapPoint?.let {
-            val currentMapPoint = MapPoint.mapPointWithGeoCoord(mapPoint.mapPointGeoCoord.latitude, mapPoint.mapPointGeoCoord.longitude)
-            MapReverseGeoCoder(BuildConfig.appKey, currentMapPoint, object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
-                override fun onReverseGeoCoderFoundAddress(p0: MapReverseGeoCoder?, address: String) {
-                    binding.tvJuso.editText.setText(address)
-                    binding.tvJuso.editText.clearFocus()
-                }
-
-                override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
-                    toast("주소를 찾을 수 없습니다.")
-                }
-            }, activity).startFindingAddress()
-        }
+        viewModel.getJusoFromGeoCord(mapPoint, activity)
     }
 
     override fun onMapViewInitialized(p0: MapView?) {

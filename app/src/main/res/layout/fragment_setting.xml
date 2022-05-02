@@ -1,51 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <include
-        android:id="@+id/appBar"
-        layout="@layout/app_bar" />
+    <data>
 
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="40dp" />
+    </data>
 
-    <include
-        android:id="@+id/logout"
-        layout="@layout/item_setting_list" />
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:background="@color/backgroundGrey"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="12dp" />
+        <include
+            android:id="@+id/appBar"
+            layout="@layout/app_bar" />
 
-    <include
-        android:id="@+id/alarm"
-        layout="@layout/item_setting_list" />
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="30dp" />
 
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="12dp" />
+        <include
+            android:id="@+id/logout"
+            layout="@layout/item_setting_list" />
 
-    <include
-        android:id="@+id/myZzim"
-        layout="@layout/item_setting_list" />
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="12dp" />
 
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="12dp" />
+        <include
+            android:id="@+id/alarm"
+            layout="@layout/item_setting_list" />
 
-    <include
-        android:id="@+id/suggest"
-        layout="@layout/item_setting_list" />
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="12dp" />
 
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="12dp" />
+        <include
+            android:id="@+id/myZzim"
+            layout="@layout/item_setting_list" />
 
-    <include
-        android:id="@+id/withdrawal"
-        layout="@layout/item_setting_list" />
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="12dp" />
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+        <include
+            android:id="@+id/suggest"
+            layout="@layout/item_setting_list" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="12dp" />
+
+        <include
+            android:id="@+id/withdrawal"
+            layout="@layout/item_setting_list" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

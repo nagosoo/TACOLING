@@ -1,7 +1,7 @@
 package com.eundmswlji.tacoling.ui.setting
 
-import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.eundmswlji.tacoling.BuildConfig
+import com.eundmswlji.tacoling.Util.toast
 import com.eundmswlji.tacoling.data.repository.JusoRepository
 import com.eundmswlji.tacoling.databinding.FragmentSettingBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,14 +48,19 @@ class SettingFragment : Fragment() {
     }
 
     private fun sendEmailToAdmin() {
-        val email = Intent(Intent.ACTION_SENDTO)
-        email.putExtra(Intent.EXTRA_SUBJECT, "건의하기")
-        email.putExtra(Intent.EXTRA_EMAIL, "nagosoo@kakao.com")
-        email.putExtra(
-            Intent.EXTRA_TEXT,
-            "App Version : ${BuildConfig.VERSION_NAME}\nDevice : ${Build.DEVICE}\nAndroid(SDK) : ${Build.VERSION.SDK_INT}(${Build.VERSION.RELEASE})\n내용 : ",
-        )
-        email.type = "message/rfc822"
-        requireContext().startActivity(email)
+        val intent = Intent(Intent.ACTION_SENDTO)
+        intent.apply {
+            data = Uri.parse("mailto:") // only email apps should handle this. no message, sns app
+            putExtra(Intent.EXTRA_SUBJECT, "건의하기")
+            putExtra(Intent.EXTRA_EMAIL, "nagosoo@kakao.com")
+            putExtra(
+                Intent.EXTRA_TEXT,
+                "App Version : ${BuildConfig.VERSION_NAME}\nDevice : ${Build.DEVICE}\nAndroid(SDK) : ${Build.VERSION.SDK_INT}(${Build.VERSION.RELEASE})\n내용 : ",
+            )
+            type = "*/*"
+        }
+        if (intent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivity(intent)
+        }
     }
 }
