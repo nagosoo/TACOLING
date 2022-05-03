@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Tacoling</string>
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="octopusEmoji">&#128025;</string>
+    <string name="sweatEmoji">&#128166;</string>
+    <string name="redHeartEmoji">&#10084;</string>
 </resources>

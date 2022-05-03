@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.eundmswlji.tacoling.ui.setting.SettingViewModel" />
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:background="@color/backgroundGrey"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/backgroundGrey"
         android:orientation="vertical">
 
         <include
@@ -19,41 +23,50 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp" />
 
-        <include
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/logout"
-            layout="@layout/item_setting_list" />
+            style="@style/settingButton"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="12dp"
+            android:text="로그아웃" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="12dp" />
-
-        <include
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/alarm"
-            layout="@layout/item_setting_list" />
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/white"
+            android:checked="@{viewModel.isAlarmOn().peekContent()}"
+            android:gravity="center_vertical"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="알림 설정"
+            android:textOff=""
+            android:textOn=""
+            android:thumb="@drawable/sw_thumb"
+            app:switchMinWidth="30dp"
+            app:track="@drawable/selector_sw" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="12dp" />
-
-        <include
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/myZzim"
-            layout="@layout/item_setting_list" />
+            style="@style/settingButton"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="12dp"
+            android:text="내가 찜한 가게" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="12dp" />
-
-        <include
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/suggest"
-            layout="@layout/item_setting_list" />
+            style="@style/settingButton"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="12dp"
+            android:text="건의하기" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="12dp" />
-
-        <include
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/withdrawal"
-            layout="@layout/item_setting_list" />
+            style="@style/settingButton"
+            android:layout_width="match_parent"
+            android:text="탈퇴하기" />
+
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

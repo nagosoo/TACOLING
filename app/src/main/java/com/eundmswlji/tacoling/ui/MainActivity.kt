@@ -59,11 +59,11 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_setting -> {
-                navController.navigate(R.id.action_mapFragment_to_settingFragment)
+                navController.navigate(R.id.settingFragment)
                 return true
             }
             R.id.menu_map -> {
-                navController.navigate(R.id.action_settingFragment_to_mapFragment)
+                navController.navigate(R.id.mapFragment)
                 return true
             }
         }

@@ -49,15 +49,15 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMapBinding.inflate(inflater).apply {
-            lifecycleOwner=viewLifecycleOwner
-            viewModel=this@MapFragment.viewModel
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = this@MapFragment.viewModel
         }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        settingMap()
+        initMap()
         setRecyclerView()
         setOnClickListener()
         setObserver()
@@ -67,7 +67,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
             ActivityResultContracts.RequestMultiplePermissions()
         ) { map ->
             if (map["android.permission.ACCESS_FINE_LOCATION"] == true && map["android.permission.ACCESS_COARSE_LOCATION"] == true) {
-                showMyLocation()
+                trackingOn()
             }
         }
     }
@@ -78,9 +78,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         })
 
         viewModel.currentAddress.observe(viewLifecycleOwner, EventObserver {
-           // binding.tvJuso.editText.setText(it)
             binding.tvJuso.editText.clearFocus()
-            toast("hey")
         })
     }
 
@@ -95,7 +93,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         mapView.addPOIItems(mapPOIItem.toTypedArray())
     }
 
-    private fun settingMap() {
+    private fun initMap() {
         MapView.setMapTilePersistentCacheEnabled(true)
         mapView = MapView(activity)
         binding.mapViewContainer.addView(mapView)
@@ -107,12 +105,9 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
     }
 
     private fun itemClickListener(x: Double, y: Double, address: String) {
-        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
+        trackingOff()
         binding.tvJuso.recyclerView.isVisible = false
-        with(binding.tvJuso.editText) {
-            this.setText(address)
-            this.clearFocus()
-        }
+        viewModel.setCurrentJuso(address)
         val mapPoint = MapPoint.mapPointWithGeoCoord(y, x)
         mapView.setMapCenterPoint(mapPoint, true)
     }
@@ -173,7 +168,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         when {
             onlyCheckPermissions() -> {
                 //둘다 혀용 되어 있음
-                showMyLocation()
+                trackingOn()
             }
             (shouldShowDialog()) -> {
                 NormalDialog(title = "위치권한 설정", message = "위치권한 설정을 허용해주세요.", positiveMessage = "네", negativeMessage = "아니요", positiveButtonListener = ::turnOnLocationPermission).show(
@@ -214,7 +209,11 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         checkGPS(requireContext())
     }
 
-    private fun showMyLocation() {
+    private fun trackingOff() {
+        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
+    }
+
+    private fun trackingOn() {
         mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
     }
 
@@ -226,7 +225,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
     }
 
     override fun onMapViewCenterPointMoved(p0: MapView?, p1: MapPoint?) {
-        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
+        trackingOff()
     }
 
     override fun onMapViewZoomLevelChanged(p0: MapView?, p1: Int) {
@@ -268,7 +267,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         super.onResume()
         checkGPSOn() //gps 는 항상체크
         if (onlyCheckPermissions()) {
-            showMyLocation()
+            trackingOn()
         }
     }
 

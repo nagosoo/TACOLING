@@ -49,4 +49,8 @@ class MapViewModel @Inject constructor(
         }
     }
 
+    fun setCurrentJuso(address:String){
+        _currentAddress.value = Event(address)
+    }
+
 }
