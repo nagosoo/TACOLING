@@ -30,10 +30,11 @@
         <entry key="app/src/main/res/layout/fragment_map.xml" value="0.18" />
         <entry key="app/src/main/res/layout/fragment_my_zzim.xml" value="0.14" />
         <entry key="app/src/main/res/layout/fragment_setting.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_shop.xml" value="0.14" />
+        <entry key="app/src/main/res/layout/fragment_shop.xml" value="0.16" />
         <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.335" />
         <entry key="app/src/main/res/layout/item_setting_list.xml" value="0.24094202898550723" />
         <entry key="app/src/main/res/layout/item_shop.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/shop_top.xml" value="0.14" />
         <entry key="app/src/main/res/layout/splash.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/menu/menu.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_channel.xml" value="0.198" />

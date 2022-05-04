@@ -271,4 +271,9 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        binding.mapViewContainer.removeView(mapView)
+    }
+
 }

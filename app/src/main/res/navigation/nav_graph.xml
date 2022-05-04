@@ -9,7 +9,12 @@
         tools:layout="@layout/fragment_sign_in"
         android:id="@+id/signInFragment"
         android:name="com.eundmswlji.tacoling.ui.sign_in.SignInFragment"
-        android:label="SignInFragment" />
+        android:label="SignInFragment" >
+        <action
+            android:id="@+id/action_signInFragment_to_mapFragment2"
+            app:destination="@id/mapFragment"
+            app:launchSingleTop="true" />
+    </fragment>
     <fragment
         tools:layout="@layout/fragment_map"
         android:id="@+id/mapFragment"

@@ -65,10 +65,10 @@ class SettingFragment : Fragment() {
         intent.apply {
             data = Uri.parse("mailto:") // only email apps should handle this. no message, sns app
             putExtra(Intent.EXTRA_SUBJECT, "건의하기")
-            putExtra(Intent.EXTRA_EMAIL, "nagosoo@kakao.com")
+            putExtra(Intent.EXTRA_EMAIL, arrayOf("nagosoo@kakao.com"))
             putExtra(
                 Intent.EXTRA_TEXT,
-                "App Version : ${BuildConfig.VERSION_NAME}\nDevice : ${Build.DEVICE}\nAndroid(SDK) : ${Build.VERSION.SDK_INT}(${Build.VERSION.RELEASE})\n내용 : ",
+                "App Version : ${BuildConfig.VERSION_NAME}\nDevice : ${Build.MODEL}\nAndroid(SDK) : ${Build.VERSION.SDK_INT}(${Build.VERSION.RELEASE})\n내용 : ",
             )
         }
         if (intent.resolveActivity(requireContext().packageManager) != null) {

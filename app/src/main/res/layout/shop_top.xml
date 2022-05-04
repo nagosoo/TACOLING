@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/bg_white_4"
+        android:paddingTop="32dp"
+        android:paddingBottom="32dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/tvLocation"
+            app:layout_constraintEnd_toStartOf="@id/buttonCall"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="aa" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/buttonCall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_phone"
+            app:layout_constraintBottom_toBottomOf="@id/tvName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tvName"
+            app:layout_constraintTop_toTopOf="@id/tvName" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="40dp"
+            android:drawableStart="@drawable/ic_my_location_without_round"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@id/buttonZzim"
+            app:layout_constraintEnd_toStartOf="@id/view"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvName"
+            tools:text="55m" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="2dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/textGrey"
+            app:layout_constraintEnd_toStartOf="@id/tvZeroWaste"
+            app:layout_constraintStart_toEndOf="@id/tvLocation"
+            app:layout_constraintTop_toTopOf="@id/tvLocation" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvZeroWaste"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@id/view"
+            app:layout_constraintTop_toTopOf="@id/tvLocation"
+            tools:text="미참여" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonZzim"
+            style="@style/pinkLightButton"
+            android:text="단골가게로 찜"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/space2"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvLocation" />
+
+        <Space
+            android:id="@+id/space2"
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@id/buttonShare"
+            app:layout_constraintStart_toEndOf="@id/buttonZzim"
+            app:layout_constraintTop_toTopOf="@id/buttonZzim" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonShare"
+            style="@style/pinkLightButton"
+            android:text="공유하기"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/space2"
+            app:layout_constraintTop_toTopOf="@id/buttonZzim" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

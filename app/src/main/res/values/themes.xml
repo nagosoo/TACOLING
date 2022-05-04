@@ -23,12 +23,14 @@
         <item name="postSplashScreenTheme">@style/Theme.Tacoling</item>
     </style>
 
-    <style name="pinkLightButton">
+    <style name="pinkLightButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="elevation">0dp</item>
         <item name="android:layout_height">47dp</item>
         <item name="android:layout_width">115dp</item>
-        <item name="background">@drawable/bg_pink_light_4</item>
+        <item name="android:background">@drawable/bg_pink_light_4</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
         <item name="android:textSize">14sp</item>
     </style>
 

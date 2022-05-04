@@ -13,11 +13,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.eundmswlji.tacoling.MapUtil
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationBarView
+import com.kakao.sdk.auth.AuthApiClient
+import com.kakao.sdk.common.model.KakaoSdkError
+import com.kakao.sdk.user.UserApiClient
+import com.kakao.sdk.user.model.AccessTokenInfo
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,16 +35,50 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
+        checkIsLogin()
         checkGPSOn()
         val doneFirstRequest = sharedPref.getBoolean("firstRequest", false)
         if (!doneFirstRequest) checkPermission()
 
         binding.bottomNavView.setOnItemSelectedListener(this)
         binding.bottomNavView.setOnItemReselectedListener(this)
+    }
+
+    private fun checkIsLogin() {
+        if (AuthApiClient.instance.hasToken()) {
+            UserApiClient.instance.accessTokenInfo { _, error ->
+                if (error != null) {
+                    if (error is KakaoSdkError && error.isInvalidTokenError()) {
+                        //로그인 필요
+                        goToLoginFragment()
+                    } else {
+                        //기타 에러
+                    }
+                } else {
+                    //토큰 유효성 체크 성공(필요 시 토큰 갱신됨)
+                    UserApiClient().accessTokenInfo(callback = object : (AccessTokenInfo?, Throwable?) -> (Unit) {
+                        override fun invoke(token: AccessTokenInfo?, error: Throwable?) {
+                            if (error != null) {
+                                goToLoginFragment()
+                            } else if (token != null) {
+                                navController.navigate(R.id.mapFragment)
+                            }
+                        }
+                    })
+                }
+            }
+        } else {
+            goToLoginFragment()
+        }
+    }
+
+    private fun goToLoginFragment() {
+        navController.apply {
+            setGraph(R.navigation.nav_graph)
+        }.navigate(R.id.signInFragment)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
