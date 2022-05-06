@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@drawable/bg_white_25"
+    android:orientation="horizontal">
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:weightSum="7">
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rbMon"
+            style="@style/styleDays"
+            android:text="월" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rbThu"
+            style="@style/styleDays"
+            android:text="화" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:button="@null"
+            android:id="@+id/rbWed"
+            style="@style/styleDays"
+            android:text="수" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rbThr"
+            style="@style/styleDays"
+            android:text="목" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rbFri"
+            style="@style/styleDays"
+            android:text="금" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rbSat"
+            style="@style/styleDays"
+            android:text="토" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rbSun"
+            style="@style/styleDays"
+            android:text="일" />
+    </RadioGroup>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -19,6 +19,7 @@
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editText"
+            style="@style/text14Black"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="20dp"
@@ -26,8 +27,6 @@
             android:gravity="center"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            android:textColor="@color/black"
-            android:textSize="14sp"
             app:currentAddress="@{viewModel.currentAddress.peekContent()}"
             tools:text="영송로 85 한신중앙 아파트 " />
 

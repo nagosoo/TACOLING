@@ -1,6 +1,7 @@
 package com.eundmswlji.tacoling.ui.dialog
 
 import android.os.Bundle
+import android.text.Spanned
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,8 @@ import com.eundmswlji.tacoling.databinding.DialogNormalBinding
 
 class NormalDialog(
     private val title: String,
-    private val message: String,
+    private val message: String?=null,
+    private val spannedMessage: Spanned?=null,
     private val positiveMessage: String,
     private val negativeMessage: String,
     private val positiveButtonListener: () -> (Unit),
@@ -32,7 +34,8 @@ class NormalDialog(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.tvTitle.text = title
-        binding.tvMessage.text = message
+        message?.let { binding.tvMessage.text = it }
+        spannedMessage?.let { binding.tvMessage.text = it }
         binding.buttonNegative.text = negativeMessage
         binding.buttonPositive.text = positiveMessage
         binding.buttonPositive.setOnClickListener {

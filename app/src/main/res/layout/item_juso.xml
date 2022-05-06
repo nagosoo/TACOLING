@@ -21,8 +21,7 @@
             android:maxLines="2"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            android:textColor="@color/black"
-            android:textSize="14sp"
+            style="@style/text14Black"
             tools:text="영송로 85 한신중앙 아파트" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

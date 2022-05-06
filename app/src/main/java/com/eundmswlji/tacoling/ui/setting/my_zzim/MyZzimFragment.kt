@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.data.model.Shop
 import com.eundmswlji.tacoling.databinding.FragmentMyZzimBinding
+import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.decoration.VerticalItemDecoration
 import splitties.dimensions.dip
 
@@ -29,10 +30,13 @@ class MyZzimFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setAdapter()
         setAppBar()
+        (requireActivity() as? MainActivity)?.hideBottomNav()
+
         //
         viewModel.setMyZzimList()
         //
     }
+
 
     private fun setAppBar() {
         binding.appBar.tv.text = "내가 찜한 가게"

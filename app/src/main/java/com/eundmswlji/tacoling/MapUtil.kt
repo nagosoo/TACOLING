@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
+import org.json.JSONObject
 
 object MapUtil {
     fun getMapPOIItem(name: String, latitude: Double, longitude: Double): MapPOIItem {
@@ -36,5 +37,6 @@ object MapUtil {
             context.startActivity(intent)
         }
     }
+
 }
 

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:background="@drawable/bg_white_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="25dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="25dp"
+        android:paddingBottom="16dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="출몰지역"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TableLayout
+            android:id="@+id/tl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TableRow android:layout_marginBottom="13dp">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_marginEnd="20dp"
+                    android:text="월"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvMon"
+                    android:textColor="@color/textGrey"
+                    android:textSize="15sp"
+                    tools:text="만촌아파트 앞 18:00~20:00" />
+            </TableRow>
+
+            <TableRow android:layout_marginBottom="13dp">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_marginEnd="20dp"
+                    android:text="화"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvTue"
+                    android:textColor="@color/textGrey"
+                    android:textSize="15sp"
+                    tools:text="만촌아파트 앞 18:00~20:00" />
+            </TableRow>
+
+            <TableRow android:layout_marginBottom="13dp">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_marginEnd="20dp"
+                    android:text="수"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvWed"
+                    android:textColor="@color/textGrey"
+                    android:textSize="15sp"
+                    tools:text="만촌아파트 앞 18:00~20:00" />
+            </TableRow>
+
+            <TableRow android:layout_marginBottom="13dp">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_marginEnd="20dp"
+                    android:text="목"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvThu"
+                    android:textColor="@color/textGrey"
+                    android:textSize="15sp"
+                    tools:text="만촌아파트 앞 18:00~20:00" />
+            </TableRow>
+
+            <TableRow android:layout_marginBottom="13dp">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_marginEnd="20dp"
+                    android:text="금"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvFri"
+                    android:textColor="@color/textGrey"
+                    android:textSize="15sp"
+                    tools:text="만촌아파트 앞 18:00~20:00" />
+            </TableRow>
+
+            <TableRow android:layout_marginBottom="13dp">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_marginEnd="20dp"
+                    android:text="토"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvSat"
+                    android:textColor="@color/textGrey"
+                    android:textSize="15sp"
+                    tools:text="만촌아파트 앞 18:00~20:00" />
+            </TableRow>
+
+            <TableRow>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_marginEnd="20dp"
+                    android:text="일"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvSun"
+                    android:textColor="@color/textGrey"
+                    android:textSize="15sp"
+                    tools:text="휴무" />
+            </TableRow>
+
+
+        </TableLayout>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

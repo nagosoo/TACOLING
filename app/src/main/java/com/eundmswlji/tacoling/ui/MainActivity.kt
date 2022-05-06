@@ -12,11 +12,14 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.eundmswlji.tacoling.MapUtil
 import com.eundmswlji.tacoling.R
+import com.eundmswlji.tacoling.Util.toast
 import com.eundmswlji.tacoling.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationBarView
 import com.kakao.sdk.auth.AuthApiClient
@@ -55,7 +58,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
                         //로그인 필요
                         goToLoginFragment()
                     } else {
-                        //기타 에러
+                        toast("로그인 실패")
                     }
                 } else {
                     //토큰 유효성 체크 성공(필요 시 토큰 갱신됨)
@@ -156,6 +159,18 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         with(sharedPref.edit()) {
             this.putBoolean("firstRequest", true)
             apply()
+        }
+    }
+
+    fun hideBottomNav(){
+        if(::binding.isInitialized){
+            binding.bottomNavView.isGone=true
+        }
+    }
+
+    fun showBottomNav(){
+        if(::binding.isInitialized){
+            binding.bottomNavView.isVisible=true
         }
     }
 }

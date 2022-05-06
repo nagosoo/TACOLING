@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -58,6 +59,10 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initMap()
+        checkGPSOn() //gps 는 항상체크
+        if (onlyCheckPermissions()) {
+            trackingOn()
+        }
         setRecyclerView()
         setOnClickListener()
         setObserver()
@@ -100,8 +105,8 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         mapView.setZoomLevel(2, true)
         mapView.setMapViewEventListener(this)
         mapView.setCurrentLocationEventListener(this)
-        mapView.setCustomCurrentLocationMarkerImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(108, 0))
-        mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(108, 0))
+        mapView.setCustomCurrentLocationMarkerImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(30, 0))
+        mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(30, 0))
     }
 
     private fun itemClickListener(x: Double, y: Double, address: String) {
@@ -162,6 +167,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
             val centerPoint = mapView.mapCenterPoint
             getJusoFromGeoCord(centerPoint)
         }
+
     }
 
     private fun checkLocationPermission() {
@@ -265,10 +271,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
 
     override fun onResume() {
         super.onResume()
-        checkGPSOn() //gps 는 항상체크
-        if (onlyCheckPermissions()) {
-            trackingOn()
-        }
+
     }
 
     override fun onStop() {

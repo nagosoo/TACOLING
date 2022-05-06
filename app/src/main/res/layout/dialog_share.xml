@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonLink"
+            style="@style/pinkLightButton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_share_link"
+            android:drawablePadding="-10dp"
+            android:paddingStart="18dp"
+            android:text="링크 복사하기" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="20dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonKakao"
+            style="@style/pinkLightButton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_share_kakao"
+            android:paddingStart="7dp"
+            android:text="카카오톡으로 공유" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

@@ -4,17 +4,23 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.BuildConfig
 import com.eundmswlji.tacoling.R
+import com.eundmswlji.tacoling.Util
+import com.eundmswlji.tacoling.Util.toast
 import com.eundmswlji.tacoling.data.repository.JusoRepository
 import com.eundmswlji.tacoling.databinding.FragmentSettingBinding
+import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
+import splitties.dimensions.dip
 import javax.inject.Inject
 
 
@@ -31,6 +37,7 @@ class SettingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setAppBar()
+        (requireActivity() as? MainActivity)?.showBottomNav()
         setOnClickListener()
         setObserver()
     }
@@ -77,7 +84,13 @@ class SettingFragment : Fragment() {
     }
 
     private fun showWithdrawalDialog() {
-        val message = "정말 탈퇴하시겠습니까? ${R.string.octopusEmoji}${R.string.sweatEmoji}"
-        NormalDialog(title = "탈퇴", message = message, positiveMessage = "네", negativeMessage = "아니요", positiveButtonListener = {}).show(childFragmentManager, null)
+        val message = Html.fromHtml(
+            "정말 탈퇴하시겠습니까? <img src=\"ic_taco\"> ${String(Character.toChars(0x1F4A6))}",
+            HtmlCompat.FROM_HTML_MODE_COMPACT,
+            Util.ImageGetter(requireContext(), requireContext().dip(17), requireContext().dip(17)),
+            null
+        )
+        NormalDialog(title = "탈퇴", spannedMessage = message, positiveMessage = "네", negativeMessage = "아니요", positiveButtonListener = {}).show(childFragmentManager, null)
     }
+
 }
