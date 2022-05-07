@@ -1,6 +1,7 @@
 package com.eundmswlji.tacoling.ui.map
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Editable
@@ -10,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -44,6 +44,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
     private val viewModel: MapViewModel by viewModels()
     private lateinit var mapView: MapView
     private val adapter by lazy { MapAdapter(::itemClickListener) }
+    private val sharedPref by lazy { requireActivity().getPreferences(Context.MODE_PRIVATE) }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -59,10 +60,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initMap()
-        checkGPSOn() //gps 는 항상체크
-        if (onlyCheckPermissions()) {
-            trackingOn()
-        }
+        requestPermission()
         setRecyclerView()
         setOnClickListener()
         setObserver()
@@ -70,12 +68,25 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
 
         locationResultLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
-        ) { map ->
-            if (map["android.permission.ACCESS_FINE_LOCATION"] == true && map["android.permission.ACCESS_COARSE_LOCATION"] == true) {
-                trackingOn()
+        ) { permissions ->
+            if (!permissions.values.contains(false)) {
+                trackingModeOn()
             }
         }
     }
+
+    private fun requestPermission() {
+        val doneFirstRequest = sharedPref.getBoolean("firstRequest", false)
+        if (!doneFirstRequest) {//앱 처음 사용시 무조건 퍼미션을 요청한다.
+            applyFirstRequest()
+            turnOnLocationPermission()
+        } else { // 앱 처음 사용이 아니면, 퍼미션 허락 되어있을 때만 tracking 하고, 따로 퍼미션 요청 메시지는 띄우지 x
+            if (onlyCheckPermissions()) {
+                trackingModeOn()
+            }
+        }
+    }
+
 
     private fun setObserver() {
         viewModel.toastEvent.observe(viewLifecycleOwner, EventObserver {
@@ -110,7 +121,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
     }
 
     private fun itemClickListener(x: Double, y: Double, address: String) {
-        trackingOff()
+        trackingModeOff()
         binding.tvJuso.recyclerView.isVisible = false
         viewModel.setCurrentJuso(address)
         val mapPoint = MapPoint.mapPointWithGeoCoord(y, x)
@@ -172,12 +183,8 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
 
     private fun checkLocationPermission() {
         when {
-            onlyCheckPermissions() -> {
-                //둘다 혀용 되어 있음
-                trackingOn()
-            }
-            (shouldShowDialog()) -> {
-                NormalDialog(title = "위치권한 설정", message = "위치권한 설정을 허용해주세요.", positiveMessage = "네", negativeMessage = "아니요", positiveButtonListener = ::turnOnLocationPermission).show(
+            (shouldShowRationale()) -> {
+                NormalDialog(title = "위치권한 설정", message = "내 주변의 타코야키 트럭을 찾기 위해 위치권한을 허용해주세요.", positiveMessage = "네", negativeMessage = "아니요", positiveButtonListener = ::turnOnLocationPermission).show(
                     childFragmentManager,
                     null
                 )
@@ -190,7 +197,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         }
     }
 
-    private fun shouldShowDialog(): Boolean {
+    private fun shouldShowRationale(): Boolean {
         //사용자가 권한 요청을 명시적으로 거부한 경우 true를 반환한다.
         //사용자가 권한 요청을 처음 보거나, 다시 묻지 않음 선택한 경우, 권한을 허용한 경우 false를 반환한다.
         return shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) || shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -215,11 +222,18 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         checkGPS(requireContext())
     }
 
-    private fun trackingOff() {
+    private fun applyFirstRequest() {
+        with(sharedPref.edit()) {
+            this.putBoolean("firstRequest", true)
+            apply()
+        }
+    }
+
+    private fun trackingModeOff() {
         mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
     }
 
-    private fun trackingOn() {
+    private fun trackingModeOn() {
         mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
     }
 
@@ -231,7 +245,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
     }
 
     override fun onMapViewCenterPointMoved(p0: MapView?, p1: MapPoint?) {
-        trackingOff()
+        trackingModeOff()
     }
 
     override fun onMapViewZoomLevelChanged(p0: MapView?, p1: Int) {
@@ -271,7 +285,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
 
     override fun onResume() {
         super.onResume()
-
+        checkGPSOn()
     }
 
     override fun onStop() {
