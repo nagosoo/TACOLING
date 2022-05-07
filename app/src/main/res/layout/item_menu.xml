@@ -17,7 +17,6 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="15sp"
-            android:textStyle="bold"
             tools:text="타코야키 8알(기본맛, 매운맛)" />
 
         <Space

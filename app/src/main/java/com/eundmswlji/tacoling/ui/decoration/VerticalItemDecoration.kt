@@ -24,7 +24,7 @@ class VerticalItemDecoration(
         when (position) {
             0 -> {
                 outRect.top = top
-                outRect.bottom = between
+                outRect.bottom = if(state.itemCount==1) bottom else between
             }
             lastPosition -> outRect.bottom = bottom
             else -> outRect.bottom = between

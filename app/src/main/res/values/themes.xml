@@ -67,16 +67,16 @@
     </style>
 
     <style name="DialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="android:windowMinWidthMajor">80%</item>
-        <item name="android:windowMinWidthMinor">80%</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@drawable/bg_white_4</item>
         <item name="android:windowIsFloating">true</item>
     </style>
 
     <style name="DialogStyleHeight180" parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="android:windowMinWidthMajor">80%</item>
-        <item name="android:windowMinWidthMinor">80%</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
         <item name="android:minHeight">180dp</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@drawable/bg_white_4</item>
