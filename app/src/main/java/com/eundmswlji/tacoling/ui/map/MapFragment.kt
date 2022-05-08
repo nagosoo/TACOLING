@@ -59,13 +59,6 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initMap()
-        requestPermission()
-        setRecyclerView()
-        setOnClickListener()
-        setObserver()
-        test()
-
         locationResultLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
@@ -73,6 +66,12 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
                 trackingModeOn()
             }
         }
+        initMap()
+        requestPermission()
+        setRecyclerView()
+        setOnClickListener()
+        setObserver()
+        test()
     }
 
     private fun requestPermission() {
