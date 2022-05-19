@@ -9,9 +9,11 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -34,6 +36,7 @@ import kotlinx.coroutines.launch
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
+import java.util.*
 import kotlin.math.abs
 import kotlin.math.pow
 
@@ -72,6 +75,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
             }
         }
         initMap()
+        initDays()
         requestPermission()
         setRecyclerView()
         setOnClickListener()
@@ -120,6 +124,20 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
             setCurrentLocationEventListener(this@MapFragment)
             setCustomCurrentLocationMarkerImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(30, 0))
             setCustomCurrentLocationMarkerTrackingImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(30, 0))
+        }
+    }
+
+    private fun initDays() {
+        when (val today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
+            1 -> {
+                binding.itemDays.rbSun.isChecked = true
+            }
+            in 2..6 -> {
+                (binding.itemDays.radioGroup[today - 2] as RadioButton).isChecked = true
+            }
+            7 -> {
+                binding.itemDays.rbSat.isChecked = true
+            }
         }
     }
 
@@ -279,6 +297,16 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         toast("주소를 찾을 수 없습니다.")
     }
 
+    override fun onResume() {
+        super.onResume()
+        checkGPSOn()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        binding.mapViewContainer.removeView(mapView)
+    }
+
     override fun onMapViewInitialized(p0: MapView?) {}
 
     override fun onCurrentLocationDeviceHeadingUpdate(p0: MapView?, p1: Float) {}
@@ -298,15 +326,5 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
     override fun onMapViewDragEnded(p0: MapView?, p1: MapPoint?) {}
 
     override fun onMapViewMoveFinished(p0: MapView?, p1: MapPoint?) {}
-
-    override fun onResume() {
-        super.onResume()
-        checkGPSOn()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        binding.mapViewContainer.removeView(mapView)
-    }
 
 }

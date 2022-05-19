@@ -24,7 +24,7 @@ object BindingAdapter {
 
     @BindingAdapter("myZzimList")
     @JvmStatic
-    fun setMyZzimList(rv: RecyclerView, list:List<Shop>){
+    fun setMyZzimList(rv: RecyclerView, list: List<Shop>) {
         (rv.adapter as? ListAdapter<Shop, MyZzimAdapter.MyViewHolder>)?.submitList(list)
     }
 }
