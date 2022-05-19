@@ -8,6 +8,7 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.BuildConfig
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.Util
-import com.eundmswlji.tacoling.Util.toast
 import com.eundmswlji.tacoling.data.repository.JusoRepository
 import com.eundmswlji.tacoling.databinding.FragmentSettingBinding
 import com.eundmswlji.tacoling.ui.MainActivity
@@ -24,7 +24,7 @@ import splitties.dimensions.dip
 import javax.inject.Inject
 
 
-class SettingFragment : Fragment() {
+class SettingFragment : Fragment(), View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     @Inject
     lateinit var jusoRepository: JusoRepository
     private lateinit var binding: FragmentSettingBinding
@@ -38,33 +38,42 @@ class SettingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setAppBar()
         (requireActivity() as? MainActivity)?.showBottomNav()
-        setOnClickListener()
         setObserver()
+        binding.suggest.setOnClickListener(this)
+        binding.withdrawal.setOnClickListener(this)
+        binding.myZzim.setOnClickListener(this)
+        binding.alarm.setOnClickListener(this)
+        binding.logout.setOnClickListener(this)
+        binding.alarm.setOnCheckedChangeListener(this)
     }
 
     private fun setObserver() {
         //TODO::alarmOnOff DB 처리
     }
 
-    private fun setAppBar() {
-        binding.appBar.tv.text = "마이페이지"
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            binding.suggest.id -> {
+                sendEmailToAdmin()
+            }
+            binding.withdrawal.id -> {
+                showWithdrawalDialog()
+            }
+            binding.myZzim.id -> {
+                findNavController().navigate(R.id.myZzimFragment)
+            }
+            binding.logout.id -> {
+
+            }
+        }
     }
 
-    private fun setOnClickListener() {
-        binding.suggest.setOnClickListener {
-            sendEmailToAdmin()
-        }
-        binding.withdrawal.setOnClickListener {
-            showWithdrawalDialog()
-        }
-        binding.myZzim.setOnClickListener {
-            findNavController().navigate(R.id.myZzimFragment)
-        }
+    override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+        viewModel.setAlarmOnOff(isChecked)
+    }
 
-        binding.alarm.setOnCheckedChangeListener { buttonView, isChecked ->
-            viewModel.setAlarmOnOff(isChecked)
-        }
-        binding.logout.setOnClickListener { }
+    private fun setAppBar() {
+        binding.appBar.tv.text = "마이페이지"
     }
 
     private fun sendEmailToAdmin() {

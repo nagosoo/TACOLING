@@ -40,6 +40,7 @@ import kotlin.math.pow
 
 @AndroidEntryPoint
 class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLocationEventListener {
+
     private lateinit var binding: FragmentMapBinding
     private lateinit var locationResultLauncher: ActivityResultLauncher<Array<String>>
     private var job: Job? = null
@@ -90,7 +91,6 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         }
     }
 
-
     private fun setObserver() {
         viewModel.toastEvent.observe(viewLifecycleOwner, EventObserver {
             toast(it)
@@ -108,18 +108,19 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
     private fun test() {
         mapPOIItem.add(getMapPOIItem("ㅌㅅㅌ", 35.86401751026963, 128.6485239265323))
         mapPOIItem.add(getMapPOIItem("ㅌㅅㅌ", 35.85881638638933, 128.6356195137821))
-        //  mapView.addPOIItems(mapPOIItem.toTypedArray())
     }
 
     private fun initMap() {
         MapView.setMapTilePersistentCacheEnabled(true)
         mapView = MapView(activity)
         binding.mapViewContainer.addView(mapView)
-        mapView.setZoomLevel(2, true)
-        mapView.setMapViewEventListener(this)
-        mapView.setCurrentLocationEventListener(this)
-        mapView.setCustomCurrentLocationMarkerImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(30, 0))
-        mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(30, 0))
+        mapView.apply {
+            setZoomLevel(2, true)
+            setMapViewEventListener(this@MapFragment)
+            setCurrentLocationEventListener(this@MapFragment)
+            setCustomCurrentLocationMarkerImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(30, 0))
+            setCustomCurrentLocationMarkerTrackingImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(30, 0))
+        }
     }
 
     private fun itemClickListener(x: Double, y: Double, address: String) {
@@ -165,15 +166,12 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         }
 
         binding.tvJuso.editText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
             override fun onTextChanged(query: CharSequence?, start: Int, before: Int, count: Int) {
                 if (!query.isNullOrEmpty()) debounce(query.toString())
             }
 
-            override fun afterTextChanged(s: Editable?) {
-            }
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         })
 
         binding.buttonResearch.setOnClickListener {
@@ -250,7 +248,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         viewModel.getJusoFromGeoCord(mapPoint, activity)
     }
 
-    private fun getMapPOIItemIn3Km(currentPoint: MapPoint?): List<MapPOIItem> {
+    private fun getMapPOIItemsIn3Km(currentPoint: MapPoint?): List<MapPOIItem> {
         if (currentPoint == null) return emptyList()
         val myLatitude = currentPoint.mapPointGeoCoord.latitude
         val myLongitude = currentPoint.mapPointGeoCoord.longitude
@@ -263,37 +261,13 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
     }
 
     private fun setPOIItemsIn3Km(centerPoint: MapPoint?) {
-        val mapPOIListIn3Km = getMapPOIItemIn3Km(centerPoint)
+        val mapPOIListIn3Km = getMapPOIItemsIn3Km(centerPoint)
         mapView.removeAllPOIItems()
         mapView.addPOIItems(mapPOIListIn3Km.toTypedArray())
     }
 
-    override fun onMapViewInitialized(p0: MapView?) {
-    }
-
     override fun onMapViewCenterPointMoved(p0: MapView?, currentPoint: MapPoint?) {
         trackingModeOff()
-    }
-
-    override fun onMapViewZoomLevelChanged(p0: MapView?, p1: Int) {
-    }
-
-    override fun onMapViewSingleTapped(p0: MapView?, p1: MapPoint?) {
-    }
-
-    override fun onMapViewDoubleTapped(p0: MapView?, p1: MapPoint?) {
-    }
-
-    override fun onMapViewLongPressed(p0: MapView?, p1: MapPoint?) {
-    }
-
-    override fun onMapViewDragStarted(p0: MapView?, p1: MapPoint?) {
-    }
-
-    override fun onMapViewDragEnded(p0: MapView?, p1: MapPoint?) {
-    }
-
-    override fun onMapViewMoveFinished(p0: MapView?, p1: MapPoint?) {
     }
 
     override fun onCurrentLocationUpdate(p0: MapView?, currentPoint: MapPoint?, p2: Float) {
@@ -301,15 +275,29 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         setPOIItemsIn3Km(currentPoint)
     }
 
-    override fun onCurrentLocationDeviceHeadingUpdate(p0: MapView?, p1: Float) {
-    }
-
     override fun onCurrentLocationUpdateFailed(p0: MapView?) {
         toast("주소를 찾을 수 없습니다.")
     }
 
-    override fun onCurrentLocationUpdateCancelled(p0: MapView?) {
-    }
+    override fun onMapViewInitialized(p0: MapView?) {}
+
+    override fun onCurrentLocationDeviceHeadingUpdate(p0: MapView?, p1: Float) {}
+
+    override fun onCurrentLocationUpdateCancelled(p0: MapView?) {}
+
+    override fun onMapViewZoomLevelChanged(p0: MapView?, p1: Int) {}
+
+    override fun onMapViewSingleTapped(p0: MapView?, p1: MapPoint?) {}
+
+    override fun onMapViewDoubleTapped(p0: MapView?, p1: MapPoint?) {}
+
+    override fun onMapViewLongPressed(p0: MapView?, p1: MapPoint?) {}
+
+    override fun onMapViewDragStarted(p0: MapView?, p1: MapPoint?) {}
+
+    override fun onMapViewDragEnded(p0: MapView?, p1: MapPoint?) {}
+
+    override fun onMapViewMoveFinished(p0: MapView?, p1: MapPoint?) {}
 
     override fun onResume() {
         super.onResume()
