@@ -21,37 +21,44 @@
             <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/rbMon"
                 style="@style/styleDays"
+                android:tag="2"
                 android:text="월" />
 
             <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/rbThu"
                 style="@style/styleDays"
+                android:tag="3"
                 android:text="화" />
 
             <androidx.appcompat.widget.AppCompatRadioButton
-                android:button="@null"
                 android:id="@+id/rbWed"
                 style="@style/styleDays"
+                android:button="@null"
+                android:tag="4"
                 android:text="수" />
 
             <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/rbThr"
                 style="@style/styleDays"
+                android:tag="5"
                 android:text="목" />
 
             <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/rbFri"
                 style="@style/styleDays"
+                android:tag="6"
                 android:text="금" />
 
             <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/rbSat"
                 style="@style/styleDays"
+                android:tag="7"
                 android:text="토" />
 
             <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/rbSun"
                 style="@style/styleDays"
+                android:tag="1"
                 android:text="일" />
         </RadioGroup>
 

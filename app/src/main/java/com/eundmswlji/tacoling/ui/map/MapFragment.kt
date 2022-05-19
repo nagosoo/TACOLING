@@ -13,7 +13,6 @@ import android.widget.RadioButton
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -128,17 +127,8 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
     }
 
     private fun initDays() {
-        when (val today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
-            1 -> {
-                binding.itemDays.rbSun.isChecked = true
-            }
-            in 2..6 -> {
-                (binding.itemDays.radioGroup[today - 2] as RadioButton).isChecked = true
-            }
-            7 -> {
-                binding.itemDays.rbSat.isChecked = true
-            }
-        }
+        val today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+        binding.itemDays.root.findViewWithTag<RadioButton>("$today").isChecked = true
     }
 
     private fun itemClickListener(x: Double, y: Double, address: String) {
