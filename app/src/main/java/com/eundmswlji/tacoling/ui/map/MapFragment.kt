@@ -34,6 +34,8 @@ import kotlinx.coroutines.launch
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
+import kotlin.math.abs
+import kotlin.math.pow
 
 
 @AndroidEntryPoint
@@ -45,6 +47,8 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
     private lateinit var mapView: MapView
     private val adapter by lazy { MapAdapter(::itemClickListener) }
     private val sharedPref by lazy { requireActivity().getPreferences(Context.MODE_PRIVATE) }
+    val mapPOIItem = mutableListOf<MapPOIItem>()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -102,10 +106,9 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
     }
 
     private fun test() {
-        val mapPOIItem = mutableListOf<MapPOIItem>()
         mapPOIItem.add(getMapPOIItem("ㅌㅅㅌ", 35.86401751026963, 128.6485239265323))
         mapPOIItem.add(getMapPOIItem("ㅌㅅㅌ", 35.85881638638933, 128.6356195137821))
-        mapView.addPOIItems(mapPOIItem.toTypedArray())
+        //  mapView.addPOIItems(mapPOIItem.toTypedArray())
     }
 
     private fun initMap() {
@@ -176,6 +179,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         binding.buttonResearch.setOnClickListener {
             val centerPoint = mapView.mapCenterPoint
             getJusoFromGeoCord(centerPoint)
+            setPOIItemsIn3Km(centerPoint)
         }
 
     }
@@ -183,7 +187,13 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
     private fun checkLocationPermission() {
         when {
             (shouldShowRationale()) -> {
-                NormalDialog(title = "위치권한 설정", message = "내 주변의 타코야키 트럭을 찾기 위해 위치권한을 허용해주세요.", positiveMessage = "네", negativeMessage = "아니요", positiveButtonListener = ::turnOnLocationPermission).show(
+                NormalDialog(
+                    title = "위치권한 설정",
+                    message = "내 주변의 타코야키 트럭을 찾기 위해 위치권한을 허용해주세요.",
+                    positiveMessage = "네",
+                    negativeMessage = "아니요",
+                    positiveButtonListener = ::turnOnLocationPermission
+                ).show(
                     childFragmentManager,
                     null
                 )
@@ -240,10 +250,28 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
         viewModel.getJusoFromGeoCord(mapPoint, activity)
     }
 
+    private fun getMapPOIItemIn3Km(currentPoint: MapPoint?): List<MapPOIItem> {
+        if (currentPoint == null) return emptyList()
+        val myLatitude = currentPoint.mapPointGeoCoord.latitude
+        val myLongitude = currentPoint.mapPointGeoCoord.longitude
+        return mapPOIItem.filter {
+            val itemLatitude = it.mapPoint.mapPointGeoCoord.latitude //위도
+            val itemLongitude = it.mapPoint.mapPointGeoCoord.longitude //경도
+            val distance = abs(myLatitude - itemLatitude).times(110.574).pow(2) + abs(myLongitude - itemLongitude).times(111).pow(2)
+            distance <= 9 //현재위치에서 3km 이내인것 보여주기
+        }
+    }
+
+    private fun setPOIItemsIn3Km(centerPoint: MapPoint?) {
+        val mapPOIListIn3Km = getMapPOIItemIn3Km(centerPoint)
+        mapView.removeAllPOIItems()
+        mapView.addPOIItems(mapPOIListIn3Km.toTypedArray())
+    }
+
     override fun onMapViewInitialized(p0: MapView?) {
     }
 
-    override fun onMapViewCenterPointMoved(p0: MapView?, p1: MapPoint?) {
+    override fun onMapViewCenterPointMoved(p0: MapView?, currentPoint: MapPoint?) {
         trackingModeOff()
     }
 
@@ -270,6 +298,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
 
     override fun onCurrentLocationUpdate(p0: MapView?, currentPoint: MapPoint?, p2: Float) {
         getJusoFromGeoCord(currentPoint)
+        setPOIItemsIn3Km(currentPoint)
     }
 
     override fun onCurrentLocationDeviceHeadingUpdate(p0: MapView?, p1: Float) {
