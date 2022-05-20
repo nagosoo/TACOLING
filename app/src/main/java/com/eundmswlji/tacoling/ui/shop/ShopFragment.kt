@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.eundmswlji.tacoling.data.model.Menu
 import com.eundmswlji.tacoling.databinding.FragmentShopBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
@@ -85,8 +84,8 @@ class ShopFragment : BaseFragment() {
         binding.mapViewContainer.addView(mapView)
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroyView() {
+        super.onDestroyView()
         binding.mapViewContainer.removeView(mapView)
     }
 }
