@@ -247,6 +247,7 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
     }
 
     private fun trackingModeOff() {
+        if (!onlyCheckPermissions()) return
         mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
     }
 
