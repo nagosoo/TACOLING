@@ -27,6 +27,8 @@ import com.eundmswlji.tacoling.Util
 import com.eundmswlji.tacoling.Util.hideKeyboard
 import com.eundmswlji.tacoling.Util.toast
 import com.eundmswlji.tacoling.databinding.FragmentMapBinding
+import com.eundmswlji.tacoling.ui.BaseFragment
+import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -41,7 +43,7 @@ import kotlin.math.pow
 
 
 @AndroidEntryPoint
-class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLocationEventListener {
+class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.CurrentLocationEventListener {
 
     private lateinit var binding: FragmentMapBinding
     private lateinit var locationResultLauncher: ActivityResultLauncher<Array<String>>
@@ -73,6 +75,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener, MapView.CurrentLoc
                 trackingModeOn()
             }
         }
+        (requireActivity() as? MainActivity)?.showBottomNav()
         initMap()
         initDays()
         requestPermission()

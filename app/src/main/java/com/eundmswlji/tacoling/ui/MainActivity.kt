@@ -1,24 +1,18 @@
 package com.eundmswlji.tacoling.ui
 
-import android.Manifest
-import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import com.eundmswlji.tacoling.MapUtil
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.Util.toast
 import com.eundmswlji.tacoling.databinding.ActivityMainBinding
@@ -31,19 +25,24 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener, NavigationBarView.OnItemReselectedListener {
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
+
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-        checkIsLogin()
 
         binding.bottomNavView.setOnItemSelectedListener(this)
         binding.bottomNavView.setOnItemReselectedListener(this)
+
+        checkIsLogin()
     }
 
     private fun checkIsLogin() {
@@ -52,7 +51,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
                 if (error != null) {
                     if (error is KakaoSdkError && error.isInvalidTokenError()) {
                         //로그인 필요
-                        goToLoginFragment()
+                        setNavGraph(false)
                     } else {
                         toast("로그인 실패")
                     }
@@ -61,23 +60,26 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
                     UserApiClient().accessTokenInfo(callback = object : (AccessTokenInfo?, Throwable?) -> (Unit) {
                         override fun invoke(token: AccessTokenInfo?, error: Throwable?) {
                             if (error != null) {
-                                goToLoginFragment()
+                                //로그인 필요
+                                setNavGraph(false)
                             } else if (token != null) {
-                                navController.navigate(R.id.mapFragment)
+                                setNavGraph(true)
                             }
                         }
                     })
                 }
             }
         } else {
-            goToLoginFragment()
+            //  로그인 필요
+            setNavGraph(false)
         }
     }
 
-    private fun goToLoginFragment() {
-        navController.apply {
-            setGraph(R.navigation.nav_graph)
-        }.navigate(R.id.signInFragment)
+    private fun setNavGraph(isAlreadyLogin: Boolean) {
+        val navGraph = navController.navInflater.inflate(R.navigation.nav_graph) // app:navGraph="@navigation/nav_graph" 로 설정했던 것
+        if (isAlreadyLogin) navGraph.setStartDestination(R.id.mapFragment) //setStartDestination 설정
+        else navGraph.setStartDestination(R.id.signInFragment)
+        navController.setGraph(navGraph, null) //navController에 graph 설정
     }
 
     override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
@@ -119,15 +121,15 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         }
     }
 
-    fun hideBottomNav(){
-        if(::binding.isInitialized){
-            binding.bottomNavView.isGone=true
+    fun hideBottomNav() {
+        if (::binding.isInitialized) {
+            binding.bottomNavView.isGone = true
         }
     }
 
-    fun showBottomNav(){
-        if(::binding.isInitialized){
-            binding.bottomNavView.isVisible=true
+    fun showBottomNav() {
+        if (::binding.isInitialized) {
+            binding.bottomNavView.isVisible = true
         }
     }
 }

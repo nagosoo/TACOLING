@@ -10,11 +10,12 @@ import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.data.model.Shop
 import com.eundmswlji.tacoling.databinding.FragmentMyZzimBinding
+import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.decoration.VerticalItemDecoration
 import splitties.dimensions.dip
 
-class MyZzimFragment : Fragment() {
+class MyZzimFragment : BaseFragment() {
     private lateinit var binding: FragmentMyZzimBinding
     private val adapter by lazy { MyZzimAdapter(::itemClickListener, ::heartClickListener) }
     private val viewModel: MyZzimViewModel by viewModels()

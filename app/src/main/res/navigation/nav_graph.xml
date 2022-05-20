@@ -2,33 +2,31 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
-    app:startDestination="@id/mapFragment">
+    android:id="@+id/nav_graph">
 
     <fragment
-        tools:layout="@layout/fragment_sign_in"
         android:id="@+id/signInFragment"
         android:name="com.eundmswlji.tacoling.ui.sign_in.SignInFragment"
-        android:label="SignInFragment" >
+        android:label="SignInFragment"
+        tools:layout="@layout/fragment_sign_in">
         <action
-            android:id="@+id/action_signInFragment_to_mapFragment2"
-            app:destination="@id/mapFragment"
-            app:launchSingleTop="true" />
+            android:id="@+id/action_signInFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
     <fragment
-        tools:layout="@layout/fragment_map"
         android:id="@+id/mapFragment"
         android:name="com.eundmswlji.tacoling.ui.map.MapFragment"
-        android:label="MapFragment" >
+        android:label="MapFragment"
+        tools:layout="@layout/fragment_map">
         <action
             android:id="@+id/action_mapFragment_to_settingFragment"
             app:destination="@id/settingFragment" />
     </fragment>
     <fragment
-        tools:layout="@layout/fragment_setting"
         android:id="@+id/settingFragment"
         android:name="com.eundmswlji.tacoling.ui.setting.SettingFragment"
-        android:label="SettingFragment" >
+        android:label="SettingFragment"
+        tools:layout="@layout/fragment_setting">
         <action
             android:id="@+id/action_settingFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
@@ -37,19 +35,19 @@
             app:destination="@id/myZzimFragment" />
     </fragment>
     <fragment
-        tools:layout="@layout/fragment_my_zzim"
         android:id="@+id/myZzimFragment"
         android:name="com.eundmswlji.tacoling.ui.setting.my_zzim.MyZzimFragment"
-        android:label="MyZzimFragment" >
+        android:label="MyZzimFragment"
+        tools:layout="@layout/fragment_my_zzim">
         <action
             android:id="@+id/action_myZzimFragment_to_shopFragment"
             app:destination="@id/shopFragment" />
     </fragment>
     <fragment
-        tools:layout="@layout/fragment_shop"
         android:id="@+id/shopFragment"
         android:name="com.eundmswlji.tacoling.ui.shop.ShopFragment"
-        android:label="ShopFragment" />
+        android:label="ShopFragment"
+        tools:layout="@layout/fragment_shop" />
 
 
 </navigation>

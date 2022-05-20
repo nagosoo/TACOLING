@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.eundmswlji.tacoling.data.model.Menu
 import com.eundmswlji.tacoling.databinding.FragmentShopBinding
+import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.decoration.VerticalItemDecoration
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
@@ -17,7 +18,7 @@ import net.daum.mf.map.api.MapView
 import splitties.dimensions.dip
 
 
-class ShopFragment : Fragment() {
+class ShopFragment : BaseFragment() {
     private lateinit var binding: FragmentShopBinding
     private lateinit var mapView: MapView
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,13 +20,14 @@ import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.Util
 import com.eundmswlji.tacoling.data.repository.JusoRepository
 import com.eundmswlji.tacoling.databinding.FragmentSettingBinding
+import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
 import splitties.dimensions.dip
 import javax.inject.Inject
 
 
-class SettingFragment : Fragment(), View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+class SettingFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     @Inject
     lateinit var jusoRepository: JusoRepository
     private lateinit var binding: FragmentSettingBinding

@@ -9,13 +9,14 @@ import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.Util.toast
 import com.eundmswlji.tacoling.databinding.FragmentSignInBinding
+import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 
-class SignInFragment : Fragment() {
+class SignInFragment : BaseFragment() {
     private lateinit var binding: FragmentSignInBinding
 
     override fun onCreateView(
