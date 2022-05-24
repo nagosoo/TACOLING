@@ -5,6 +5,7 @@ import android.content.Intent
 import android.location.LocationManager
 import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.common.GooglePlayServicesUtil
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 
@@ -20,6 +21,7 @@ object MapUtil {
     }
 
     fun checkGPS(context: Context) {
+        //Todo :: gps 처리
         val lm = context.getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
         if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
