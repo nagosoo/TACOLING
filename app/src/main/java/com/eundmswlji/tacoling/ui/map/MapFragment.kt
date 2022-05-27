@@ -1,8 +1,6 @@
 package com.eundmswlji.tacoling.ui.map
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,14 +10,12 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import com.eundmswlji.tacoling.EventObserver
-import com.eundmswlji.tacoling.MapUtil.checkGPS
 import com.eundmswlji.tacoling.MapUtil.getMapPOIItem
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.Util
@@ -28,7 +24,10 @@ import com.eundmswlji.tacoling.Util.toast
 import com.eundmswlji.tacoling.databinding.FragmentMapBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
-import com.eundmswlji.tacoling.ui.dialog.NormalDialog
+import com.eundmswlji.tacoling.ui.map.LocationPermissionUtil.checkGPS
+import com.eundmswlji.tacoling.ui.map.LocationPermissionUtil.checkLocationPermission
+import com.eundmswlji.tacoling.ui.map.LocationPermissionUtil.onlyCheckPermissions
+import com.eundmswlji.tacoling.ui.map.LocationPermissionUtil.requestPermission
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -40,17 +39,17 @@ import java.util.*
 import kotlin.math.abs
 import kotlin.math.pow
 
-
 @AndroidEntryPoint
 class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.CurrentLocationEventListener {
 
     private lateinit var binding: FragmentMapBinding
-    private lateinit var locationResultLauncher: ActivityResultLauncher<Array<String>>
-    private var job: Job? = null
     private val viewModel: MapViewModel by viewModels()
+    private var job: Job? = null
     private lateinit var mapView: MapView
     private val adapter by lazy { MapAdapter(::itemClickListener) }
     private val sharedPref by lazy { requireActivity().getPreferences(Context.MODE_PRIVATE) }
+    private lateinit var locationResultLauncher: ActivityResultLauncher<Array<String>>
+
     val mapPOIItem = mutableListOf<MapPOIItem>()
 
     override fun onCreateView(
@@ -67,6 +66,18 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (requireActivity() as? MainActivity)?.showBottomNav()
+        initMap()
+        initDays()
+        requestPermission(sharedPref, requireContext(), ::trackingModeOn)
+        setRecyclerView()
+        setOnClickListener()
+        setObserver()
+        test()
+    }
+
+    fun setLocationResultLauncher(): ActivityResultLauncher<Array<String>> {
         locationResultLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
@@ -74,26 +85,7 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
                 trackingModeOn()
             }
         }
-        (requireActivity() as? MainActivity)?.showBottomNav()
-        initMap()
-        initDays()
-        requestPermission()
-        setRecyclerView()
-        setOnClickListener()
-        setObserver()
-        test()
-    }
-
-    private fun requestPermission() {
-        val doneFirstRequest = sharedPref.getBoolean("firstRequest", false)
-        if (!doneFirstRequest) {//앱 처음 사용시 무조건 퍼미션을 요청한다.
-            applyFirstRequest()
-            turnOnLocationPermission()
-        } else { // 앱 처음 사용이 아니면, 퍼미션 허락 되어있을 때만 tracking 하고, 따로 퍼미션 요청 메시지는 띄우지 x
-            if (onlyCheckPermissions()) {
-                trackingModeOn()
-            }
-        }
+        return locationResultLauncher
     }
 
     private fun setObserver() {
@@ -143,8 +135,8 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
 
     private fun setOnClickListener() {
         binding.buttonMyLocation.setOnClickListener {
-            checkGPSOn()
-            checkLocationPermission()
+            checkGPS(requireContext())
+            checkLocationPermission(childFragmentManager, requireActivity())
         }
 
         val debounce = Util.debounce<String>(coroutineScope = lifecycleScope) { query ->
@@ -192,62 +184,8 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
 
     }
 
-    private fun checkLocationPermission() {
-        when {
-            (shouldShowRationale()) -> {
-                NormalDialog(
-                    title = "위치권한 설정",
-                    message = "내 주변의 타코야키 트럭을 찾기 위해 위치권한을 허용해주세요.",
-                    positiveMessage = "네",
-                    negativeMessage = "아니요",
-                    positiveButtonListener = ::turnOnLocationPermission
-                ).show(
-                    childFragmentManager,
-                    null
-                )
-            }
-            else -> {
-                // You can directly ask for the permission.
-                // The registered ActivityResultCallback gets the result of this request.
-                turnOnLocationPermission()
-            }
-        }
-    }
-
-    private fun shouldShowRationale(): Boolean {
-        //사용자가 권한 요청을 명시적으로 거부한 경우 true를 반환한다.
-        //사용자가 권한 요청을 처음 보거나, 다시 묻지 않음 선택한 경우, 권한을 허용한 경우 false를 반환한다.
-        return shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) || shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
-    }
-
-    private fun turnOnLocationPermission() {
-        locationResultLauncher.launch(
-            arrayOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        )
-    }
-
-    private fun onlyCheckPermissions(): Boolean {
-        val coarsePermissionGranted = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        val finePermissionGranted = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        return coarsePermissionGranted && finePermissionGranted
-    }
-
-    private fun checkGPSOn() {
-        checkGPS(requireContext())
-    }
-
-    private fun applyFirstRequest() {
-        with(sharedPref.edit()) {
-            this.putBoolean("firstRequest", true)
-            apply()
-        }
-    }
-
     private fun trackingModeOff() {
-        if (!onlyCheckPermissions()) return
+        if (!onlyCheckPermissions(requireContext())) return
         mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
     }
 
@@ -292,7 +230,7 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
 
     override fun onResume() {
         super.onResume()
-        checkGPSOn()
+        checkGPS(requireContext())
     }
 
     override fun onDestroyView() {

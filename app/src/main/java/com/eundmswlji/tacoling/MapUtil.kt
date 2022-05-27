@@ -1,11 +1,5 @@
 package com.eundmswlji.tacoling
 
-import android.content.Context
-import android.content.Intent
-import android.location.LocationManager
-import android.provider.Settings
-import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.common.GooglePlayServicesUtil
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 
@@ -17,15 +11,6 @@ object MapUtil {
             this.markerType = MapPOIItem.MarkerType.CustomImage
             this.customImageResourceId = R.drawable.ic_takoyaki
             this.isShowDisclosureButtonOnCalloutBalloon = false
-        }
-    }
-
-    fun checkGPS(context: Context) {
-        //Todo :: gps 처리
-        val lm = context.getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
-        if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-            context.startActivity(intent)
         }
     }
 
