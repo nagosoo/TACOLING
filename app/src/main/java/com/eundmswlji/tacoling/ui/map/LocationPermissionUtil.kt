@@ -12,6 +12,9 @@ import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import com.eundmswlji.tacoling.MainApplication
+import com.eundmswlji.tacoling.MainApplication.Companion.sp
+import com.eundmswlji.tacoling.SharedPreferencesUtil
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
 
 object LocationPermissionUtil {
@@ -53,9 +56,9 @@ object LocationPermissionUtil {
         return coarsePermissionGranted && finePermissionGranted
     }
 
-    fun requestPermission(sp: SharedPreferences, requireContext: Context, callBack: () -> Unit) {
-        if (!doneFirstRequest(sp)) {//앱 처음 사용시 무조건 퍼미션을 요청한다.
-            applyFirstRequest(sp)
+    fun requestPermission(requireContext: Context, callBack: () -> Unit) {
+        if (!doneFirstRequest()) {//앱 처음 사용시 무조건 퍼미션을 요청한다.
+            applyFirstRequest()
             turnOnLocationPermission()
         } else { // 앱 처음 사용이 아니면, 퍼미션 허락 되어있을 때만 tracking 하고, 따로 퍼미션 요청 메시지는 띄우지 x
             if (onlyCheckPermissions(requireContext)) {
@@ -80,13 +83,10 @@ object LocationPermissionUtil {
         )
     }
 
-    private fun doneFirstRequest(sp: SharedPreferences): Boolean =
+    private fun doneFirstRequest(): Boolean =
         sp.getBoolean("firstRequest", false)
 
-    private fun applyFirstRequest(sp: SharedPreferences) {
-        with(sp.edit()) {
-            this.putBoolean("firstRequest", true)
-            apply()
-        }
+    private fun applyFirstRequest() {
+        sp.setBoolean("firstRequest", true)
     }
 }

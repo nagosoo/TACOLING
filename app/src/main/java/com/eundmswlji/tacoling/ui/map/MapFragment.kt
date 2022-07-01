@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import com.eundmswlji.tacoling.EventObserver
+import com.eundmswlji.tacoling.MainApplication
 import com.eundmswlji.tacoling.MapUtil.getMapPOIItem
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.Util
@@ -47,7 +48,6 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
     private var job: Job? = null
     private lateinit var mapView: MapView
     private val adapter by lazy { MapAdapter(::itemClickListener) }
-    private val sharedPref by lazy { requireActivity().getPreferences(Context.MODE_PRIVATE) }
     private lateinit var locationResultLauncher: ActivityResultLauncher<Array<String>>
 
     val mapPOIItem = mutableListOf<MapPOIItem>()
@@ -70,7 +70,7 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
         (requireActivity() as? MainActivity)?.showBottomNav()
         initMap()
         initDays()
-        requestPermission(sharedPref, requireContext(), ::trackingModeOn)
+        requestPermission(requireContext(), ::trackingModeOn)
         setRecyclerView()
         setOnClickListener()
         setObserver()
