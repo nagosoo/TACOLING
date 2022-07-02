@@ -3,7 +3,6 @@ package com.eundmswlji.tacoling.ui.map
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.provider.Settings
@@ -12,9 +11,7 @@ import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
-import com.eundmswlji.tacoling.MainApplication
 import com.eundmswlji.tacoling.MainApplication.Companion.sp
-import com.eundmswlji.tacoling.SharedPreferencesUtil
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
 
 object LocationPermissionUtil {

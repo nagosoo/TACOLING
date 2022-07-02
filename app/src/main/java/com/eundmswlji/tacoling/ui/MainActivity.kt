@@ -6,8 +6,6 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isGone
@@ -16,7 +14,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.eundmswlji.tacoling.R
-import com.eundmswlji.tacoling.Util.toast
+import com.eundmswlji.tacoling.util.Util.toast
 import com.eundmswlji.tacoling.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationBarView
 import com.kakao.sdk.auth.AuthApiClient

@@ -2,6 +2,7 @@ package com.eundmswlji.tacoling
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.eundmswlji.tacoling.util.SharedPreferencesUtil
 import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.HiltAndroidApp
 

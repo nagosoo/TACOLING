@@ -1,6 +1,5 @@
 package com.eundmswlji.tacoling.ui.map
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,12 +15,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import com.eundmswlji.tacoling.EventObserver
-import com.eundmswlji.tacoling.MainApplication
 import com.eundmswlji.tacoling.MapUtil.getMapPOIItem
 import com.eundmswlji.tacoling.R
-import com.eundmswlji.tacoling.Util
-import com.eundmswlji.tacoling.Util.hideKeyboard
-import com.eundmswlji.tacoling.Util.toast
+import com.eundmswlji.tacoling.util.Util
+import com.eundmswlji.tacoling.util.Util.hideKeyboard
+import com.eundmswlji.tacoling.util.Util.toast
 import com.eundmswlji.tacoling.databinding.FragmentMapBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity

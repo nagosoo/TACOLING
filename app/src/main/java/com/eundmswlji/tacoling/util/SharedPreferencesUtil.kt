@@ -1,4 +1,4 @@
-package com.eundmswlji.tacoling
+package com.eundmswlji.tacoling.util
 
 import android.content.Context
 import android.content.SharedPreferences

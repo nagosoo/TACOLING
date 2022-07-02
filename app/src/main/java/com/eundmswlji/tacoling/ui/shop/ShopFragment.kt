@@ -13,8 +13,8 @@ import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.decoration.VerticalItemDecoration
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
 import com.eundmswlji.tacoling.ui.dialog.ShareDialog
+import com.eundmswlji.tacoling.util.Util.dp
 import net.daum.mf.map.api.MapView
-import splitties.dimensions.dip
 
 
 class ShopFragment : BaseFragment() {
@@ -72,7 +72,7 @@ class ShopFragment : BaseFragment() {
     private fun initMenu() {
         val adapter = ShopAdapter(listOf(Menu(id = 0, name = "타코야키 8알(기본맛, 매운맛)", detail = "", price = 3000), Menu(id = 0, name = "타코야키 8알(기본맛, 매운맛)", detail = "", price = 3000)))
         binding.shopBottom.recyclerView.adapter = adapter
-        binding.shopBottom.recyclerView.addItemDecoration(VerticalItemDecoration(requireContext().dip(16), requireContext().dip(16), requireContext().dip(8), 0, 0))
+        binding.shopBottom.recyclerView.addItemDecoration(VerticalItemDecoration(requireContext().dp(16), requireContext().dp(16), requireContext().dp(8), 0, 0))
     }
 
     private fun setAppBar() {

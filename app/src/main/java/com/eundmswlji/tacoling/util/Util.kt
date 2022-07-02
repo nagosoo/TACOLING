@@ -1,9 +1,11 @@
-package com.eundmswlji.tacoling
+package com.eundmswlji.tacoling.util
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.text.Html
+import android.util.DisplayMetrics
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -12,7 +14,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okhttp3.internal.format
 import java.text.DecimalFormat
 
 
@@ -24,6 +25,11 @@ object Util {
 
     fun Activity.toast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    fun Context.dp(px: Int): Int {
+        val metrics = resources.displayMetrics
+        return px / (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT).toInt()
     }
 
     fun <T> debounce(

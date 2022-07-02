@@ -13,7 +13,7 @@ import com.eundmswlji.tacoling.databinding.FragmentMyZzimBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.decoration.VerticalItemDecoration
-import splitties.dimensions.dip
+import com.eundmswlji.tacoling.util.Util.dp
 
 class MyZzimFragment : BaseFragment() {
     private lateinit var binding: FragmentMyZzimBinding
@@ -45,7 +45,7 @@ class MyZzimFragment : BaseFragment() {
 
     private fun setAdapter() {
         binding.recyclerView.adapter = adapter
-        val itemDecoration = VerticalItemDecoration(top = requireContext().dip(30), bottom = 0, between = requireContext().dip(12), left = 0, right = 0)
+        val itemDecoration = VerticalItemDecoration(top = requireContext().dp(30), bottom = 0, between = requireContext().dp(12), left = 0, right = 0)
         binding.recyclerView.addItemDecoration(itemDecoration)
     }
 

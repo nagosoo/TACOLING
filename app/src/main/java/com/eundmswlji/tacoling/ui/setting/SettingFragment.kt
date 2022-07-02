@@ -9,21 +9,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.text.HtmlCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.BuildConfig
 import com.eundmswlji.tacoling.R
-import com.eundmswlji.tacoling.Util
+import com.eundmswlji.tacoling.util.Util
 import com.eundmswlji.tacoling.data.repository.JusoRepository
 import com.eundmswlji.tacoling.databinding.FragmentSettingBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
-import splitties.dimensions.dip
+import com.eundmswlji.tacoling.util.Util.dp
 import javax.inject.Inject
 
 
@@ -99,7 +96,7 @@ class SettingFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnC
         val message = Html.fromHtml(
             "정말 탈퇴하시겠습니까? <img src=\"ic_taco\"> ${String(Character.toChars(0x1F4A6))}",
             HtmlCompat.FROM_HTML_MODE_COMPACT,
-            Util.ImageGetter(requireContext(), requireContext().dip(17), requireContext().dip(17)),
+            Util.ImageGetter(requireContext(), requireContext().dp(17), requireContext().dp(17)),
             null
         )
         NormalDialog(title = "탈퇴", spannedMessage = message, positiveMessage = "네", negativeMessage = "아니요", positiveButtonListener = {}).show(childFragmentManager, null)

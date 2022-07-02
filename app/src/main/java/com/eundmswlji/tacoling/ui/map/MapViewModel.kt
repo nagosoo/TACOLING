@@ -1,6 +1,5 @@
 package com.eundmswlji.tacoling.ui.map
 
-import android.app.Activity
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +9,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.eundmswlji.tacoling.BuildConfig
 import com.eundmswlji.tacoling.Event
-import com.eundmswlji.tacoling.Util.toast
 import com.eundmswlji.tacoling.data.model.Document
 import com.eundmswlji.tacoling.data.repository.JusoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

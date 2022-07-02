@@ -3,7 +3,7 @@ package com.eundmswlji.tacoling.ui.shop
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.eundmswlji.tacoling.Util.wonFormat
+import com.eundmswlji.tacoling.util.Util.wonFormat
 import com.eundmswlji.tacoling.data.model.Menu
 import com.eundmswlji.tacoling.databinding.ItemMenuBinding
 
