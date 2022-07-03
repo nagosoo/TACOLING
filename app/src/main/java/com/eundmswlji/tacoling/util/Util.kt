@@ -2,10 +2,8 @@ package com.eundmswlji.tacoling.util
 
 import android.app.Activity
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.text.Html
-import android.util.DisplayMetrics
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -28,8 +26,8 @@ object Util {
     }
 
     fun Context.dp(px: Int): Int {
-        val metrics = resources.displayMetrics
-        return px / (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT).toInt()
+        val density = resources.displayMetrics.density
+        return (px / density).toInt()
     }
 
     fun <T> debounce(

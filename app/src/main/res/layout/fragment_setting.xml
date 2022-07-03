@@ -46,7 +46,7 @@
             android:textOff=""
             android:textOn=""
             android:thumb="@drawable/sw_thumb"
-            app:switchMinWidth="65dp"
+            app:switchMinWidth="55dp"
             app:track="@drawable/selector_sw" />
 
         <androidx.appcompat.widget.AppCompatButton
