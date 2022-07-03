@@ -86,8 +86,6 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2") //logging interceptor
     //gson
     implementation 'com.google.code.gson:gson:2.9.0'
-    //kakao login
-    implementation "com.kakao.sdk:v2-user:2.9.0"
     //ktx
     implementation "androidx.fragment:fragment-ktx:1.5.0"
     implementation "androidx.activity:activity-ktx:1.5.0"

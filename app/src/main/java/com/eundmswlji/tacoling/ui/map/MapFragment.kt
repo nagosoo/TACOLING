@@ -2,11 +2,11 @@ package com.eundmswlji.tacoling.ui.map
 
 import android.Manifest
 import android.content.Context
-import android.content.Intent
+import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -35,6 +35,10 @@ import com.eundmswlji.tacoling.util.MapUtil.getMapPOIItem
 import com.eundmswlji.tacoling.util.Util
 import com.eundmswlji.tacoling.util.Util.hideKeyboard
 import com.eundmswlji.tacoling.util.Util.toast
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -45,6 +49,7 @@ import net.daum.mf.map.api.MapView
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.pow
+
 
 @AndroidEntryPoint
 class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.CurrentLocationEventListener {
@@ -182,24 +187,23 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
             getJusoFromGeoCord(centerPoint)
             setPOIItemsIn3Km(centerPoint)
         }
-
     }
 
     private fun trackingModeOff() {
         if (!onlyCheckPermissions(requireContext())) return
-        try {
-            mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
-        } catch (e: NullPointerException) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             toast("안드로이드 12 이상 버전에서는 내 위치 찾기 기능을 지원하지 않습니다.")
+        } else {
+            mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
         }
     }
 
     private fun trackingModeOn() {
         if (!onlyCheckPermissions(requireContext())) return
-        try {
-            mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
-        } catch (e: NullPointerException) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             toast("안드로이드 12 이상 버전에서는 내 위치 찾기 기능을 지원하지 않습니다.")
+        } else {
+            mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
         }
     }
 
@@ -279,11 +283,9 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
     }
 
     private fun checkGPS(context: Context) {
-        //Todo :: gps 처리
         val lm = context.getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
         if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-            context.startActivity(intent)
+            turnOnGPS()
         }
     }
 
@@ -340,4 +342,30 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
         MainApplication.sp.setBoolean("firstRequest", true)
     }
 
+    private fun turnOnGPS() {
+        requireActivity().let {
+            val locationRequest = LocationRequest.create()
+            locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+
+            val builder = LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest)
+
+            val task = LocationServices.getSettingsClient(it)
+                .checkLocationSettings(builder.build())
+
+            //gps 꺼져 있을 때
+            task.addOnFailureListener { e ->
+                if (e is ResolvableApiException) {
+                    try {
+                        //다이어로그 띄움
+                        e.startResolutionForResult(
+                            it,
+                            999
+                        )
+                    } catch (sendEx: IntentSender.SendIntentException) {
+                    }
+                }
+            }
+        }
+    }
 }
