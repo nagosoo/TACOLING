@@ -2,6 +2,7 @@ package com.eundmswlji.tacoling.ui
 
 import android.content.Context
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.ui.map.MapFragment
@@ -31,4 +32,5 @@ open class BaseFragment : Fragment() {
         super.onDetach()
         callback.remove()
     }
+
 }

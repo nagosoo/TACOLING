@@ -1,5 +1,6 @@
-package com.eundmswlji.tacoling
+package com.eundmswlji.tacoling.util
 
+import com.eundmswlji.tacoling.R
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 

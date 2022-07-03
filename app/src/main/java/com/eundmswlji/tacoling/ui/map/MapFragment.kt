@@ -1,32 +1,40 @@
 package com.eundmswlji.tacoling.ui.map
 
+import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import com.eundmswlji.tacoling.EventObserver
-import com.eundmswlji.tacoling.MapUtil.getMapPOIItem
+import com.eundmswlji.tacoling.MainApplication
 import com.eundmswlji.tacoling.R
-import com.eundmswlji.tacoling.util.Util
-import com.eundmswlji.tacoling.util.Util.hideKeyboard
-import com.eundmswlji.tacoling.util.Util.toast
 import com.eundmswlji.tacoling.databinding.FragmentMapBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
-import com.eundmswlji.tacoling.ui.map.LocationPermissionUtil.checkGPS
-import com.eundmswlji.tacoling.ui.map.LocationPermissionUtil.checkLocationPermission
-import com.eundmswlji.tacoling.ui.map.LocationPermissionUtil.onlyCheckPermissions
-import com.eundmswlji.tacoling.ui.map.LocationPermissionUtil.requestPermission
+import com.eundmswlji.tacoling.ui.dialog.NormalDialog
+import com.eundmswlji.tacoling.util.MapUtil.getMapPOIItem
+import com.eundmswlji.tacoling.util.Util
+import com.eundmswlji.tacoling.util.Util.hideKeyboard
+import com.eundmswlji.tacoling.util.Util.toast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -46,9 +54,16 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
     private var job: Job? = null
     private lateinit var mapView: MapView
     private val adapter by lazy { MapAdapter(::itemClickListener) }
-    private lateinit var locationResultLauncher: ActivityResultLauncher<Array<String>>
 
-    val mapPOIItem = mutableListOf<MapPOIItem>()
+    private val mapPOIItem = mutableListOf<MapPOIItem>()
+
+    private val locationResultLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (!permissions.values.contains(false)) {
+            trackingModeOn()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,26 +79,14 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         (requireActivity() as? MainActivity)?.showBottomNav()
         initMap()
         initDays()
-        requestPermission(requireContext(), ::trackingModeOn)
         setRecyclerView()
         setOnClickListener()
         setObserver()
         test()
-    }
-
-    fun setLocationResultLauncher(): ActivityResultLauncher<Array<String>> {
-        locationResultLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) { permissions ->
-            if (!permissions.values.contains(false)) {
-                trackingModeOn()
-            }
-        }
-        return locationResultLauncher
+        requestPermission(requireContext(), ::trackingModeOn)
     }
 
     private fun setObserver() {
@@ -184,11 +187,20 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
 
     private fun trackingModeOff() {
         if (!onlyCheckPermissions(requireContext())) return
-        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
+        try {
+            mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
+        } catch (e: NullPointerException) {
+            toast("안드로이드 12 이상 버전에서는 내 위치 찾기 기능을 지원하지 않습니다.")
+        }
     }
 
     private fun trackingModeOn() {
-        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
+        if (!onlyCheckPermissions(requireContext())) return
+        try {
+            mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
+        } catch (e: NullPointerException) {
+            toast("안드로이드 12 이상 버전에서는 내 위치 찾기 기능을 지원하지 않습니다.")
+        }
     }
 
     private fun getJusoFromGeoCord(mapPoint: MapPoint?) {
@@ -255,5 +267,77 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
     override fun onMapViewDragEnded(p0: MapView?, p1: MapPoint?) {}
 
     override fun onMapViewMoveFinished(p0: MapView?, p1: MapPoint?) {}
+
+    //위치권한 관련
+    private fun turnOnLocationPermission() {
+        locationResultLauncher.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        )
+    }
+
+    private fun checkGPS(context: Context) {
+        //Todo :: gps 처리
+        val lm = context.getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
+        if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+            context.startActivity(intent)
+        }
+    }
+
+    private fun checkLocationPermission(fm: FragmentManager, requireActivity: FragmentActivity) {
+        when {
+            (shouldShowRationale(requireActivity)) -> {
+                NormalDialog(
+                    title = "위치권한 설정",
+                    message = "내 주변의 타코야키 트럭을 찾기 위해 위치권한을 허용해주세요.",
+                    positiveMessage = "네",
+                    negativeMessage = "아니요",
+                    positiveButtonListener = { turnOnLocationPermission() }
+                ).show(
+                    fm,
+                    null
+                )
+            }
+            else -> {
+                // You can directly ask for the permission.
+                // The registered ActivityResultCallback gets the result of this request.
+                turnOnLocationPermission()
+            }
+        }
+    }
+
+    private fun onlyCheckPermissions(requireContext: Context): Boolean {
+        val coarsePermissionGranted = ContextCompat.checkSelfPermission(requireContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val finePermissionGranted = ContextCompat.checkSelfPermission(requireContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return coarsePermissionGranted && finePermissionGranted
+    }
+
+    private fun requestPermission(requireContext: Context, callBack: () -> Unit) {
+        if (!doneFirstRequest()) {//앱 처음 사용시 무조건 퍼미션을 요청한다.
+            applyFirstRequest()
+            turnOnLocationPermission()
+        } else { // 앱 처음 사용이 아니면, 퍼미션 허락 되어있을 때만 tracking 하고, 따로 퍼미션 요청 메시지는 띄우지 x
+            if (onlyCheckPermissions(requireContext)) {
+                callBack()
+            }
+        }
+    }
+
+    private fun shouldShowRationale(requireActivity: FragmentActivity): Boolean {
+        //사용자가 권한 요청을 명시적으로 거부한 경우 true를 반환한다.
+        //사용자가 권한 요청을 처음 보거나, 다시 묻지 않음 선택한 경우, 권한을 허용한 경우 false를 반환한다.
+        return ActivityCompat.shouldShowRequestPermissionRationale(requireActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
+                || ActivityCompat.shouldShowRequestPermissionRationale(requireActivity, Manifest.permission.ACCESS_FINE_LOCATION)
+    }
+
+    private fun doneFirstRequest(): Boolean =
+        MainApplication.sp.getBoolean("firstRequest", false)
+
+    private fun applyFirstRequest() {
+        MainApplication.sp.setBoolean("firstRequest", true)
+    }
 
 }
