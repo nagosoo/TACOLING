@@ -191,20 +191,12 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
 
     private fun trackingModeOff() {
         if (!onlyCheckPermissions(requireContext())) return
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            toast("안드로이드 12 이상 버전에서는 내 위치 찾기 기능을 지원하지 않습니다.")
-        } else {
-            mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
-        }
+        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
     }
 
     private fun trackingModeOn() {
         if (!onlyCheckPermissions(requireContext())) return
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            toast("안드로이드 12 이상 버전에서는 내 위치 찾기 기능을 지원하지 않습니다.")
-        } else {
-            mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
-        }
+        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
     }
 
     private fun getJusoFromGeoCord(mapPoint: MapPoint?) {
