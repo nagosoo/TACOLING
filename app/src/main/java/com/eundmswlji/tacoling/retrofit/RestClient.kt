@@ -1,6 +1,7 @@
 package com.eundmswlji.tacoling.retrofit
 
 import com.eundmswlji.tacoling.retrofit.interceptor.AuthorizationInterceptor
+import com.eundmswlji.tacoling.retrofit.interceptor.UserAgentInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -11,6 +12,7 @@ import javax.inject.Inject
 class RestClient @Inject constructor() {
     private val httpLoggingInterceptor: HttpLoggingInterceptor by lazy { HttpLoggingInterceptor() }
     private val authorizationInterceptor: AuthorizationInterceptor by lazy { AuthorizationInterceptor() }
+    private val userAgentInterceptor: UserAgentInterceptor by lazy { UserAgentInterceptor() }
 
     fun getRetrofitBuilder(baseurl: String): Retrofit {
         return Retrofit.Builder().baseUrl(baseurl)
@@ -29,6 +31,7 @@ class RestClient @Inject constructor() {
                     level = HttpLoggingInterceptor.Level.BODY
                 })
                 add(authorizationInterceptor)
+                add(userAgentInterceptor)
             }
         }.build()
     }
