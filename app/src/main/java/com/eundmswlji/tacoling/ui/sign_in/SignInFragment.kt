@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.R
-import com.eundmswlji.tacoling.util.Util.toast
 import com.eundmswlji.tacoling.databinding.FragmentSignInBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
+import com.eundmswlji.tacoling.util.Util.toast
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
@@ -57,7 +57,10 @@ class SignInFragment : BaseFragment() {
                         }
 
                         // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
-                        UserApiClient.instance.loginWithKakaoAccount(requireContext(), callback = callback)
+                        UserApiClient.instance.loginWithKakaoAccount(
+                            requireContext(),
+                            callback = callback
+                        )
                     } else if (token != null) {
                         findNavController().navigate(R.id.mapFragment)
                     }

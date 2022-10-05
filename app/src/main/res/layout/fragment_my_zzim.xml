@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.eundmswlji.tacoling.ui.setting.my_zzim.MyZzimViewModel" />
+            type="com.eundmswlji.tacoling.ui.setting.my_liked.MyLikedViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +25,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appBar"
-            app:myZzimList="@{viewModel.myZzimList}"
+            app:myLikedList="@{viewModel.myLikedList}"
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

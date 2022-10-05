@@ -9,5 +9,5 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 @InstallIn(ActivityRetainedComponent::class)
 abstract class DataSourceModule {
     @Binds
-    abstract fun bindJusoDataSource(jusoDataSourceImpl: JusoDataSourceImpl): JusoDatasource
+    abstract fun bindAddressDataSource(addressDataSourceImpl: AddressDataSourceImpl): AddressDatasource
 }

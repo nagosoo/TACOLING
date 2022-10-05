@@ -6,7 +6,6 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isGone
@@ -76,9 +75,9 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         }
     }
 
-    private fun setNavGraph(isAlreadyLogin: Boolean) {
+    private fun setNavGraph(doneLogin: Boolean) {
         val navGraph = navController.navInflater.inflate(R.navigation.nav_graph) // app:navGraph="@navigation/nav_graph" 로 설정했던 것
-        if (isAlreadyLogin) navGraph.setStartDestination(R.id.mapFragment) //setStartDestination 설정
+        if (doneLogin) navGraph.setStartDestination(R.id.mapFragment) //setStartDestination 설정
         else navGraph.setStartDestination(R.id.signInFragment)
         navController.setGraph(navGraph, null) //navController에 graph 설정
     }

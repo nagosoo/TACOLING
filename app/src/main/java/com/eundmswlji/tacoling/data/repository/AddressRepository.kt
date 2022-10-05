@@ -6,7 +6,7 @@ import com.eundmswlji.tacoling.data.model.Juso
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
-interface JusoRepository {
-    suspend fun getJuso(query: String) : Flow<PagingData<Document>>
-    suspend fun apiGetJuso(query: String, size: Int, page: Int) : Response<Juso>
+interface AddressRepository {
+    suspend fun getAddress(query: String) : Flow<PagingData<Document>>
+    suspend fun apiGetAddress(query: String, size: Int, page: Int) : Response<Juso>
 }

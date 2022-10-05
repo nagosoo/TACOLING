@@ -2,5 +2,5 @@
     <string name="app_name">타코링</string>
     <string name="sweatEmoji">&#128166;</string>
     <string name="redHeartEmoji">&#10084;</string>
-    <string name="zzimWithRedHeart">단골가게로 찜 &#10084;</string>
+    <string name="LikedWithRedHeart">단골가게로 찜 &#10084;</string>
 </resources>

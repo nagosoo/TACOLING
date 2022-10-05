@@ -15,7 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.BuildConfig
 import com.eundmswlji.tacoling.R
-import com.eundmswlji.tacoling.data.repository.JusoRepository
+import com.eundmswlji.tacoling.data.repository.AddressRepository
 import com.eundmswlji.tacoling.databinding.FragmentSettingBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 class SettingFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     @Inject
-    lateinit var jusoRepository: JusoRepository
+    lateinit var addressRepository: AddressRepository
     private lateinit var binding: FragmentSettingBinding
     private val viewModel: SettingViewModel by viewModels()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

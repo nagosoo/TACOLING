@@ -11,14 +11,13 @@ import com.eundmswlji.tacoling.databinding.DialogNormalBinding
 
 class NormalDialog(
     private val title: String,
-    private val message: String?=null,
-    private val spannedMessage: Spanned?=null,
+    private val message: String? = null,
+    private val spannedMessage: Spanned? = null,
     private val positiveMessage: String,
     private val negativeMessage: String,
     private val positiveButtonListener: () -> (Unit),
     private val negativeButtonListener: (() -> (Unit))? = null
-) :
-    DialogFragment() {
+) : DialogFragment() {
     private lateinit var binding: DialogNormalBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

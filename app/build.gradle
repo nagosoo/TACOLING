@@ -5,21 +5,28 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 
+def Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
-    compileSdk 31
+    compileSdk 32
 
     buildFeatures { dataBinding = true }
 
+    def major = 1
+    def minor = 0
+    def patch = 0
+
     defaultConfig {
         buildConfigField "String", "baseUrl", '"https://dapi.kakao.com"'
-        buildConfigField "String", "appKey", '"563fe1f966e961f52948242b73c19cca"'
-        buildConfigField "String", "restKey", '"64e23bd337c873853926def07c5028fb"'
+        buildConfigField "String", "appKey", properties.getProperty("app.key")
+        buildConfigField "String", "restKey", properties.getProperty("rest.key")
 
         applicationId "com.eundmswlji.tacoling"
         minSdk 23
-        targetSdk 30
-        versionCode 1
-        versionName "1.0"
+        targetSdk 32
+        versionCode major * 100 + minor * 10 + patch
+        versionName "${major}.${minor}.${patch}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -39,15 +46,6 @@ android {
     }
     namespace 'com.eundmswlji.tacoling'
 
-    splits {
-        abi {
-            enable true
-            reset()
-            include 'x86', 'armeabi-v7a', 'x86_64'
-            universalApk true
-        }
-
-    }
 }
 
 dependencies {

@@ -36,7 +36,7 @@ class ShopFragment : BaseFragment() {
     }
 
     private fun setOnClickListener() {
-        binding.shopTop.buttonZzim.setOnClickListener {
+        binding.shopTop.buttonLike.setOnClickListener {
             // "단골가게 찜 해지" 더이상 가게의 상세 정보를 받지 않습니다.\n알림은 마이페이지에서 끌 수 있습니다. 찜 해지하기
             NormalDialog(
                 title = "단골가게 찜",

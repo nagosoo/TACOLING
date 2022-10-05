@@ -1,11 +1,5 @@
 package com.eundmswlji.tacoling.ui.map
 
-import android.Manifest
-import android.content.Context
-import android.content.IntentSender
-import android.content.pm.PackageManager
-import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,31 +8,28 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import com.eundmswlji.tacoling.EventObserver
-import com.eundmswlji.tacoling.MainApplication
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.databinding.FragmentMapBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
+import com.eundmswlji.tacoling.ui.dialog.NormalDialogFactory
+import com.eundmswlji.tacoling.ui.map.GpsPermissionUtil.checkGPS
+import com.eundmswlji.tacoling.ui.map.LocationPermissionUtil.onlyCheckPermissions
+import com.eundmswlji.tacoling.ui.map.LocationPermissionUtil.requestPermission
+import com.eundmswlji.tacoling.ui.map.LocationPermissionUtil.shouldShowRationale
+import com.eundmswlji.tacoling.ui.map.LocationPermissionUtil.launchLocationLauncher
+import com.eundmswlji.tacoling.util.MapUtil.geoToKm
 import com.eundmswlji.tacoling.util.MapUtil.getMapPOIItem
 import com.eundmswlji.tacoling.util.Util
 import com.eundmswlji.tacoling.util.Util.hideKeyboard
 import com.eundmswlji.tacoling.util.Util.toast
-import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -47,18 +38,26 @@ import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 import java.util.*
-import kotlin.math.abs
-import kotlin.math.pow
 
 
 @AndroidEntryPoint
-class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.CurrentLocationEventListener {
+class MapFragment : BaseFragment(), MapView.MapViewEventListener,
+    MapView.CurrentLocationEventListener {
 
     private lateinit var binding: FragmentMapBinding
     private val viewModel: MapViewModel by viewModels()
     private var job: Job? = null
     private lateinit var mapView: MapView
     private val adapter by lazy { MapAdapter(::itemClickListener) }
+    private val normalDialogFactory by lazy {
+        NormalDialogFactory(
+            title = "위치권한 설정",
+            message = "내 주변의 타코야키 트럭을 찾기 위해 위치권한을 허용해주세요.",
+            positiveMessage = "네",
+            negativeMessage = "아니요",
+            positiveButtonListener = { launchLocationLauncher(locationResultLauncher) }
+        )
+    }
 
     private val mapPOIItem = mutableListOf<MapPOIItem>()
 
@@ -83,6 +82,7 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        childFragmentManager.fragmentFactory = normalDialogFactory
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as? MainActivity)?.showBottomNav()
         initMap()
@@ -91,7 +91,7 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
         setOnClickListener()
         setObserver()
         test()
-        requestPermission(requireContext(), ::trackingModeOn)
+        requestPermission(requireContext(), ::trackingModeOn, locationResultLauncher)
     }
 
     private fun setObserver() {
@@ -100,12 +100,12 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
         })
 
         viewModel.currentAddress.observe(viewLifecycleOwner, EventObserver {
-            binding.tvJuso.editText.clearFocus()
+            binding.tvAddress.editText.clearFocus()
         })
     }
 
     private fun setRecyclerView() {
-        binding.tvJuso.recyclerView.adapter = adapter
+        binding.tvAddress.recyclerView.adapter = adapter
     }
 
     private fun test() {
@@ -121,8 +121,14 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
             setZoomLevel(2, true)
             setMapViewEventListener(this@MapFragment)
             setCurrentLocationEventListener(this@MapFragment)
-            setCustomCurrentLocationMarkerImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(30, 0))
-            setCustomCurrentLocationMarkerTrackingImage(R.drawable.ic_my_location, MapPOIItem.ImageOffset(30, 0))
+            setCustomCurrentLocationMarkerImage(
+                R.drawable.ic_my_location,
+                MapPOIItem.ImageOffset(30, 0)
+            )
+            setCustomCurrentLocationMarkerTrackingImage(
+                R.drawable.ic_my_location,
+                MapPOIItem.ImageOffset(30, 0)
+            )
         }
     }
 
@@ -133,47 +139,48 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
 
     private fun itemClickListener(x: Double, y: Double, address: String) {
         trackingModeOff()
-        binding.tvJuso.recyclerView.isVisible = false
-        viewModel.setCurrentJuso(address)
+        binding.tvAddress.recyclerView.isVisible = false
+        viewModel.setCurrentAddress(address)
         val mapPoint = MapPoint.mapPointWithGeoCoord(y, x)
         mapView.setMapCenterPoint(mapPoint, true)
     }
 
     private fun setOnClickListener() {
         binding.buttonMyLocation.setOnClickListener {
-            checkGPS(requireContext())
-            checkLocationPermission(childFragmentManager, requireActivity())
+            checkGPS(requireActivity())
+            checkLocationPermission()
         }
 
         val debounce = Util.debounce<String>(coroutineScope = lifecycleScope) { query ->
             job?.cancel()
             job = lifecycleScope.launch {
-                viewModel.getJuso(query).collectLatest {
+                viewModel.getAddress(query).collectLatest {
                     adapter.submitData(it)
                 }
             }
             lifecycleScope.launch {
                 adapter.loadStateFlow.collectLatest { loadState ->
-                    val isListEmpty = loadState.refresh is LoadState.NotLoading && adapter.itemCount == 0
+                    val isListEmpty =
+                        loadState.refresh is LoadState.NotLoading && adapter.itemCount == 0
                     binding.tvNoData.isVisible = isListEmpty
                 }
             }
         }
 
-        binding.tvJuso.editText.setOnFocusChangeListener { v, hasFocus ->
+        binding.tvAddress.editText.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
                 job?.cancel()
                 job = lifecycleScope.launch {
                     adapter.submitData(PagingData.empty())
                 }
-                binding.tvJuso.editText.setText("")
-                binding.tvJuso.recyclerView.isVisible = true
+                binding.tvAddress.editText.setText("")
+                binding.tvAddress.recyclerView.isVisible = true
             } else {
                 hideKeyboard(v)
             }
         }
 
-        binding.tvJuso.editText.addTextChangedListener(object : TextWatcher {
+        binding.tvAddress.editText.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(query: CharSequence?, start: Int, before: Int, count: Int) {
                 if (!query.isNullOrEmpty()) debounce(query.toString())
             }
@@ -184,7 +191,7 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
 
         binding.buttonResearch.setOnClickListener {
             val centerPoint = mapView.mapCenterPoint
-            getJusoFromGeoCord(centerPoint)
+            getAddressFromGeoCord(centerPoint)
             setPOIItemsIn3Km(centerPoint)
         }
     }
@@ -196,11 +203,12 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
 
     private fun trackingModeOn() {
         if (!onlyCheckPermissions(requireContext())) return
-        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
+        mapView.currentLocationTrackingMode =
+            MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
     }
 
-    private fun getJusoFromGeoCord(mapPoint: MapPoint?) {
-        viewModel.getJusoFromGeoCord(mapPoint, activity)
+    private fun getAddressFromGeoCord(mapPoint: MapPoint?) {
+        viewModel.getAddressFromGeoCord(mapPoint, activity)
     }
 
     private fun getMapPOIItemsIn3Km(currentPoint: MapPoint?): List<MapPOIItem> {
@@ -210,7 +218,7 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
         return mapPOIItem.filter {
             val itemLatitude = it.mapPoint.mapPointGeoCoord.latitude //위도
             val itemLongitude = it.mapPoint.mapPointGeoCoord.longitude //경도
-            val distance = abs(myLatitude - itemLatitude).times(110.574).pow(2) + abs(myLongitude - itemLongitude).times(111).pow(2)
+            val distance = geoToKm(myLatitude, itemLatitude, myLongitude, itemLongitude)
             distance <= 9 //현재위치에서 3km 이내인것 보여주기
         }
     }
@@ -226,7 +234,7 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
     }
 
     override fun onCurrentLocationUpdate(p0: MapView?, currentPoint: MapPoint?, p2: Float) {
-        getJusoFromGeoCord(currentPoint)
+        getAddressFromGeoCord(currentPoint)
         setPOIItemsIn3Km(currentPoint)
     }
 
@@ -236,7 +244,7 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
 
     override fun onResume() {
         super.onResume()
-        checkGPS(requireContext())
+        checkGPS(requireActivity())
     }
 
     override fun onDestroyView() {
@@ -264,100 +272,21 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener, MapView.Curren
 
     override fun onMapViewMoveFinished(p0: MapView?, p1: MapPoint?) {}
 
-    //위치권한 관련
-    private fun turnOnLocationPermission() {
-        locationResultLauncher.launch(
-            arrayOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        )
-    }
-
-    private fun checkGPS(context: Context) {
-        val lm = context.getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
-        if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            turnOnGPS()
-        }
-    }
-
-    private fun checkLocationPermission(fm: FragmentManager, requireActivity: FragmentActivity) {
+    private fun checkLocationPermission() {
         when {
-            (shouldShowRationale(requireActivity)) -> {
-                NormalDialog(
-                    title = "위치권한 설정",
-                    message = "내 주변의 타코야키 트럭을 찾기 위해 위치권한을 허용해주세요.",
-                    positiveMessage = "네",
-                    negativeMessage = "아니요",
-                    positiveButtonListener = { turnOnLocationPermission() }
-                ).show(
-                    fm,
-                    null
+            (shouldShowRationale(requireActivity())) -> {
+                //권한 요청을 이전에 거부 했을 시 , 다이어로그 띄움
+                childFragmentManager.fragmentFactory.instantiate(
+                    requireActivity().classLoader,
+                    NormalDialog::class.java.name
                 )
             }
             else -> {
                 // You can directly ask for the permission.
                 // The registered ActivityResultCallback gets the result of this request.
-                turnOnLocationPermission()
+                launchLocationLauncher(locationResultLauncher)
             }
         }
     }
 
-    private fun onlyCheckPermissions(requireContext: Context): Boolean {
-        val coarsePermissionGranted = ContextCompat.checkSelfPermission(requireContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        val finePermissionGranted = ContextCompat.checkSelfPermission(requireContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        return coarsePermissionGranted && finePermissionGranted
-    }
-
-    private fun requestPermission(requireContext: Context, callBack: () -> Unit) {
-        if (!doneFirstRequest()) {//앱 처음 사용시 무조건 퍼미션을 요청한다.
-            applyFirstRequest()
-            turnOnLocationPermission()
-        } else { // 앱 처음 사용이 아니면, 퍼미션 허락 되어있을 때만 tracking 하고, 따로 퍼미션 요청 메시지는 띄우지 x
-            if (onlyCheckPermissions(requireContext)) {
-                callBack()
-            }
-        }
-    }
-
-    private fun shouldShowRationale(requireActivity: FragmentActivity): Boolean {
-        //사용자가 권한 요청을 명시적으로 거부한 경우 true를 반환한다.
-        //사용자가 권한 요청을 처음 보거나, 다시 묻지 않음 선택한 경우, 권한을 허용한 경우 false를 반환한다.
-        return ActivityCompat.shouldShowRequestPermissionRationale(requireActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
-                || ActivityCompat.shouldShowRequestPermissionRationale(requireActivity, Manifest.permission.ACCESS_FINE_LOCATION)
-    }
-
-    private fun doneFirstRequest(): Boolean =
-        MainApplication.sp.getBoolean("firstRequest", false)
-
-    private fun applyFirstRequest() {
-        MainApplication.sp.setBoolean("firstRequest", true)
-    }
-
-    private fun turnOnGPS() {
-        requireActivity().let {
-            val locationRequest = LocationRequest.create()
-            locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-
-            val builder = LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest)
-
-            val task = LocationServices.getSettingsClient(it)
-                .checkLocationSettings(builder.build())
-
-            //gps 꺼져 있을 때
-            task.addOnFailureListener { e ->
-                if (e is ResolvableApiException) {
-                    try {
-                        //다이어로그 띄움
-                        e.startResolutionForResult(
-                            it,
-                            999
-                        )
-                    } catch (sendEx: IntentSender.SendIntentException) {
-                    }
-                }
-            }
-        }
-    }
 }

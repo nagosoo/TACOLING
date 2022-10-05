@@ -7,9 +7,10 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.eundmswlji.tacoling.data.model.Document
-import com.eundmswlji.tacoling.databinding.ItemJusoBinding
+import com.eundmswlji.tacoling.databinding.ItemAddressBinding
 
-class MapAdapter(private val clickListener: (x: Double, y: Double, address:String) -> (Unit)) : PagingDataAdapter<Document, MapAdapter.MyViewHolder>(DIFF_CALLBACK) {
+class MapAdapter(private val clickListener: (x: Double, y: Double, address: String) -> (Unit)) :
+    PagingDataAdapter<Document, MapAdapter.MyViewHolder>(DIFF_CALLBACK) {
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.bind()
         holder.itemView.setOnClickListener {
@@ -20,14 +21,15 @@ class MapAdapter(private val clickListener: (x: Double, y: Double, address:Strin
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemJusoBinding.inflate(inflater, parent, false)
+        val binding = ItemAddressBinding.inflate(inflater, parent, false)
         return MyViewHolder(binding)
     }
 
-    inner class MyViewHolder(private val binding: ItemJusoBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MyViewHolder(private val binding: ItemAddressBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind() {
             val item = getItem(absoluteAdapterPosition)
-            binding.tv.isVisible= item?.addressName.isNullOrEmpty().not()
+            binding.tv.isVisible = item?.addressName.isNullOrEmpty().not()
             binding.tv.text = item?.addressName
         }
     }

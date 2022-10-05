@@ -1,4 +1,4 @@
-package com.eundmswlji.tacoling.ui.setting.my_zzim
+package com.eundmswlji.tacoling.ui.setting.my_liked
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,7 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.eundmswlji.tacoling.data.model.Shop
 import com.eundmswlji.tacoling.databinding.ItemShopBinding
 
-class MyZzimAdapter(private val onClickListener: (Shop) -> (Unit), private val onHeartClickListener: (Shop) -> (Unit)) : ListAdapter<Shop, MyZzimAdapter.MyViewHolder>(DIFF_UTIL) {
+class MyLikedAdapter(
+    private val onClickListener: (Shop) -> (Unit),
+    private val onHeartClickListener: (Shop) -> (Unit)
+) : ListAdapter<Shop, MyLikedAdapter.MyViewHolder>(DIFF_UTIL) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -24,7 +27,8 @@ class MyZzimAdapter(private val onClickListener: (Shop) -> (Unit), private val o
         }
     }
 
-    inner class MyViewHolder(private val binding: ItemShopBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MyViewHolder(private val binding: ItemShopBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind() {
             val item = getItem(absoluteAdapterPosition)
             binding.tvName.text = item.name
@@ -36,7 +40,8 @@ class MyZzimAdapter(private val onClickListener: (Shop) -> (Unit), private val o
 
     companion object {
         val DIFF_UTIL = object : DiffUtil.ItemCallback<Shop>() {
-            override fun areItemsTheSame(oldItem: Shop, newItem: Shop): Boolean = oldItem == newItem
+            override fun areItemsTheSame(oldItem: Shop, newItem: Shop): Boolean =
+                oldItem.id == newItem.id
 
             override fun areContentsTheSame(oldItem: Shop, newItem: Shop): Boolean =
                 oldItem.id == newItem.id &&

@@ -36,7 +36,7 @@
     </fragment>
     <fragment
         android:id="@+id/myZzimFragment"
-        android:name="com.eundmswlji.tacoling.ui.setting.my_zzim.MyZzimFragment"
+        android:name="com.eundmswlji.tacoling.ui.setting.my_liked.MyLikedFragment"
         android:label="MyZzimFragment"
         tools:layout="@layout/fragment_my_zzim">
         <action

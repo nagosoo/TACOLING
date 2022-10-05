@@ -9,5 +9,5 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 @InstallIn(ActivityRetainedComponent::class)
 abstract class RepositoryModule {
     @Binds
-    abstract fun bindJusoRepository(jusoRepositoryImpl: JusoRepositoryImpl): JusoRepository
+    abstract fun bindAddressRepository(addressRepositoryImpl: AddressRepositoryImpl): AddressRepository
 }

@@ -51,7 +51,7 @@
             android:layout_marginBottom="40dp"
             android:drawableStart="@drawable/ic_my_location_without_round"
             style="@style/text14Black"
-            app:layout_constraintBottom_toTopOf="@id/buttonZzim"
+            app:layout_constraintBottom_toTopOf="@id/buttonLike"
             app:layout_constraintEnd_toStartOf="@id/view"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
@@ -83,9 +83,9 @@
             tools:text="용기내챌린지 미참여" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonZzim"
+            android:id="@+id/buttonLike"
             style="@style/pinkLightButton"
-            android:text="@string/zzimWithRedHeart"
+            android:text="@string/LikedWithRedHeart"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/space2"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -97,8 +97,8 @@
             android:layout_width="20dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@id/buttonShare"
-            app:layout_constraintStart_toEndOf="@id/buttonZzim"
-            app:layout_constraintTop_toTopOf="@id/buttonZzim" />
+            app:layout_constraintStart_toEndOf="@id/buttonLike"
+            app:layout_constraintTop_toTopOf="@id/buttonLike" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:drawableEnd="@drawable/ic_share"
@@ -109,6 +109,6 @@
             android:text="공유하기"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/space2"
-            app:layout_constraintTop_toTopOf="@id/buttonZzim" />
+            app:layout_constraintTop_toTopOf="@id/buttonLike" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
