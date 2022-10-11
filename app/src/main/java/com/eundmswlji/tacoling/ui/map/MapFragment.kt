@@ -1,5 +1,6 @@
 package com.eundmswlji.tacoling.ui.map
 
+import android.Manifest
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -18,13 +20,7 @@ import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.databinding.FragmentMapBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
-import com.eundmswlji.tacoling.ui.dialog.NormalDialog
-import com.eundmswlji.tacoling.ui.dialog.NormalDialogFactory
 import com.eundmswlji.tacoling.ui.map.GpsPermissionUtil.checkGPS
-import com.eundmswlji.tacoling.ui.map.LocationPermissionUtil.onlyCheckPermissions
-import com.eundmswlji.tacoling.ui.map.LocationPermissionUtil.requestPermission
-import com.eundmswlji.tacoling.ui.map.LocationPermissionUtil.shouldShowRationale
-import com.eundmswlji.tacoling.ui.map.LocationPermissionUtil.launchLocationLauncher
 import com.eundmswlji.tacoling.util.MapUtil.geoToKm
 import com.eundmswlji.tacoling.util.MapUtil.getMapPOIItem
 import com.eundmswlji.tacoling.util.Util
@@ -44,30 +40,35 @@ import java.util.*
 class MapFragment : BaseFragment(), MapView.MapViewEventListener,
     MapView.CurrentLocationEventListener {
 
-    private lateinit var binding: FragmentMapBinding
-    private val viewModel: MapViewModel by viewModels()
-    private var job: Job? = null
-    private lateinit var mapView: MapView
-    private val adapter by lazy { MapAdapter(::itemClickListener) }
-    private val normalDialogFactory by lazy {
-        NormalDialogFactory(
-            title = "위치권한 설정",
-            message = "내 주변의 타코야키 트럭을 찾기 위해 위치권한을 허용해주세요.",
-            positiveMessage = "네",
-            negativeMessage = "아니요",
-            positiveButtonListener = { launchLocationLauncher(locationResultLauncher) }
-        )
-    }
-
-    private val mapPOIItem = mutableListOf<MapPOIItem>()
-
     private val locationResultLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        if (!permissions.values.contains(false)) {
-            trackingModeOn()
+        when {
+            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                trackingModeOn()
+                test()
+            }
+            permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+                // 대략적인 위치만 허용 됨
+                requestLocationPermission()
+            }
+            else -> {
+                // No location access granted.
+                Toast.makeText(
+                    requireContext(),
+                    "위치권한을 허용 하지 않으면 내 주변 타코야키 트럭을 찾을 수 없습니다.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
+
+    private lateinit var binding: FragmentMapBinding
+    private val viewModel: MapViewModel by viewModels()
+    private var job: Job? = null
+    private val mapView by lazy {MapView(requireActivity())}
+    private val adapter by lazy { MapAdapter(::itemClickListener) }
+    private val mapPOIItem = mutableListOf<MapPOIItem>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -82,16 +83,24 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        childFragmentManager.fragmentFactory = normalDialogFactory
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as? MainActivity)?.showBottomNav()
         initMap()
+        requestLocationPermission()
         initDays()
         setRecyclerView()
         setOnClickListener()
         setObserver()
-        test()
-        requestPermission(requireContext(), ::trackingModeOn, locationResultLauncher)
+    }
+
+    private fun requestLocationPermission(
+    ) {
+        locationResultLauncher.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        )
     }
 
     private fun setObserver() {
@@ -115,7 +124,6 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
 
     private fun initMap() {
         MapView.setMapTilePersistentCacheEnabled(true)
-        mapView = MapView(activity)
         binding.mapViewContainer.addView(mapView)
         mapView.apply {
             setZoomLevel(2, true)
@@ -148,7 +156,6 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
     private fun setOnClickListener() {
         binding.buttonMyLocation.setOnClickListener {
             checkGPS(requireActivity())
-            checkLocationPermission()
         }
 
         val debounce = Util.debounce<String>(coroutineScope = lifecycleScope) { query ->
@@ -197,14 +204,11 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
     }
 
     private fun trackingModeOff() {
-        if (!onlyCheckPermissions(requireContext())) return
         mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
     }
 
     private fun trackingModeOn() {
-        if (!onlyCheckPermissions(requireContext())) return
-        mapView.currentLocationTrackingMode =
-            MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
+        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
     }
 
     private fun getAddressFromGeoCord(mapPoint: MapPoint?) {
@@ -253,40 +257,13 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
     }
 
     override fun onMapViewInitialized(p0: MapView?) {}
-
     override fun onCurrentLocationDeviceHeadingUpdate(p0: MapView?, p1: Float) {}
-
     override fun onCurrentLocationUpdateCancelled(p0: MapView?) {}
-
     override fun onMapViewZoomLevelChanged(p0: MapView?, p1: Int) {}
-
     override fun onMapViewSingleTapped(p0: MapView?, p1: MapPoint?) {}
-
     override fun onMapViewDoubleTapped(p0: MapView?, p1: MapPoint?) {}
-
     override fun onMapViewLongPressed(p0: MapView?, p1: MapPoint?) {}
-
     override fun onMapViewDragStarted(p0: MapView?, p1: MapPoint?) {}
-
     override fun onMapViewDragEnded(p0: MapView?, p1: MapPoint?) {}
-
     override fun onMapViewMoveFinished(p0: MapView?, p1: MapPoint?) {}
-
-    private fun checkLocationPermission() {
-        when {
-            (shouldShowRationale(requireActivity())) -> {
-                //권한 요청을 이전에 거부 했을 시 , 다이어로그 띄움
-                childFragmentManager.fragmentFactory.instantiate(
-                    requireActivity().classLoader,
-                    NormalDialog::class.java.name
-                )
-            }
-            else -> {
-                // You can directly ask for the permission.
-                // The registered ActivityResultCallback gets the result of this request.
-                launchLocationLauncher(locationResultLauncher)
-            }
-        }
-    }
-
 }
