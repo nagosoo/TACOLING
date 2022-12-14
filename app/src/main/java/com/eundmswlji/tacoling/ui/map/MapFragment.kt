@@ -33,6 +33,7 @@ import kotlinx.coroutines.launch
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
+import java.security.Permission
 import java.util.*
 
 
@@ -208,7 +209,7 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
     }
 
     private fun trackingModeOn() {
-        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
+       mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
     }
 
     private fun getAddressFromGeoCord(mapPoint: MapPoint?) {
