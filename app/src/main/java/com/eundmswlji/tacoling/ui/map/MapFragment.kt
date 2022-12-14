@@ -1,9 +1,13 @@
 package com.eundmswlji.tacoling.ui.map
 
 import android.Manifest
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +37,6 @@ import kotlinx.coroutines.launch
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
-import java.security.Permission
 import java.util.*
 
 
@@ -45,21 +48,15 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         when {
-            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
-                trackingModeOn()
-                test()
-            }
-            permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-                // 대략적인 위치만 허용 됨
-                requestLocationPermission()
-            }
+            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> trackingModeOn()
             else -> {
                 // No location access granted.
                 Toast.makeText(
                     requireContext(),
-                    "위치권한을 허용 하지 않으면 내 주변 타코야키 트럭을 찾을 수 없습니다.",
+                    "위치권한을 허용 하지 않으면 내 주변 타코야키 트럭을 찾을 수 없습니다.\n설정에서 대략적인 위치권한과 정확한 위치권한 모두 설정해주세요.",
                     Toast.LENGTH_SHORT
                 ).show()
+                goToSettings()
             }
         }
     }
@@ -67,7 +64,7 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
     private lateinit var binding: FragmentMapBinding
     private val viewModel: MapViewModel by viewModels()
     private var job: Job? = null
-    private val mapView by lazy {MapView(requireActivity())}
+    private val mapView by lazy { MapView(requireActivity()) }
     private val adapter by lazy { MapAdapter(::itemClickListener) }
     private val mapPOIItem = mutableListOf<MapPOIItem>()
 
@@ -87,11 +84,18 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as? MainActivity)?.showBottomNav()
         initMap()
-        requestLocationPermission()
+        test()
         initDays()
         setRecyclerView()
         setOnClickListener()
         setObserver()
+    }
+
+    private fun goToSettings() {
+        val pkg = "package:" + requireActivity().applicationContext.packageName
+        val pkgUri = Uri.parse(pkg)
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, pkgUri)
+        startActivity(intent)
     }
 
     private fun requestLocationPermission(
@@ -157,6 +161,7 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
     private fun setOnClickListener() {
         binding.buttonMyLocation.setOnClickListener {
             checkGPS(requireActivity())
+            requestLocationPermission()
         }
 
         val debounce = Util.debounce<String>(coroutineScope = lifecycleScope) { query ->
@@ -209,7 +214,8 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
     }
 
     private fun trackingModeOn() {
-       mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
+        mapView.currentLocationTrackingMode =
+            MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
     }
 
     private fun getAddressFromGeoCord(mapPoint: MapPoint?) {
@@ -247,9 +253,9 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
         toast("주소를 찾을 수 없습니다.")
     }
 
-    override fun onResume() {
-        super.onResume()
-        checkGPS(requireActivity())
+    override fun onStart() {
+        super.onStart()
+        requestLocationPermission()
     }
 
     override fun onDestroyView() {
