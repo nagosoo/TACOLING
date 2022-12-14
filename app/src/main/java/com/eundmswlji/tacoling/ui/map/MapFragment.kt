@@ -14,13 +14,16 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import com.eundmswlji.tacoling.EventObserver
 import com.eundmswlji.tacoling.R
+import com.eundmswlji.tacoling.data.model.Shop
 import com.eundmswlji.tacoling.databinding.FragmentMapBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
@@ -42,7 +45,7 @@ import java.util.*
 
 @AndroidEntryPoint
 class MapFragment : BaseFragment(), MapView.MapViewEventListener,
-    MapView.CurrentLocationEventListener {
+    MapView.CurrentLocationEventListener, MapView.POIItemEventListener {
 
     private val locationResultLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -142,6 +145,7 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
                 R.drawable.ic_my_location,
                 MapPOIItem.ImageOffset(30, 0)
             )
+            setPOIItemEventListener(this@MapFragment)
         }
     }
 
@@ -253,6 +257,24 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
         toast("주소를 찾을 수 없습니다.")
     }
 
+    override fun onPOIItemSelected(p0: MapView?, p1: MapPOIItem?) {
+        //val bundle = bundleOf("shop" to Shop(0,"은지네가게", listOf()))
+        val bundle = bundleOf("shop" to "멀보누")
+        findNavController().navigate(R.id.shopFragment, bundle)
+    }
+
+
+    override fun onCalloutBalloonOfPOIItemTouched(
+        p0: MapView?,
+        p1: MapPOIItem?,
+        p2: MapPOIItem.CalloutBalloonButtonType?
+    ) {
+       // val bundle = bundleOf("shop" to Shop(0,"은지네가게", listOf()))
+        val bundle = bundleOf("shop" to "멀보누")
+        findNavController().navigate(R.id.shopFragment, bundle)
+    }
+
+
     override fun onStart() {
         super.onStart()
         requestLocationPermission()
@@ -273,4 +295,6 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
     override fun onMapViewDragStarted(p0: MapView?, p1: MapPoint?) {}
     override fun onMapViewDragEnded(p0: MapView?, p1: MapPoint?) {}
     override fun onMapViewMoveFinished(p0: MapView?, p1: MapPoint?) {}
+    override fun onCalloutBalloonOfPOIItemTouched(p0: MapView?, p1: MapPOIItem?) {}
+    override fun onDraggablePOIItemMoved(p0: MapView?, p1: MapPOIItem?, p2: MapPoint?) {}
 }
