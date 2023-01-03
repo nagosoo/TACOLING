@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -51,7 +52,10 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         when {
-            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> trackingModeOn()
+            permissions.getOrDefault(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                false
+            ) -> trackingModeOn()
             else -> {
                 // No location access granted.
                 Toast.makeText(
@@ -64,10 +68,11 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
         }
     }
 
-    private lateinit var binding: FragmentMapBinding
+    private var _binding: FragmentMapBinding? = null
+    private val binding get() = _binding!!
     private val viewModel: MapViewModel by viewModels()
     private var job: Job? = null
-    private val mapView by lazy { MapView(requireActivity()) }
+    private var mapView: MapView? = null
     private val adapter by lazy { MapAdapter(::itemClickListener) }
     private val mapPOIItem = mutableListOf<MapPOIItem>()
 
@@ -76,18 +81,26 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMapBinding.inflate(inflater).apply {
-            lifecycleOwner = viewLifecycleOwner
-            viewModel = this@MapFragment.viewModel
-        }
+        Log.d("LOGGING", "onCreateView")
+
+        _binding =
+            DataBindingUtil.inflate<FragmentMapBinding?>(
+                layoutInflater,
+                R.layout.fragment_map,
+                container,
+                false
+            ).apply {
+                lifecycleOwner = viewLifecycleOwner
+                viewModel = this@MapFragment.viewModel
+            }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("LOGGING", "onViewCreated")
+
         (requireActivity() as? MainActivity)?.showBottomNav()
-        initMap()
-        test()
         initDays()
         setRecyclerView()
         setOnClickListener()
@@ -132,8 +145,10 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
 
     private fun initMap() {
         MapView.setMapTilePersistentCacheEnabled(true)
+        mapView = MapView(requireActivity())
         binding.mapViewContainer.addView(mapView)
-        mapView.apply {
+        //Log.d("LOGGING","${mapView.hashCode()}")
+        mapView?.apply {
             setZoomLevel(2, true)
             setMapViewEventListener(this@MapFragment)
             setCurrentLocationEventListener(this@MapFragment)
@@ -159,7 +174,7 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
         binding.tvAddress.recyclerView.isVisible = false
         viewModel.setCurrentAddress(address)
         val mapPoint = MapPoint.mapPointWithGeoCoord(y, x)
-        mapView.setMapCenterPoint(mapPoint, true)
+        mapView?.setMapCenterPoint(mapPoint, true)
     }
 
     private fun setOnClickListener() {
@@ -207,18 +222,18 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
         })
 
         binding.buttonResearch.setOnClickListener {
-            val centerPoint = mapView.mapCenterPoint
+            val centerPoint = mapView?.mapCenterPoint
             getAddressFromGeoCord(centerPoint)
             setPOIItemsIn3Km(centerPoint)
         }
     }
 
     private fun trackingModeOff() {
-        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
+        mapView?.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
     }
 
     private fun trackingModeOn() {
-        mapView.currentLocationTrackingMode =
+        mapView?.currentLocationTrackingMode =
             MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
     }
 
@@ -240,8 +255,8 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
 
     private fun setPOIItemsIn3Km(centerPoint: MapPoint?) {
         val mapPOIListIn3Km = getMapPOIItemsIn3Km(centerPoint)
-        mapView.removeAllPOIItems()
-        mapView.addPOIItems(mapPOIListIn3Km.toTypedArray())
+        mapView?.removeAllPOIItems()
+        mapView?.addPOIItems(mapPOIListIn3Km.toTypedArray())
     }
 
     override fun onMapViewCenterPointMoved(p0: MapView?, currentPoint: MapPoint?) {
@@ -263,26 +278,31 @@ class MapFragment : BaseFragment(), MapView.MapViewEventListener,
         findNavController().navigate(R.id.shopFragment, bundle)
     }
 
-
     override fun onCalloutBalloonOfPOIItemTouched(
         p0: MapView?,
         p1: MapPOIItem?,
         p2: MapPOIItem.CalloutBalloonButtonType?
     ) {
-       // val bundle = bundleOf("shop" to Shop(0,"은지네가게", listOf()))
-        val bundle = bundleOf("shop" to "멀보누")
+        val bundle = bundleOf("shop" to Shop(0, "은지네가게", listOf()))
         findNavController().navigate(R.id.shopFragment, bundle)
     }
-
 
     override fun onStart() {
         super.onStart()
         requestLocationPermission()
+        initMap()
+        test()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onStop() {
+        super.onStop()
         binding.mapViewContainer.removeView(mapView)
+        mapView = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     override fun onMapViewInitialized(p0: MapView?) {}

@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.data.model.Menu
 import com.eundmswlji.tacoling.databinding.FragmentShopBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
@@ -16,19 +18,22 @@ import com.eundmswlji.tacoling.ui.dialog.ShareDialog
 import com.eundmswlji.tacoling.util.Util.dp
 import net.daum.mf.map.api.MapView
 
-
 class ShopFragment : BaseFragment() {
-    private lateinit var binding: FragmentShopBinding
-    private lateinit var mapView: MapView
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentShopBinding.inflate(inflater)
+    private var _binding: FragmentShopBinding? = null
+    private val binding get() = _binding!!
+    private var mapView: MapView? = null
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_shop, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setAppBar()
-        initMap()
         initArea()
         initMenu()
         setOnClickListener()
@@ -70,9 +75,20 @@ class ShopFragment : BaseFragment() {
     }
 
     private fun initMenu() {
-        val adapter = ShopAdapter(listOf(Menu(id = 0, name = "타코야키 8알(기본맛, 매운맛)", detail = "", price = 3000), Menu(id = 0, name = "타코야키 8알(기본맛, 매운맛)", detail = "", price = 3000)))
+        val adapter = ShopAdapter(
+            listOf(
+                Menu(id = 0, name = "타코야키 8알(기본맛, 매운맛)", detail = "", price = 3000),
+                Menu(id = 0, name = "타코야키 8알(기본맛, 매운맛)", detail = "", price = 3000)
+            )
+        )
         binding.shopBottom.recyclerView.adapter = adapter
-        binding.shopBottom.recyclerView.addItemDecoration(VerticalItemDecoration(requireContext().dp(16), requireContext().dp(16), requireContext().dp(8), 0, 0))
+        binding.shopBottom.recyclerView.addItemDecoration(
+            VerticalItemDecoration(
+                requireContext().dp(
+                    16
+                ), requireContext().dp(16), requireContext().dp(8), 0, 0
+            )
+        )
     }
 
     private fun setAppBar() {
@@ -84,8 +100,19 @@ class ShopFragment : BaseFragment() {
         binding.mapViewContainer.addView(mapView)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onStart() {
+        super.onStart()
+        initMap()
+    }
+
+    override fun onStop() {
+        super.onStop()
         binding.mapViewContainer.removeView(mapView)
+        mapView = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }
