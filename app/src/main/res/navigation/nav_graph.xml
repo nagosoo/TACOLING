@@ -21,6 +21,9 @@
         <action
             android:id="@+id/action_mapFragment_to_settingFragment"
             app:destination="@id/settingFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_shopFragment"
+            app:destination="@id/shopFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingFragment"
@@ -31,24 +34,31 @@
             android:id="@+id/action_settingFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
         <action
-            android:id="@+id/action_settingFragment_to_myZzimFragment"
-            app:destination="@id/myZzimFragment" />
+            android:id="@+id/action_settingFragment_to_myLikedFragment"
+            app:destination="@id/myLikedFragment" />
     </fragment>
     <fragment
-        android:id="@+id/myZzimFragment"
+        android:id="@+id/myLikedFragment"
         android:name="com.eundmswlji.tacoling.ui.setting.my_liked.MyLikedFragment"
-        android:label="MyZzimFragment"
-        tools:layout="@layout/fragment_my_zzim">
+        android:label="MyLikedFragment"
+        tools:layout="@layout/fragment_my_liked">
         <action
             android:id="@+id/action_myZzimFragment_to_shopFragment"
             app:destination="@id/shopFragment" />
     </fragment>
     <fragment
-
         android:id="@+id/shopFragment"
         android:name="com.eundmswlji.tacoling.ui.shop.ShopFragment"
         android:label="ShopFragment"
-        tools:layout="@layout/fragment_shop" />
+        tools:layout="@layout/fragment_shop">
+        <argument
+            android:name="shopId"
+            app:argType="integer" />
+        <deepLink
+            android:id="@+id/deepLink"
+            android:autoVerify="true"
+            app:uri="tacoling.com/?shopId={shopId}" />
+    </fragment>
 
 
 </navigation>

@@ -2,6 +2,7 @@ package com.eundmswlji.tacoling.ui
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
@@ -14,9 +15,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.eundmswlji.tacoling.R
-import com.eundmswlji.tacoling.util.Util.toast
 import com.eundmswlji.tacoling.databinding.ActivityMainBinding
+import com.eundmswlji.tacoling.util.Util.toast
 import com.google.android.material.navigation.NavigationBarView
+import com.google.firebase.dynamiclinks.ktx.dynamicLinks
+import com.google.firebase.ktx.Firebase
 import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.common.model.KakaoSdkError
 import com.kakao.sdk.user.UserApiClient
@@ -24,7 +27,8 @@ import com.kakao.sdk.user.model.AccessTokenInfo
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener, NavigationBarView.OnItemReselectedListener {
+class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener,
+    NavigationBarView.OnItemReselectedListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
@@ -43,6 +47,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         binding.bottomNavView.setOnItemReselectedListener(this)
 
         checkIsLogin()
+
     }
 
     private fun checkIsLogin() {
@@ -57,7 +62,8 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
                     }
                 } else {
                     //토큰 유효성 체크 성공(필요 시 토큰 갱신됨)
-                    UserApiClient().accessTokenInfo(callback = object : (AccessTokenInfo?, Throwable?) -> (Unit) {
+                    UserApiClient().accessTokenInfo(callback = object :
+                            (AccessTokenInfo?, Throwable?) -> (Unit) {
                         override fun invoke(token: AccessTokenInfo?, error: Throwable?) {
                             if (error != null) {
                                 //로그인 필요
@@ -76,8 +82,12 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
     }
 
     private fun setNavGraph(doneLogin: Boolean) {
-        val navGraph = navController.navInflater.inflate(R.navigation.nav_graph) // app:navGraph="@navigation/nav_graph" 로 설정했던 것
-        if (doneLogin) navGraph.setStartDestination(R.id.mapFragment) //setStartDestination 설정
+        val navGraph =
+            navController.navInflater.inflate(R.navigation.nav_graph) // app:navGraph="@navigation/nav_graph" 로 설정했던 것
+        if (doneLogin) {
+            navGraph.setStartDestination(R.id.mapFragment)
+            getDynamicLink()
+        } //setStartDestination 설정
         else navGraph.setStartDestination(R.id.signInFragment)
         navController.setGraph(navGraph, null) //navController에 graph 설정
     }
@@ -131,6 +141,24 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         if (::binding.isInitialized) {
             binding.bottomNavView.isVisible = true
         }
+    }
+
+    private fun getDynamicLink() {
+
+        Firebase.dynamicLinks
+            .getDynamicLink(intent)
+            .addOnSuccessListener(this) { pendingDynamicLinkData ->
+                pendingDynamicLinkData?.link?.let {
+                    navController.navigate(it)
+                }
+            }
+            .addOnFailureListener(this) { e ->
+                Log.w(
+                    "LOGGING",
+                    "getDynamicLink:onFailure",
+                    e
+                )
+            }
     }
 
 }

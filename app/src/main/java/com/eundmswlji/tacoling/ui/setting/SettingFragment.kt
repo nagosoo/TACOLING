@@ -41,7 +41,7 @@ class SettingFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnC
         setObserver()
         binding.suggest.setOnClickListener(this)
         binding.withdrawal.setOnClickListener(this)
-        binding.myZzim.setOnClickListener(this)
+        binding.myLiked.setOnClickListener(this)
         binding.alarm.setOnClickListener(this)
         binding.logout.setOnClickListener(this)
         binding.alarm.setOnCheckedChangeListener(this)
@@ -59,8 +59,8 @@ class SettingFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnC
             binding.withdrawal.id -> {
                 showWithdrawalDialog()
             }
-            binding.myZzim.id -> {
-                findNavController().navigate(R.id.myZzimFragment)
+            binding.myLiked.id -> {
+                findNavController().navigate(R.id.myLikedFragment)
             }
             binding.logout.id -> {
 

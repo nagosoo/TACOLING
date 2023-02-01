@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.data.model.Menu
 import com.eundmswlji.tacoling.databinding.FragmentShopBinding
@@ -15,6 +16,7 @@ import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.decoration.VerticalItemDecoration
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
 import com.eundmswlji.tacoling.ui.dialog.ShareDialog
+import com.eundmswlji.tacoling.ui.dialog.ShareDialogFactory
 import com.eundmswlji.tacoling.util.Util.dp
 import net.daum.mf.map.api.MapView
 
@@ -22,6 +24,7 @@ class ShopFragment : BaseFragment() {
     private var _binding: FragmentShopBinding? = null
     private val binding get() = _binding!!
     private var mapView: MapView? = null
+    private val shopId by lazy { arguments?.getInt("shopId")}
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -52,7 +55,11 @@ class ShopFragment : BaseFragment() {
                 negativeButtonListener = {}).show(childFragmentManager, null)
         }
         binding.shopTop.buttonShare.setOnClickListener {
-            ShareDialog().show(childFragmentManager, null)
+           val dialog = ShareDialogFactory(shopId!!).instantiate(
+                classLoader = ClassLoader.getSystemClassLoader(),
+                ShareDialog::class.java.name
+            )
+            (dialog as DialogFragment).show(childFragmentManager, null)
         }
         binding.shopTop.buttonCall.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL).apply {

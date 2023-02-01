@@ -50,7 +50,7 @@
             app:track="@drawable/selector_sw" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/myZzim"
+            android:id="@+id/myLiked"
             style="@style/settingButton"
             android:layout_width="match_parent"
             android:layout_marginBottom="12dp"

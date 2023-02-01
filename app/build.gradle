@@ -3,13 +3,15 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 def Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     buildFeatures { dataBinding = true }
 
@@ -23,8 +25,8 @@ android {
         buildConfigField "String", "restKey", properties.getProperty("rest.key")
 
         applicationId "com.eundmswlji.tacoling"
-        minSdk 23
-        targetSdk 32
+        minSdk 26
+        targetSdk 33
         versionCode major * 100 + minor * 10 + patch
         versionName "${major}.${minor}.${patch}"
 
@@ -87,5 +89,11 @@ dependencies {
     //ktx
     implementation "androidx.fragment:fragment-ktx:1.5.0"
     implementation "androidx.activity:activity-ktx:1.5.0"
+
+    //firebase
+    implementation platform('com.google.firebase:firebase-bom:31.2.0')
+    //firebase dynamic link
+    implementation 'com.google.firebase:firebase-dynamic-links-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
 }
