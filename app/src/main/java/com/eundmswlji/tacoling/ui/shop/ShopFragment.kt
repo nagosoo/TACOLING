@@ -1,5 +1,6 @@
 package com.eundmswlji.tacoling.ui.shop
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -17,7 +18,9 @@ import com.eundmswlji.tacoling.ui.decoration.VerticalItemDecoration
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
 import com.eundmswlji.tacoling.ui.dialog.ShareDialog
 import com.eundmswlji.tacoling.ui.dialog.ShareDialogFactory
+import com.eundmswlji.tacoling.util.LinkUtil
 import com.eundmswlji.tacoling.util.Util.dp
+import com.eundmswlji.tacoling.util.Util.toast
 import net.daum.mf.map.api.MapView
 
 class ShopFragment : BaseFragment() {
@@ -55,11 +58,13 @@ class ShopFragment : BaseFragment() {
                 negativeButtonListener = {}).show(childFragmentManager, null)
         }
         binding.shopTop.buttonShare.setOnClickListener {
-           val dialog = ShareDialogFactory(shopId!!).instantiate(
-                classLoader = ClassLoader.getSystemClassLoader(),
-                ShareDialog::class.java.name
-            )
-            (dialog as DialogFragment).show(childFragmentManager, null)
+            share()
+//           val dialog = ShareDialogFactory(shopId!!).instantiate(
+//                classLoader = ClassLoader.getSystemClassLoader(),
+//                ShareDialog::class.java.name
+//            )
+//            (dialog as DialogFragment).show(childFragmentManager, null)
+
         }
         binding.shopTop.buttonCall.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL).apply {
@@ -67,6 +72,30 @@ class ShopFragment : BaseFragment() {
             }
             if (intent.resolveActivity(requireActivity().packageManager) != null) {
                 startActivity(intent)
+            }
+        }
+    }
+
+    private fun share(){
+        LinkUtil.setDynamicLinks(shopId!!, "타코왕")?.let { shortLink ->
+
+            val share = Intent.createChooser(Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, shortLink.toString())
+                type = "text/plain"
+
+                // (Optional) Here we're setting the title of the content
+                putExtra(Intent.EXTRA_TITLE, "'타코왕'을 소개해보세요!")
+
+                // (Optional) Here we're passing a content URI to an image to be displayed
+                //  data = contentUri
+                // flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+            }, null)
+
+            try {
+                startActivity(share)
+            } catch (e: ActivityNotFoundException) {
+                toast("공유 가능한 앱이 없습니다.")
             }
         }
     }

@@ -1,8 +1,10 @@
 package com.eundmswlji.tacoling.ui.dialog
 
+import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +14,7 @@ import androidx.fragment.app.DialogFragment
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.databinding.DialogShareBinding
 import com.eundmswlji.tacoling.util.LinkUtil
+import com.eundmswlji.tacoling.util.Util.toast
 
 class ShareDialog(private val shopId: Int) : DialogFragment() {
     private lateinit var binding: DialogShareBinding
@@ -35,7 +38,10 @@ class ShareDialog(private val shopId: Int) : DialogFragment() {
     }
 
     private fun setOnClickListener() {
-        binding.buttonKakao.setOnClickListener { }
+        binding.buttonKakao.setOnClickListener {
+
+
+        }
         binding.buttonLink.setOnClickListener {
             LinkUtil.setDynamicLinks(shopId, "타코왕")?.let { shortLink ->
                 val clip: ClipData = ClipData.newPlainText("appUrl", "$shortLink")
