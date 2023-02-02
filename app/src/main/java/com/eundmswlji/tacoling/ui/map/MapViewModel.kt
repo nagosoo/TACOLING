@@ -28,6 +28,13 @@ class MapViewModel @Inject constructor(
     private val _toastEvent = MutableLiveData<Event<String>>()
     val toastEvent: LiveData<Event<String>> = _toastEvent
 
+    private val _showZeroWasteShop = MutableLiveData<Boolean>(true)
+    val showZeroWasteShop: LiveData<Boolean> = _showZeroWasteShop
+
+    fun toggleZeroWasteShop() {
+        _showZeroWasteShop.value = !_showZeroWasteShop.value!!
+    }
+
     suspend fun getAddress(query: String): Flow<PagingData<Document>> {
         return getAddressUsecase.invoke(query).cachedIn(viewModelScope)
     }
