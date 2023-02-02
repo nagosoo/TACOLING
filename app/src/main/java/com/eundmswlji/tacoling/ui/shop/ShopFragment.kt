@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.data.model.Menu
 import com.eundmswlji.tacoling.databinding.FragmentShopBinding
@@ -128,6 +129,7 @@ class ShopFragment : BaseFragment() {
 
     private fun setAppBar() {
         binding.appBar.tv.text = "가게 상세 보기"
+        binding.appBar.buttonBack.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun initMap() {
