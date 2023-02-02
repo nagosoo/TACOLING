@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.data.model.Menu
 import com.eundmswlji.tacoling.databinding.FragmentShopBinding
@@ -16,18 +15,18 @@ import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.decoration.VerticalItemDecoration
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
-import com.eundmswlji.tacoling.ui.dialog.ShareDialog
-import com.eundmswlji.tacoling.ui.dialog.ShareDialogFactory
 import com.eundmswlji.tacoling.util.LinkUtil
+import com.eundmswlji.tacoling.util.MapUtil
 import com.eundmswlji.tacoling.util.Util.dp
 import com.eundmswlji.tacoling.util.Util.toast
+import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
 class ShopFragment : BaseFragment() {
     private var _binding: FragmentShopBinding? = null
     private val binding get() = _binding!!
     private var mapView: MapView? = null
-    private val shopId by lazy { arguments?.getInt("shopId")}
+    private val shopId by lazy { arguments?.getInt("shopId") }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -76,7 +75,7 @@ class ShopFragment : BaseFragment() {
         }
     }
 
-    private fun share(){
+    private fun share() {
         LinkUtil.setDynamicLinks(shopId!!, "타코왕")?.let { shortLink ->
 
             val share = Intent.createChooser(Intent().apply {
@@ -132,8 +131,26 @@ class ShopFragment : BaseFragment() {
     }
 
     private fun initMap() {
-        mapView = MapView(requireContext())
+        val centerPoint = MapPoint.mapPointWithGeoCoord(35.86401751026963, 128.6485239265323)
+        mapView = MapView(requireContext()).apply {
+            setMapCenterPointAndZoomLevel(centerPoint, 2, false)
+        }
         binding.mapViewContainer.addView(mapView)
+        setPOIItem()
+    }
+
+
+    private fun setPOIItem() {
+        mapView?.removeAllPOIItems()
+        mapView?.addPOIItems(
+            arrayOf(
+                MapUtil.getMapPOIItem(
+                    "ㅌㅅㅌ",
+                    35.86401751026963,
+                    128.6485239265323
+                )
+            )
+        )
     }
 
     override fun onStart() {
