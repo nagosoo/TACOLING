@@ -1,10 +1,12 @@
 package com.eundmswlji.tacoling.ui.shop
 
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -22,6 +24,7 @@ import com.eundmswlji.tacoling.util.Util.dp
 import com.eundmswlji.tacoling.util.Util.toast
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
+
 
 class ShopFragment : BaseFragment() {
     private var _binding: FragmentShopBinding? = null
@@ -132,10 +135,21 @@ class ShopFragment : BaseFragment() {
         binding.appBar.buttonBack.setOnClickListener { findNavController().popBackStack() }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initMap() {
         val centerPoint = MapPoint.mapPointWithGeoCoord(35.86401751026963, 128.6485239265323)
         mapView = MapView(requireContext()).apply {
             setMapCenterPointAndZoomLevel(centerPoint, 2, false)
+            setOnTouchListener { _, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_MOVE -> parent.requestDisallowInterceptTouchEvent(true)
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> parent.requestDisallowInterceptTouchEvent(
+                        false
+                    )
+                }
+                onTouchEvent(event)
+            }
+            currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
         }
         binding.mapViewContainer.addView(mapView)
         setPOIItem()
