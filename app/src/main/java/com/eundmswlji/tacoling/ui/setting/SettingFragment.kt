@@ -5,9 +5,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.CompoundButton
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
@@ -24,15 +22,12 @@ import com.eundmswlji.tacoling.util.Util
 import javax.inject.Inject
 
 
-class SettingFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate),
+    View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     @Inject
     lateinit var addressRepository: AddressRepository
-    private lateinit var binding: FragmentSettingBinding
+
     private val viewModel: SettingViewModel by viewModels()
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentSettingBinding.inflate(layoutInflater)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -100,7 +95,12 @@ class SettingFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnC
             Util.ImageGetter(requireContext(), 34, 34),
             null
         )
-        NormalDialog(title = "탈퇴", spannedMessage = message, positiveMessage = "네", negativeMessage = "아니요", positiveButtonListener = {}).show(childFragmentManager, null)
+        NormalDialog(
+            title = "탈퇴",
+            spannedMessage = message,
+            positiveMessage = "네",
+            negativeMessage = "아니요",
+            positiveButtonListener = {}).show(childFragmentManager, null)
     }
 
 }

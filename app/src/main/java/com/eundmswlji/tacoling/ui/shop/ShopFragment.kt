@@ -26,19 +26,9 @@ import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
 
-class ShopFragment : BaseFragment() {
-    private var _binding: FragmentShopBinding? = null
-    private val binding get() = _binding!!
+class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::inflate) {
     private var mapView: MapView? = null
     private val shopId by lazy { arguments?.getInt("shopId") }
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_shop, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -180,8 +170,4 @@ class ShopFragment : BaseFragment() {
         mapView = null
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
 }

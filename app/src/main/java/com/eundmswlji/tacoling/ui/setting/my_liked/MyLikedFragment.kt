@@ -14,21 +14,9 @@ import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.decoration.VerticalItemDecoration
 import com.eundmswlji.tacoling.util.Util.dp
 
-class MyLikedFragment : BaseFragment() {
-    private lateinit var binding: FragmentMyLikedBinding
+class MyLikedFragment : BaseFragment<FragmentMyLikedBinding>(FragmentMyLikedBinding::inflate) {
     private val adapter by lazy { MyLikedAdapter(::itemClickListener, ::heartClickListener) }
     private val viewModel: MyLikedViewModel by viewModels()
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentMyLikedBinding.inflate(layoutInflater).apply {
-            lifecycleOwner = viewLifecycleOwner
-            viewModel = this@MyLikedFragment.viewModel
-        }
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
