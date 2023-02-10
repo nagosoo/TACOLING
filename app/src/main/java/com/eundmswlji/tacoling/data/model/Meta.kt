@@ -1,13 +1,15 @@
 package com.eundmswlji.tacoling.data.model
 
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Meta(
-    @SerializedName("is_end")
+    @SerialName("is_end")
     val isEnd: Boolean,
-    @SerializedName("pageable_count")
+    @SerialName("pageable_count")
     val pageableCount: Int,
-    @SerializedName("total_count")
+    @SerialName("total_count")
     val totalCount: Int
 )

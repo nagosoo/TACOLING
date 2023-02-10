@@ -3,7 +3,7 @@ package com.eundmswlji.tacoling.ui.map
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.eundmswlji.tacoling.data.model.Document
-import com.eundmswlji.tacoling.data.repository.AddressRepository
+import com.eundmswlji.tacoling.data.repository.address.AddressRepository
 import retrofit2.HttpException
 import java.io.IOException
 

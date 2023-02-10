@@ -1,4 +1,4 @@
-package com.eundmswlji.tacoling.data.source
+package com.eundmswlji.tacoling.data.source.remote.address
 
 import com.eundmswlji.tacoling.data.model.Juso
 import com.eundmswlji.tacoling.retrofit.services.AddressService

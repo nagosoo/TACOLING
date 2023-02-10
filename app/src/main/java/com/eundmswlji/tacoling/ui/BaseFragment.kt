@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModel
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.eundmswlji.tacoling.ui.map.MapFragment
@@ -16,12 +14,12 @@ import com.eundmswlji.tacoling.ui.setting.SettingFragment
 
 typealias  Inflate<T> = (LayoutInflater, ViewGroup?, Boolean) -> T
 
-abstract class BaseFragment<VB: ViewBinding>(
-    private val inflate : Inflate<VB>
+abstract class BaseFragment<VB : ViewBinding>(
+    private val inflate: Inflate<VB>
 ) : Fragment() {
     private lateinit var callback: OnBackPressedCallback
 
-    private var _binding : VB? = null
+    private var _binding: VB? = null
     val binding get() = _binding!!
 
     override fun onCreateView(
@@ -29,7 +27,7 @@ abstract class BaseFragment<VB: ViewBinding>(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = inflate(inflater,container,false)
+        _binding = inflate(inflater, container, false)
         return binding.root
     }
 

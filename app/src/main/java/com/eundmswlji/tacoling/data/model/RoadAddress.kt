@@ -1,31 +1,33 @@
 package com.eundmswlji.tacoling.data.model
 
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class RoadAddress(
-    @SerializedName("address_name")
+    @SerialName("address_name")
     val addressName: String,
-    @SerializedName("building_name")
+    @SerialName("building_name")
     val buildingName: String,
-    @SerializedName("main_building_no")
+    @SerialName("main_building_no")
     val mainBuildingNo: String,
-    @SerializedName("region_1depth_name")
+    @SerialName("region_1depth_name")
     val region1depthName: String,
-    @SerializedName("region_2depth_name")
+    @SerialName("region_2depth_name")
     val region2depthName: String,
-    @SerializedName("region_3depth_name")
+    @SerialName("region_3depth_name")
     val region3depthName: String,
-    @SerializedName("road_name")
+    @SerialName("road_name")
     val roadName: String,
-    @SerializedName("sub_building_no")
+    @SerialName("sub_building_no")
     val subBuildingNo: String,
-    @SerializedName("underground_yn")
+    @SerialName("underground_yn")
     val undergroundYn: String,
-    @SerializedName("x")
+    @SerialName("x")
     val x: String,
-    @SerializedName("y")
+    @SerialName("y")
     val y: String,
-    @SerializedName("zone_no")
+    @SerialName("zone_no")
     val zoneNo: String
 )

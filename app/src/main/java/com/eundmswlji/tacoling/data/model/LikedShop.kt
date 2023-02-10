@@ -5,9 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Juso(
-    @SerialName("documents")
-    val documents: List<Document>,
-    @SerialName("meta")
-    val meta: Meta
+data class LikedShop(
+    @SerialName("id")
+    val id: Int
 )

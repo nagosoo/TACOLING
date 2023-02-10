@@ -5,6 +5,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'kotlinx-serialization'
 }
 
 def Properties properties = new Properties()
@@ -20,7 +21,8 @@ android {
     def patch = 0
 
     defaultConfig {
-        buildConfigField "String", "baseUrl", '"https://dapi.kakao.com"'
+        buildConfigField "String", "kakaoBaseUrl", '"https://dapi.kakao.com"'
+        buildConfigField "String", "firebaseBaseUrl", '"https://tacoling-62228-default-rtdb.firebaseio.com"'
         buildConfigField "String", "appKey", properties.getProperty("app.key")
         buildConfigField "String", "restKey", properties.getProperty("rest.key")
 
@@ -52,9 +54,9 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.appcompat:appcompat:1.4.2'
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.paging:paging-common-ktx:3.1.1'
     implementation 'androidx.paging:paging-runtime-ktx:3.1.1'
@@ -63,37 +65,44 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     //hilt
-    implementation 'com.google.dagger:hilt-android:2.42'
-    kapt 'com.google.dagger:hilt-android-compiler:2.42'
+    implementation 'com.google.dagger:hilt-android:2.44.2'
+    kapt 'com.google.dagger:hilt-android-compiler:2.44.2'
     //splash
-    implementation 'androidx.core:core-splashscreen:1.0.0-rc01'
+    implementation 'androidx.core:core-splashscreen:1.0.0'
     //navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:2.5.0"
-    implementation "androidx.navigation:navigation-ui-ktx:2.5.0"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.5.3"
+    implementation "androidx.navigation:navigation-ui-ktx:2.5.3"
     //kakao login
     implementation "com.kakao.sdk:v2-user:2.9.0"
     //kakao map
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/libDaumMapAndroid.jar')
     //google location
-    implementation 'com.google.android.gms:play-services-location:20.0.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
     //coroutine
-    implementation('org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3')
+    implementation('org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4')
     //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     //okhttp
     implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.2")
-    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2") //logging interceptor
+    //okhttp logging interceptor
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
     //gson
-    implementation 'com.google.code.gson:gson:2.9.0'
+    //implementation 'com.google.code.gson:gson:2.9.0'
+
     //ktx
-    implementation "androidx.fragment:fragment-ktx:1.5.0"
-    implementation "androidx.activity:activity-ktx:1.5.0"
+    implementation "androidx.fragment:fragment-ktx:1.5.5"
+    implementation "androidx.activity:activity-ktx:1.6.1"
 
     //firebase
     implementation platform('com.google.firebase:firebase-bom:31.2.0')
     //firebase dynamic link
     implementation 'com.google.firebase:firebase-dynamic-links-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    //serialization
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0-RC"
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
+
 
 }

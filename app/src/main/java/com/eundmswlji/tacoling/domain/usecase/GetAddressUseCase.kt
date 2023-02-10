@@ -1,6 +1,6 @@
 package com.eundmswlji.tacoling.domain.usecase
 
-import com.eundmswlji.tacoling.data.repository.AddressRepository
+import com.eundmswlji.tacoling.data.repository.address.AddressRepository
 import javax.inject.Inject
 
 class GetAddressUseCase @Inject constructor(
@@ -8,3 +8,4 @@ class GetAddressUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(query: String) = addressRepository.getAddress(query)
 }
+

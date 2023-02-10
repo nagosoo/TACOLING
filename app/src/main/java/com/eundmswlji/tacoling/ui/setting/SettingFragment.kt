@@ -13,7 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.BuildConfig
 import com.eundmswlji.tacoling.R
-import com.eundmswlji.tacoling.data.repository.AddressRepository
+import com.eundmswlji.tacoling.data.repository.address.AddressRepository
 import com.eundmswlji.tacoling.databinding.FragmentSettingBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity

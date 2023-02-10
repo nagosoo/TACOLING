@@ -1,19 +1,21 @@
 package com.eundmswlji.tacoling.data.model
 
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Document(
-    @SerializedName("address")
+    @SerialName("address")
     val address: Address,
-    @SerializedName("address_name")
+    @SerialName("address_name")
     val addressName: String,
-    @SerializedName("address_type")
+    @SerialName("address_type")
     val addressType: String,
-    @SerializedName("road_address")
+    @SerialName("road_address")
     val roadAddress: RoadAddress,
-    @SerializedName("x")
+    @SerialName("x")
     val x: String,
-    @SerializedName("y")
+    @SerialName("y")
     val y: String
 )

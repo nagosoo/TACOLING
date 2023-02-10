@@ -1,4 +1,4 @@
-package com.eundmswlji.tacoling.data.repository
+package com.eundmswlji.tacoling.data.repository.address
 
 import androidx.paging.PagingData
 import com.eundmswlji.tacoling.data.model.Document

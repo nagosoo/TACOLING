@@ -1,11 +1,11 @@
-package com.eundmswlji.tacoling.data.repository
+package com.eundmswlji.tacoling.data.repository.address
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.eundmswlji.tacoling.data.model.Document
 import com.eundmswlji.tacoling.data.model.Juso
-import com.eundmswlji.tacoling.data.source.AddressDatasource
+import com.eundmswlji.tacoling.data.source.remote.address.AddressDatasource
 import com.eundmswlji.tacoling.ui.map.AddressPagingSource
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
