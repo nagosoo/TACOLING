@@ -2,6 +2,8 @@ package com.eundmswlji.tacoling.data.source.remote
 
 import com.eundmswlji.tacoling.data.source.remote.address.AddressDataSourceImpl
 import com.eundmswlji.tacoling.data.source.remote.address.AddressDatasource
+import com.eundmswlji.tacoling.data.source.remote.shop.ShopDataSource
+import com.eundmswlji.tacoling.data.source.remote.shop.ShopDataSourceImpl
 import com.eundmswlji.tacoling.data.source.remote.user.UserDataSource
 import com.eundmswlji.tacoling.data.source.remote.user.UserDataSourceImpl
 import dagger.Binds
@@ -21,4 +23,8 @@ abstract class DataSourceModule {
     @Binds
     @Singleton
     abstract fun bindUserDataSource(userDataSourceImpl: UserDataSourceImpl): UserDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindsShopDataSource(shopDataSourceImpl: ShopDataSourceImpl) : ShopDataSource
 }

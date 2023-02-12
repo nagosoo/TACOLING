@@ -8,21 +8,22 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class RestClient @Inject constructor() {
+class TacolingRetrofit @Inject constructor() {
 
     private val httpLoggingInterceptor: HttpLoggingInterceptor by lazy { HttpLoggingInterceptor() }
     private val authorizationInterceptor: AuthorizationInterceptor by lazy { AuthorizationInterceptor() }
     private val userAgentInterceptor: UserAgentInterceptor by lazy { UserAgentInterceptor() }
 
     private val contentType = "application/json".toMediaType()
+
+    private val json = Json { encodeDefaults = true }
     fun getRetrofitBuilder(baseurl: String, needAuthorization: Boolean): Retrofit {
         return Retrofit.Builder().baseUrl(baseurl)
             .client(getOkHttpClient(needAuthorization))
-            .addConverterFactory(Json.asConverterFactory(contentType))
+            .addConverterFactory(json.asConverterFactory(contentType))
             .build()
     }
 

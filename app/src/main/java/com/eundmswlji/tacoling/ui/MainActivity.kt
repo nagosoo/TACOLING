@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
             navGraph.setStartDestination(R.id.mapFragment)
             getDynamicLink()
         } //setStartDestination 설정
-        else navGraph.setStartDestination(R.id.signInFragment)
+        else navGraph.setStartDestination(R.id.loginFragment)
         navController.setGraph(navGraph, null) //navController에 graph 설정
     }
 

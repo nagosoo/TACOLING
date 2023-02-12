@@ -6,33 +6,33 @@ import retrofit2.http.*
 
 interface UserDataSource {
 
-    fun postUser(
+    suspend fun postUser(
         @Body body: UserInfo
     ): Response<UserResponse>
 
-    fun deleteUser(
+    suspend fun deleteUser(
         @Path("id") userId: Int
     ): Response<UserResponse>
 
-    fun getUserInfo(
+    suspend fun getUserInfo(
         @Path("id") userId: Int
     ): Response<UserInfo>
 
-    fun getUserLikedShops(
+    suspend fun getUserLikedShops(
         @Path("id") userId: Int
     ): Response<List<LikedShop>>
 
-    fun addLikedShop(
+    suspend fun addLikedShop(
         @Path("id") userId: Int,
         @Path("shopId") shopId: Int,
     ): Response<AddLikedShopResponse>
 
-    fun deleteLikedShop(
+    suspend fun deleteLikedShop(
         @Path("id") userId: Int,
         @Path("shopId") shopId: Int,
     ): Response<Nothing>
 
-    fun patchAlarm(
+    suspend fun patchAlarm(
         @Path("id") userId: Int,
         @Body body: Alarm
     ): Response<Alarm>

@@ -5,8 +5,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserInfo(
-    @SerialName("liked_shops")
-    val likedShops: List<LikedShop> = emptyList(),
-    val notification: Boolean = true
+data class Location(
+    val latitude: Double,
+    val longitude: Double,
+    val name: String,
 )

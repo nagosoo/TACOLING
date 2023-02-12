@@ -5,12 +5,12 @@
     android:id="@+id/nav_graph">
 
     <fragment
-        android:id="@+id/signInFragment"
-        android:name="com.eundmswlji.tacoling.ui.sign_in.SignInFragment"
-        android:label="SignInFragment"
-        tools:layout="@layout/fragment_sign_in">
+        android:id="@+id/loginFragment"
+        android:name="com.eundmswlji.tacoling.ui.login.LoginFragment"
+        android:label="loginFragment"
+        tools:layout="@layout/fragment_login">
         <action
-            android:id="@+id/action_signInFragment_to_mapFragment"
+            android:id="@+id/action_loginFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
     </fragment>
     <fragment

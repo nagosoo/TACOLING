@@ -10,19 +10,19 @@ import javax.inject.Singleton
 class UserDataSourceImpl @Inject constructor(
     private val userService: UserService
 ) : UserDataSource {
-    override fun postUser(body: UserInfo): Response<UserResponse> = userService.postUser(body)
-    override fun deleteUser(userId: Int): Response<UserResponse> = userService.deleteUser(userId)
-    override fun getUserInfo(userId: Int): Response<UserInfo> = userService.getUserInfo(userId)
-    override fun getUserLikedShops(userId: Int): Response<List<LikedShop>> =
+    override suspend fun postUser(body: UserInfo): Response<UserResponse> = userService.postUser(body)
+    override suspend fun deleteUser(userId: Int): Response<UserResponse> = userService.deleteUser(userId)
+    override suspend fun getUserInfo(userId: Int): Response<UserInfo> = userService.getUserInfo(userId)
+    override suspend fun getUserLikedShops(userId: Int): Response<List<LikedShop>> =
         userService.getUserLikedShops(userId)
 
-    override fun addLikedShop(userId: Int, shopId: Int): Response<AddLikedShopResponse> =
+    override suspend fun addLikedShop(userId: Int, shopId: Int): Response<AddLikedShopResponse> =
         userService.addLikedShop(userId, shopId)
 
-    override fun deleteLikedShop(userId: Int, shopId: Int): Response<Nothing> =
+    override suspend fun deleteLikedShop(userId: Int, shopId: Int): Response<Nothing> =
         userService.deleteLikedShop(userId, shopId)
 
-    override fun patchAlarm(userId: Int, body: Alarm): Response<Alarm> =
+    override suspend fun patchAlarm(userId: Int, body: Alarm): Response<Alarm> =
         userService.patchAlarm(userId, body)
 
 }

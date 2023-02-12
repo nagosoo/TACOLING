@@ -22,6 +22,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import com.eundmswlji.tacoling.EventObserver
 import com.eundmswlji.tacoling.R
+import com.eundmswlji.tacoling.data.model.UserInfo
 import com.eundmswlji.tacoling.databinding.FragmentMapBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
@@ -35,6 +36,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView

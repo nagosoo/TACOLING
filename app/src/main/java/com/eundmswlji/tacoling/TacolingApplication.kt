@@ -7,7 +7,7 @@ import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class MainApplication : Application() {
+class TacolingApplication : Application() {
 
     companion object {
         lateinit var sp: SharedPreferencesUtil
