@@ -13,19 +13,17 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.BuildConfig
 import com.eundmswlji.tacoling.R
-import com.eundmswlji.tacoling.data.repository.address.AddressRepository
 import com.eundmswlji.tacoling.databinding.FragmentSettingBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
 import com.eundmswlji.tacoling.util.Util
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate),
     View.OnClickListener, CompoundButton.OnCheckedChangeListener {
-    @Inject
-    lateinit var addressRepository: AddressRepository
 
     private val viewModel: SettingViewModel by viewModels()
 
@@ -33,17 +31,18 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
         super.onViewCreated(view, savedInstanceState)
         setAppBar()
         (requireActivity() as? MainActivity)?.showBottomNav()
-        setObserver()
+        observer()
         binding.suggest.setOnClickListener(this)
         binding.withdrawal.setOnClickListener(this)
         binding.myLiked.setOnClickListener(this)
-        binding.alarm.setOnClickListener(this)
         binding.logout.setOnClickListener(this)
         binding.alarm.setOnCheckedChangeListener(this)
     }
 
-    private fun setObserver() {
-        //TODO::alarmOnOff DB 처리
+    private fun observer() {
+        viewModel.toastHelper.observe(viewLifecycleOwner) {
+
+        }
     }
 
     override fun onClick(v: View?) {
@@ -60,11 +59,14 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             binding.logout.id -> {
 
             }
+            binding.withdrawal.id -> {
+
+            }
         }
     }
 
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-        viewModel.setAlarmOnOff(isChecked)
+        viewModel.patchAlarm(isChecked)
     }
 
     private fun setAppBar() {

@@ -2,12 +2,22 @@ package com.eundmswlji.tacoling
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.viewModelScope
+import com.eundmswlji.tacoling.data.repository.user.UserRepository
 import com.eundmswlji.tacoling.util.SharedPreferencesUtil
 import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltAndroidApp
-class TacolingApplication : Application() {
+class TacolingApplication @Inject constructor(
+    private val userRepository: UserRepository
+): Application() {
 
     companion object {
         lateinit var sp: SharedPreferencesUtil

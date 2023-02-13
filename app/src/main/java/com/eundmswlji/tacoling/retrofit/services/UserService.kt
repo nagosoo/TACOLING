@@ -13,34 +13,34 @@ interface UserService {
 
     @DELETE("/user/{id}.json")
     suspend fun deleteUser(
-        @Path("id") userId: Int
+        @Path("id") userId: String
     ): Response<UserResponse>
 
     @GET("/user/{id}.json")
     suspend fun getUserInfo(
-        @Path("id") userId: Int
+        @Path("id") userId: String
     ): Response<UserInfo>
 
     @GET("/user/{id}/liked_shops.json")
     suspend fun getUserLikedShops(
-        @Path("id") userId: Int
+        @Path("id") userId: String
     ): Response<List<LikedShop>>
 
     @PATCH("/user/{id}/liked_shops/{shopId}.json")
     suspend fun addLikedShop(
-        @Path("id") userId: Int,
+        @Path("id") userId: String,
         @Path("shopId") shopId: Int,
     ): Response<AddLikedShopResponse>
 
     @DELETE("/user/{id}/liked_shops/{shopId}.json")
     suspend fun deleteLikedShop(
-        @Path("id") userId: Int,
+        @Path("id") userId: String,
         @Path("shopId") shopId: Int,
     ): Response<Nothing>
 
     @PATCH("/user/{id}.json")
     suspend fun patchAlarm(
-        @Path("id") userId: Int,
+        @Path("id") userId: String,
         @Body body: Alarm
     ): Response<Alarm>
 }

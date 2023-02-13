@@ -22,7 +22,10 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             val response = userRepository.postUser(userInfo)
             if (response.isSuccessful) {
-                _loginSuccess.postValue(true)
+                response.body()?.name?.let {
+                    userRepository.saveUserId(it)
+                    _loginSuccess.postValue(true)
+                }
             } else _loginSuccess.postValue(false)
         }
     }
