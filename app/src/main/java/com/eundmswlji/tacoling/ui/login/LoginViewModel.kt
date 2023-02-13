@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eundmswlji.tacoling.Const.USER_ID
 import com.eundmswlji.tacoling.data.model.UserInfo
 import com.eundmswlji.tacoling.data.repository.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,8 +23,9 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             val response = userRepository.postUser(userInfo)
             if (response.isSuccessful) {
-                response.body()?.name?.let {
-                    userRepository.saveUserId(it)
+                response.body()?.name?.let { userId ->
+                    userRepository.saveUserId(userId)
+                    USER_ID = userId
                     _loginSuccess.postValue(true)
                 }
             } else _loginSuccess.postValue(false)

@@ -6,5 +6,5 @@ interface UserLocalDataSource {
 
     suspend fun saveUserId(userId: String)
     suspend fun getUserId(): Flow<String?>
-
+    suspend fun clearUserId()
 }

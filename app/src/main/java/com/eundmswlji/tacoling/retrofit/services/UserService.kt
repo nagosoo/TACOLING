@@ -14,7 +14,7 @@ interface UserService {
     @DELETE("/user/{id}.json")
     suspend fun deleteUser(
         @Path("id") userId: String
-    ): Response<UserResponse>
+    ): Response<Nothing>
 
     @GET("/user/{id}.json")
     suspend fun getUserInfo(

@@ -15,9 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltAndroidApp
-class TacolingApplication @Inject constructor(
-    private val userRepository: UserRepository
-): Application() {
+class TacolingApplication : Application() {
 
     companion object {
         lateinit var sp: SharedPreferencesUtil

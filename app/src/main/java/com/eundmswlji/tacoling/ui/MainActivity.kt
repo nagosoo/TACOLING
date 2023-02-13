@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isGone
@@ -16,14 +17,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.databinding.ActivityMainBinding
-import com.eundmswlji.tacoling.util.Util.toast
 import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.ktx.Firebase
-import com.kakao.sdk.auth.AuthApiClient
-import com.kakao.sdk.common.model.KakaoSdkError
-import com.kakao.sdk.user.UserApiClient
-import com.kakao.sdk.user.model.AccessTokenInfo
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,6 +28,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -46,38 +43,15 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         binding.bottomNavView.setOnItemSelectedListener(this)
         binding.bottomNavView.setOnItemReselectedListener(this)
 
-        checkIsLogin()
+        observer()
+        viewModel.getUserId()
 
     }
 
-    private fun checkIsLogin() {
-        if (AuthApiClient.instance.hasToken()) {
-            UserApiClient.instance.accessTokenInfo { _, error ->
-                if (error != null) {
-                    if (error is KakaoSdkError && error.isInvalidTokenError()) {
-                        //로그인 필요
-                        setNavGraph(false)
-                    } else {
-                        toast("로그인 실패")
-                    }
-                } else {
-                    //토큰 유효성 체크 성공(필요 시 토큰 갱신됨)
-                    UserApiClient().accessTokenInfo(callback = object :
-                            (AccessTokenInfo?, Throwable?) -> (Unit) {
-                        override fun invoke(token: AccessTokenInfo?, error: Throwable?) {
-                            if (error != null) {
-                                //로그인 필요
-                                setNavGraph(false)
-                            } else if (token != null) {
-                                setNavGraph(true)
-                            }
-                        }
-                    })
-                }
-            }
-        } else {
-            //  로그인 필요
-            setNavGraph(false)
+    private fun observer() {
+        viewModel.userId.observe(this) {
+            if (it.isNullOrEmpty()) setNavGraph(false)
+            else setNavGraph(true)
         }
     }
 

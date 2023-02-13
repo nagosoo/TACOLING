@@ -12,12 +12,14 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.BuildConfig
+import com.eundmswlji.tacoling.EventObserver
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.databinding.FragmentSettingBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
 import com.eundmswlji.tacoling.util.Util
+import com.eundmswlji.tacoling.util.Util.toast
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -32,6 +34,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
         setAppBar()
         (requireActivity() as? MainActivity)?.showBottomNav()
         observer()
+        viewModel.getAlarmInfo()
         binding.suggest.setOnClickListener(this)
         binding.withdrawal.setOnClickListener(this)
         binding.myLiked.setOnClickListener(this)
@@ -40,8 +43,12 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
     }
 
     private fun observer() {
-        viewModel.toastHelper.observe(viewLifecycleOwner) {
+        viewModel.toastHelper.observe(viewLifecycleOwner, EventObserver {
+            toast(it)
+        })
 
+        viewModel.isUserDeletedSuccessfully.observe(viewLifecycleOwner) {
+            findNavController().navigate(R.id.loginFragment)
         }
     }
 
@@ -57,9 +64,6 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
                 findNavController().navigate(R.id.myLikedFragment)
             }
             binding.logout.id -> {
-
-            }
-            binding.withdrawal.id -> {
 
             }
         }
@@ -102,7 +106,9 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             spannedMessage = message,
             positiveMessage = "네",
             negativeMessage = "아니요",
-            positiveButtonListener = {}).show(childFragmentManager, null)
+            positiveButtonListener = {
+                viewModel.deleteUser()
+            }).show(childFragmentManager, null)
     }
 
 }

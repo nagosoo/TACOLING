@@ -16,7 +16,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun postUser(body: UserInfo): Response<UserResponse> =
         userRemoteDataSource.postUser(body)
 
-    override suspend fun deleteUser(userId: String): Response<UserResponse> =
+    override suspend fun deleteUser(userId: String): Response<Nothing> =
         userRemoteDataSource.deleteUser(userId)
 
     //    override suspend fun getUserInfo(userId: Int): Response<UserInfo> =
@@ -43,4 +43,6 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getUserId(): Flow<String?> =
         userLocalDataSource.getUserId()
+
+    override suspend fun clearUserId() = userLocalDataSource.clearUserId()
 }

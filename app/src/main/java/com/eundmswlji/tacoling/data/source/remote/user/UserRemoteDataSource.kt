@@ -12,7 +12,7 @@ interface UserRemoteDataSource {
 
     suspend fun deleteUser(
         @Path("id") userId: String
-    ): Response<UserResponse>
+    ): Response<Nothing>
 
     suspend fun getUserInfo(
         @Path("id") userId: String

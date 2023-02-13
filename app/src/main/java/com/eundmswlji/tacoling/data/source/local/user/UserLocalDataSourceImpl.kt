@@ -42,4 +42,10 @@ class UserLocalDataSourceImpl @Inject constructor(
                 prefs[USER_ID]
             }
 
+    override suspend fun clearUserId() {
+        dataStore.edit { prefs ->
+            prefs.clear()
+        }
+    }
+
 }

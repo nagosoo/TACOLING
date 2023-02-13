@@ -36,6 +36,9 @@
         <action
             android:id="@+id/action_settingFragment_to_myLikedFragment"
             app:destination="@id/myLikedFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/myLikedFragment"

@@ -38,7 +38,7 @@
             android:layout_height="50dp"
             android:layout_marginBottom="12dp"
             android:background="@color/white"
-            android:checked="@{viewModel.isAlarmOn()}"
+            android:checked="@{viewModel.isAlarmChecked().booleanValue()}"
             android:gravity="center_vertical"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"

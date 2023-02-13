@@ -14,7 +14,7 @@ interface UserRepository {
 
     suspend fun deleteUser(
         @Path("id") userId: String
-    ): Response<UserResponse>
+    ): Response<Nothing>
 
 //    suspend fun getUserInfo(
 //        @Path("id") userId: Int
@@ -45,4 +45,6 @@ interface UserRepository {
 
     suspend fun saveUserId(userId: String)
     suspend fun getUserId() : Flow<String?>
+    suspend fun clearUserId()
+
 }
