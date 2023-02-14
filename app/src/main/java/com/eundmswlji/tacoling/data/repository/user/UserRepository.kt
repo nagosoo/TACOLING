@@ -2,6 +2,7 @@ package com.eundmswlji.tacoling.data.repository.user
 
 import com.eundmswlji.tacoling.data.model.*
 import kotlinx.coroutines.flow.Flow
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Path
@@ -14,7 +15,7 @@ interface UserRepository {
 
     suspend fun deleteUser(
         @Path("id") userId: String
-    ): Response<Nothing>
+    ): Response<ResponseBody>
 
 //    suspend fun getUserInfo(
 //        @Path("id") userId: Int
@@ -44,7 +45,7 @@ interface UserRepository {
     ): Response<Alarm>
 
     suspend fun saveUserId(userId: String)
-    suspend fun getUserId() : Flow<String?>
+    suspend fun getUserId() : String?
     suspend fun clearUserId()
 
 }

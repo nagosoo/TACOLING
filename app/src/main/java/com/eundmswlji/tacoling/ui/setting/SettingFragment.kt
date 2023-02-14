@@ -31,6 +31,12 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.apply {
+            viewModel = this@SettingFragment.viewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
+
         setAppBar()
         (requireActivity() as? MainActivity)?.showBottomNav()
         observer()
@@ -47,8 +53,9 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             toast(it)
         })
 
-        viewModel.isUserDeletedSuccessfully.observe(viewLifecycleOwner) {
-            findNavController().navigate(R.id.loginFragment)
+        viewModel.isUserDeletedSuccessful.observe(viewLifecycleOwner) {
+            val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment()
+            findNavController().navigate(action)
         }
     }
 
@@ -64,7 +71,8 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
                 findNavController().navigate(R.id.myLikedFragment)
             }
             binding.logout.id -> {
-
+                val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment()
+                findNavController().navigate(action)
             }
         }
     }

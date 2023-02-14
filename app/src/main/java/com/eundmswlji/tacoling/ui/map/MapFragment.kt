@@ -177,13 +177,13 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
                     adapter.submitData(it)
                 }
             }
-            lifecycleScope.launch {
-                adapter.loadStateFlow.collectLatest { loadState ->
-                    val isListEmpty =
-                        loadState.refresh is LoadState.NotLoading && adapter.itemCount == 0
-                    binding.tvNoData.isVisible = isListEmpty
-                }
-            }
+//            lifecycleScope.launch {
+//                adapter.loadStateFlow.collectLatest { loadState ->
+//                    val isListEmpty =
+//                        loadState.refresh is LoadState.NotLoading && adapter.itemCount == 0
+//                    binding.tvNoData.isVisible = isListEmpty
+//                }
+//            }
         }
 
         binding.tvAddress.editText.setOnFocusChangeListener { v, hasFocus ->

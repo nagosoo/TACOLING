@@ -1,6 +1,7 @@
 package com.eundmswlji.tacoling.retrofit.services
 
 import com.eundmswlji.tacoling.data.model.*
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -14,7 +15,7 @@ interface UserService {
     @DELETE("/user/{id}.json")
     suspend fun deleteUser(
         @Path("id") userId: String
-    ): Response<Nothing>
+    ): Response<ResponseBody>
 
     @GET("/user/{id}.json")
     suspend fun getUserInfo(

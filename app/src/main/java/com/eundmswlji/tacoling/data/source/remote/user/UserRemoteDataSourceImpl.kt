@@ -2,6 +2,7 @@ package com.eundmswlji.tacoling.data.source.remote.user
 
 import com.eundmswlji.tacoling.data.model.*
 import com.eundmswlji.tacoling.retrofit.services.UserService
+import okhttp3.ResponseBody
 import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -11,7 +12,7 @@ class UserRemoteDataSourceImpl @Inject constructor(
     private val userService: UserService
 ) : UserRemoteDataSource {
     override suspend fun postUser(body: UserInfo): Response<UserResponse> = userService.postUser(body)
-    override suspend fun deleteUser(userId: String): Response<Nothing> = userService.deleteUser(userId)
+    override suspend fun deleteUser(userId: String): Response<ResponseBody> = userService.deleteUser(userId)
     override suspend fun getUserInfo(userId: String): Response<UserInfo> = userService.getUserInfo(userId)
     override suspend fun getUserLikedShops(userId: String): Response<List<LikedShop>> =
         userService.getUserLikedShops(userId)
