@@ -21,7 +21,7 @@ interface UserRemoteDataSource {
 
     suspend fun getUserLikedShops(
         @Path("id") userId: String
-    ): Response<List<LikedShop>>
+    ): Response<List<LikedShop>?>
 
     suspend fun addLikedShop(
         @Path("id") userId: String,
@@ -31,7 +31,7 @@ interface UserRemoteDataSource {
     suspend fun deleteLikedShop(
         @Path("id") userId: String,
         @Path("shopId") shopId: Int,
-    ): Response<Nothing>
+    ): Response<ResponseBody>
 
     suspend fun patchAlarm(
         @Path("id") userId: String,

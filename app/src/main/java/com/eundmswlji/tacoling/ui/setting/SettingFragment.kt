@@ -44,7 +44,6 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
         binding.suggest.setOnClickListener(this)
         binding.withdrawal.setOnClickListener(this)
         binding.myLiked.setOnClickListener(this)
-        binding.logout.setOnClickListener(this)
         binding.alarm.setOnCheckedChangeListener(this)
     }
 
@@ -68,10 +67,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
                 showWithdrawalDialog()
             }
             binding.myLiked.id -> {
-                findNavController().navigate(R.id.myLikedFragment)
-            }
-            binding.logout.id -> {
-                val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment()
+                val action = SettingFragmentDirections.actionSettingFragmentToLikedShopFragment()
                 findNavController().navigate(action)
             }
         }

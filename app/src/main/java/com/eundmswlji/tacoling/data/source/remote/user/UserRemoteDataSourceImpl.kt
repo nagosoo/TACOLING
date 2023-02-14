@@ -14,13 +14,13 @@ class UserRemoteDataSourceImpl @Inject constructor(
     override suspend fun postUser(body: UserInfo): Response<UserResponse> = userService.postUser(body)
     override suspend fun deleteUser(userId: String): Response<ResponseBody> = userService.deleteUser(userId)
     override suspend fun getUserInfo(userId: String): Response<UserInfo> = userService.getUserInfo(userId)
-    override suspend fun getUserLikedShops(userId: String): Response<List<LikedShop>> =
+    override suspend fun getUserLikedShops(userId: String): Response<List<LikedShop>?> =
         userService.getUserLikedShops(userId)
 
     override suspend fun addLikedShop(userId: String, shopId: Int): Response<AddLikedShopResponse> =
         userService.addLikedShop(userId, shopId)
 
-    override suspend fun deleteLikedShop(userId: String, shopId: Int): Response<Nothing> =
+    override suspend fun deleteLikedShop(userId: String, shopId: Int): Response<ResponseBody> =
         userService.deleteLikedShop(userId, shopId)
 
     override suspend fun patchAlarm(userId: String, body: Alarm): Response<Alarm> =

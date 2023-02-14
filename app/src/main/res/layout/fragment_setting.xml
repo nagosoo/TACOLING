@@ -23,14 +23,6 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/logout"
-            style="@style/settingButton"
-            android:layout_width="match_parent"
-            android:layout_marginBottom="12dp"
-            android:text="로그아웃"
-            android:textSize="14sp" />
-
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/alarm"
             style="@style/text14Black"

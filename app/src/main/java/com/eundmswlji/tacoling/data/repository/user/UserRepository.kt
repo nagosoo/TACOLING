@@ -2,6 +2,7 @@ package com.eundmswlji.tacoling.data.repository.user
 
 import com.eundmswlji.tacoling.data.model.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -25,9 +26,13 @@ interface UserRepository {
         @Path("id") userId: String
     ): Boolean
 
+//    suspend fun getUserLikedShops(
+//        @Path("id") userId: String
+//    ): Response<List<LikedShop?>>
+
     suspend fun getUserLikedShops(
         @Path("id") userId: String
-    ): Response<List<LikedShop>>
+    ): Flow<List<LikedShop?>>
 
     suspend fun addLikedShop(
         @Path("id") userId: String,
@@ -37,7 +42,7 @@ interface UserRepository {
     suspend fun deleteLikedShop(
         @Path("id") userId: String,
         @Path("shopId") shopId: Int,
-    ): Response<Nothing>
+    ): Response<ResponseBody>
 
     suspend fun patchAlarm(
         @Path("id") userId: String,

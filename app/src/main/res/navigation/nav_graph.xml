@@ -34,19 +34,19 @@
             android:id="@+id/action_settingFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
         <action
-            android:id="@+id/action_settingFragment_to_myLikedFragment"
-            app:destination="@id/myLikedFragment" />
+            android:id="@+id/action_settingFragment_to_likedShopFragment"
+            app:destination="@id/likedShopFragment" />
         <action
             android:id="@+id/action_settingFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
     <fragment
-        android:id="@+id/myLikedFragment"
-        android:name="com.eundmswlji.tacoling.ui.setting.my_liked.MyLikedFragment"
+        android:id="@+id/likedShopFragment"
+        android:name="com.eundmswlji.tacoling.ui.setting.liked_shop.LikedShopFragment"
         android:label="MyLikedFragment"
-        tools:layout="@layout/fragment_my_liked">
+        tools:layout="@layout/fragment_liked_shop">
         <action
-            android:id="@+id/action_myZzimFragment_to_shopFragment"
+            android:id="@+id/action_likedShopFragment_to_shopFragment"
             app:destination="@id/shopFragment" />
     </fragment>
     <fragment

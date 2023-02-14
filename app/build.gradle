@@ -106,4 +106,7 @@ dependencies {
 
     //preferences dataStore
     implementation "androidx.datastore:datastore-preferences:1.0.0"
+
+    //recyclerview
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
 }

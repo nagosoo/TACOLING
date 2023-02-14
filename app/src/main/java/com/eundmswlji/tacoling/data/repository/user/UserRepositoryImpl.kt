@@ -3,7 +3,9 @@ package com.eundmswlji.tacoling.data.repository.user
 import com.eundmswlji.tacoling.data.model.*
 import com.eundmswlji.tacoling.data.source.local.user.UserLocalDataSource
 import com.eundmswlji.tacoling.data.source.remote.user.UserRemoteDataSource
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import okhttp3.ResponseBody
 import retrofit2.Response
 import javax.inject.Inject
@@ -31,13 +33,18 @@ class UserRepositoryImpl @Inject constructor(
         else true
     }
 
-    override suspend fun getUserLikedShops(userId: String): Response<List<LikedShop>> =
-        userRemoteDataSource.getUserLikedShops(userId)
+    override suspend fun getUserLikedShops(userId: String): Flow<List<LikedShop?>> {
+        val response = userRemoteDataSource.getUserLikedShops(userId)
+        response.body()?.let { list ->
+            return flow { emit(list) }
+        }
+        return flow { emit(emptyList()) }
+    }
 
     override suspend fun addLikedShop(userId: String, shopId: Int): Response<AddLikedShopResponse> =
         userRemoteDataSource.addLikedShop(userId, shopId)
 
-    override suspend fun deleteLikedShop(userId: String, shopId: Int): Response<Nothing> =
+    override suspend fun deleteLikedShop(userId: String, shopId: Int): Response<ResponseBody> =
         userRemoteDataSource.deleteLikedShop(userId, shopId)
 
     override suspend fun patchAlarm(userId: String, body: Alarm): Response<Alarm> =

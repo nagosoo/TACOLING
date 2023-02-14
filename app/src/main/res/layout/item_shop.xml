@@ -1,48 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
     </data>
 
-    <androidx.appcompat.widget.Toolbar
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/white"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
         android:paddingStart="15dp"
         android:paddingEnd="15dp">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:drawablePadding="5dp"
-            android:drawableStart="@drawable/ic_taco_mini"
             android:id="@+id/tvName"
+            style="@style/text14Black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            style="@style/text14Black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="타코왕" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvPhoneNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            style="@style/text14Black"
-            tools:text="010-0000-0000" />
-
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvHeart"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image_heart"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/heart_icon"
             android:textSize="18sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="@string/redHeartEmoji" />
-
-    </androidx.appcompat.widget.Toolbar>
+            android:tint="@color/mainRed"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

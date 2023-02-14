@@ -25,7 +25,7 @@ interface UserService {
     @GET("/user/{id}/liked_shops.json")
     suspend fun getUserLikedShops(
         @Path("id") userId: String
-    ): Response<List<LikedShop>>
+    ): Response<List<LikedShop>?>
 
     @PATCH("/user/{id}/liked_shops/{shopId}.json")
     suspend fun addLikedShop(
@@ -37,7 +37,7 @@ interface UserService {
     suspend fun deleteLikedShop(
         @Path("id") userId: String,
         @Path("shopId") shopId: Int,
-    ): Response<Nothing>
+    ): Response<ResponseBody>
 
     @PATCH("/user/{id}.json")
     suspend fun patchAlarm(

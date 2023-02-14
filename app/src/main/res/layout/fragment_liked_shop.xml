@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.eundmswlji.tacoling.ui.setting.my_liked.MyLikedViewModel" />
+            type="com.eundmswlji.tacoling.ui.setting.liked_shop.LikedShopViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +25,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appBar"
-            app:myLikedList="@{viewModel.myLikedList}"
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

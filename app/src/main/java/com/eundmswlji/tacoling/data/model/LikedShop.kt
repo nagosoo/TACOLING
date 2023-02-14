@@ -7,5 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class LikedShop(
     @SerialName("id")
-    val id: Int
+    val id: Int,
+    @SerialName("name")
+    val name: String
 )
