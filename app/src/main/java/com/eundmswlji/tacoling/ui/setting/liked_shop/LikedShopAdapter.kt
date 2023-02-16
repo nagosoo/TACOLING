@@ -5,13 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.eundmswlji.tacoling.data.model.LikedShop
+import com.eundmswlji.tacoling.data.model.LikedShopX
 import com.eundmswlji.tacoling.databinding.ItemShopBinding
 
 class LikedShopAdapter(
     private val onItemClickListener: (Int) -> (Unit),
     //private val onHeartClickListener: (Int) -> (Unit)
-) : ListAdapter<LikedShop, LikedShopAdapter.LikedShopViewHolder>(DIFF_UTIL) {
+) : ListAdapter<LikedShopX, LikedShopAdapter.LikedShopViewHolder>(DIFF_UTIL) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LikedShopViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -31,18 +31,19 @@ class LikedShopAdapter(
 //            binding.tvHeart.setOnClickListener {
 //                onHeartClickListener(item.id)
 //            }
+            //밀어서 삭제로 구현 ㄱ
             itemView.setOnClickListener {
-                onItemClickListener(item.id)
+                onItemClickListener(item.id!!)
             }
         }
     }
 
     companion object {
-        val DIFF_UTIL = object : DiffUtil.ItemCallback<LikedShop>() {
-            override fun areItemsTheSame(oldItem: LikedShop, newItem: LikedShop): Boolean =
+        val DIFF_UTIL = object : DiffUtil.ItemCallback<LikedShopX>() {
+            override fun areItemsTheSame(oldItem: LikedShopX, newItem: LikedShopX): Boolean =
                 oldItem === newItem
 
-            override fun areContentsTheSame(oldItem: LikedShop, newItem: LikedShop): Boolean =
+            override fun areContentsTheSame(oldItem: LikedShopX, newItem: LikedShopX): Boolean =
                 oldItem.id == newItem.id
         }
     }

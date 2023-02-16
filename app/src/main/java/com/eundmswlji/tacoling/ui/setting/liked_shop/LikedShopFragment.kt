@@ -7,11 +7,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
+import com.eundmswlji.tacoling.EventObserver
 import com.eundmswlji.tacoling.databinding.FragmentLikedShopBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.decoration.VerticalItemDecoration
 import com.eundmswlji.tacoling.util.Util.dp
+import com.eundmswlji.tacoling.util.Util.toast
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -28,8 +33,8 @@ class LikedShopFragment :
         (requireActivity() as? MainActivity)?.hideBottomNav()
         viewModel.getLikedShops()
         observer()
+        setupTouchHelper(binding.root)
     }
-
 
     private fun observer() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -39,6 +44,10 @@ class LikedShopFragment :
                 }
             }
         }
+
+        viewModel.toastHelper.observe(viewLifecycleOwner, EventObserver {
+            toast(it)
+        })
     }
 
     private fun setAppBar() {
@@ -63,6 +72,34 @@ class LikedShopFragment :
         val action =
             LikedShopFragmentDirections.actionLikedShopFragmentToShopFragment(shopId)
         findNavController().navigate(action)
+    }
+
+    private fun setupTouchHelper(view: View) {
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
+            0, ItemTouchHelper.LEFT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.bindingAdapterPosition
+                val shop = viewModel.myLikedList.value[position]
+                viewModel.removeMyLikedList(position)
+                Snackbar.make(view, "찜한 가게가 삭제되었습니다.", Snackbar.LENGTH_SHORT).apply {
+                    setAction("되돌리기") {
+                        viewModel.addMyLikedList(position, shop.id, shop.name)
+                    }
+                }.show()
+            }
+        }
+        ItemTouchHelper(itemTouchHelperCallback).apply {
+            attachToRecyclerView(binding.recyclerView)
+        }
     }
 
 //    private fun heartClickListener(shop: Int) {

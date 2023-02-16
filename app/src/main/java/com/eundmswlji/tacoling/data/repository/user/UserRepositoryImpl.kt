@@ -33,19 +33,23 @@ class UserRepositoryImpl @Inject constructor(
         else true
     }
 
-    override suspend fun getUserLikedShops(userId: String): Flow<List<LikedShop?>> {
+    override suspend fun getUserLikedShops(userId: String): Flow<List<LikedShopX>> {
         val response = userRemoteDataSource.getUserLikedShops(userId)
-        response.body()?.let { list ->
-            return flow { emit(list) }
-        }
-        return flow { emit(emptyList()) }
+        return if (response.isSuccessful) {
+            if (response.body()!!.first().id < 0) flow { emit(emptyList()) } //임의처리
+            else flow { emit(response.body()!!) }
+        } else flow { emit(emptyList()) }
     }
 
-    override suspend fun addLikedShop(userId: String, shopId: Int): Response<AddLikedShopResponse> =
-        userRemoteDataSource.addLikedShop(userId, shopId)
+    override suspend fun addLikedShop(
+        userId: String,
+        shopIndex: Int,
+        body: LikedShopX
+    ): Response<AddLikedShopResponse> =
+        userRemoteDataSource.addLikedShop(userId, shopIndex, body)
 
-    override suspend fun deleteLikedShop(userId: String, shopId: Int): Response<ResponseBody> =
-        userRemoteDataSource.deleteLikedShop(userId, shopId)
+    override suspend fun deleteLikedShop(userId: String, shopIndex: Int): Response<ResponseBody> =
+        userRemoteDataSource.deleteLikedShop(userId, shopIndex)
 
     override suspend fun patchAlarm(userId: String, body: Alarm): Response<Alarm> =
         userRemoteDataSource.patchAlarm(userId, body)

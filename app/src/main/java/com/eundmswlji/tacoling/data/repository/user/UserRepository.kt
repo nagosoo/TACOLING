@@ -32,16 +32,17 @@ interface UserRepository {
 
     suspend fun getUserLikedShops(
         @Path("id") userId: String
-    ): Flow<List<LikedShop?>>
+    ): Flow<List<LikedShopX>>
 
     suspend fun addLikedShop(
         @Path("id") userId: String,
-        @Path("shopId") shopId: Int,
+        @Path("shopId") shopIndex: Int,
+        @Body body: LikedShopX
     ): Response<AddLikedShopResponse>
 
     suspend fun deleteLikedShop(
         @Path("id") userId: String,
-        @Path("shopId") shopId: Int,
+        @Path("shopId") shopIndex: Int,
     ): Response<ResponseBody>
 
     suspend fun patchAlarm(

@@ -5,8 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserInfo(
-    @SerialName("liked_shops")
-    val likedShops: List<LikedShopX>,
-    val notification: Boolean = true
+data class LikedShopX(
+    val id: Int, //파싱에러로 인해 임의
+    val name: String
 )

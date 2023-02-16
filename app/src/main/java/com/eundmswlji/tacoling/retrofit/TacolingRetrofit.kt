@@ -3,6 +3,7 @@ package com.eundmswlji.tacoling.retrofit
 import com.eundmswlji.tacoling.retrofit.interceptor.AuthorizationInterceptor
 import com.eundmswlji.tacoling.retrofit.interceptor.UserAgentInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -19,7 +20,12 @@ class TacolingRetrofit @Inject constructor() {
 
     private val contentType = "application/json".toMediaType()
 
-    private val json = Json { encodeDefaults = true }
+    private val json = Json {
+        encodeDefaults = true
+        ignoreUnknownKeys = true
+    }
+
+    @OptIn(ExperimentalSerializationApi::class)
     fun getRetrofitBuilder(baseurl: String, needAuthorization: Boolean): Retrofit {
         return Retrofit.Builder().baseUrl(baseurl)
             .client(getOkHttpClient(needAuthorization))

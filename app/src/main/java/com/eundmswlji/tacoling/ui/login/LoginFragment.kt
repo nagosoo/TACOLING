@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.R
+import com.eundmswlji.tacoling.data.model.LikedShopX
 import com.eundmswlji.tacoling.data.model.UserInfo
 import com.eundmswlji.tacoling.databinding.FragmentLoginBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
@@ -35,7 +36,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     private fun loginWithKakao() {
-        val defaultUser = UserInfo()
+        val dummyShop = LikedShopX(-100, "empty")
+        val dummyLikedShopList = listOf<LikedShopX>(dummyShop)
+        val defaultUser = UserInfo(likedShops = dummyLikedShopList)
         val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
             if (error != null) {
                 toast("로그인 실패")

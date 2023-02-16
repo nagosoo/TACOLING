@@ -13,7 +13,7 @@ data class Document(
     @SerialName("address_type")
     val addressType: String,
     @SerialName("road_address")
-    val roadAddress: RoadAddress,
+    val roadAddress: RoadAddress?,
     @SerialName("x")
     val x: String,
     @SerialName("y")
