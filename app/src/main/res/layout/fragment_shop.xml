@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.eundmswlji.tacoling.ui.shop.ShopViewModel" />
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -47,6 +50,7 @@
                     app:layout_constraintTop_toBottomOf="@id/mapViewContainer" />
 
                 <include
+                    bind:viewModel="@{viewModel}"
                     android:id="@+id/shopMiddle"
                     layout="@layout/shop_middle"
                     android:layout_width="match_parent"

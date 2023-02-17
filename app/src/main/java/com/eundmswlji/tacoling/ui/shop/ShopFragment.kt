@@ -5,14 +5,13 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.eundmswlji.tacoling.EventObserver
 import com.eundmswlji.tacoling.R
-import com.eundmswlji.tacoling.data.model.Menu
 import com.eundmswlji.tacoling.databinding.FragmentShopBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
@@ -22,48 +21,65 @@ import com.eundmswlji.tacoling.util.LinkUtil
 import com.eundmswlji.tacoling.util.MapUtil
 import com.eundmswlji.tacoling.util.Util.dp
 import com.eundmswlji.tacoling.util.Util.toast
+import dagger.hilt.android.AndroidEntryPoint
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
-
+@AndroidEntryPoint
 class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::inflate) {
+
     private var mapView: MapView? = null
     private val shopId by lazy { arguments?.getInt("shopId") }
+    private val viewModel: ShopViewModel by viewModels()
+    private val adapter by lazy { ShopAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.apply {
+            viewModel = this@ShopFragment.viewModel
+        }
+
+        if (shopId == null) return
+
         setAppBar()
-        initArea()
-        initMenu()
         setOnClickListener()
+        observer()
+        setRecyclerView()
+        viewModel.getShopInfo(shopId!!)
         (activity as? MainActivity)?.hideBottomNav()
+    }
+
+    private fun observer() {
+        viewModel.toastHelper.observe(viewLifecycleOwner, EventObserver {
+            toast(it)
+        })
+
+        viewModel.shopInfo.observe(viewLifecycleOwner) {
+            adapter.updateList(it.menu)
+            setPOIItem()
+        }
     }
 
     private fun setOnClickListener() {
         binding.shopTop.buttonLike.setOnClickListener {
-            // "단골가게 찜 해지" 더이상 가게의 상세 정보를 받지 않습니다.\n알림은 마이페이지에서 끌 수 있습니다. 찜 해지하기
             NormalDialog(
                 title = "단골가게 찜",
-                message = "가게의 상세 정보를 알려드립니다.\n알림은 마이페이지에서 끌 수 있습니다.",
-                positiveMessage = "찜하기",
+                message = getString(R.string.dialog_add_like),
+                positiveMessage = getString(R.string.dialog_add_like),
                 negativeMessage = "닫기",
-                positiveButtonListener = {},
-                negativeButtonListener = {}).show(childFragmentManager, null)
+                positiveButtonListener = {}).show(childFragmentManager, null)
         }
+
         binding.shopTop.buttonShare.setOnClickListener {
             share()
-//           val dialog = ShareDialogFactory(shopId!!).instantiate(
-//                classLoader = ClassLoader.getSystemClassLoader(),
-//                ShareDialog::class.java.name
-//            )
-//            (dialog as DialogFragment).show(childFragmentManager, null)
-
         }
+
         binding.shopTop.buttonCall.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL).apply {
-                data = Uri.parse("tel:01000000000")
+                data = Uri.parse("tel:" + viewModel.shopInfo.value?.phoneNumber)
             }
-            if (intent.resolveActivity(requireActivity().packageManager) != null) {
+            intent.resolveActivity(requireActivity().packageManager)?.let {
                 startActivity(intent)
             }
         }
@@ -76,13 +92,7 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
                 action = Intent.ACTION_SEND
                 putExtra(Intent.EXTRA_TEXT, shortLink.toString())
                 type = "text/plain"
-
-                // (Optional) Here we're setting the title of the content
                 putExtra(Intent.EXTRA_TITLE, "'타코왕'을 소개해보세요!")
-
-                // (Optional) Here we're passing a content URI to an image to be displayed
-                //  data = contentUri
-                // flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
             }, null)
 
             try {
@@ -93,23 +103,8 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
         }
     }
 
-    private fun initArea() {
-        binding.shopMiddle.tvMon.text = "만촌아파트 앞 18:00~20:00"
-        binding.shopMiddle.tvTue.text = "만촌아파트 앞 18:00~20:00"
-        binding.shopMiddle.tvWed.text = "만촌아파트 앞 18:00~20:00"
-        binding.shopMiddle.tvThu.text = "만촌아파트 앞 18:00~20:00"
-        binding.shopMiddle.tvFri.text = "만촌아파트 앞 18:00~20:00"
-        binding.shopMiddle.tvSat.text = "휴무"
-        binding.shopMiddle.tvSun.text = "만촌아파트 앞 18:00~20:00"
-    }
 
-    private fun initMenu() {
-        val adapter = ShopAdapter(
-            listOf(
-                Menu(id = 0, name = "타코야키 8알(기본맛, 매운맛)", detail = "", price = 3000),
-                Menu(id = 0, name = "타코야키 8알(기본맛, 매운맛)", detail = "", price = 3000)
-            )
-        )
+    private fun setRecyclerView() {
         binding.shopBottom.recyclerView.adapter = adapter
         binding.shopBottom.recyclerView.addItemDecoration(
             VerticalItemDecoration(
@@ -142,21 +137,23 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
             currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
         }
         binding.mapViewContainer.addView(mapView)
-        setPOIItem()
+        //   setPOIItem()
     }
 
 
     private fun setPOIItem() {
-        mapView?.removeAllPOIItems()
-        mapView?.addPOIItems(
-            arrayOf(
-                MapUtil.getMapPOIItem(
-                    "ㅌㅅㅌ",
-                    35.86401751026963,
-                    128.6485239265323
+        mapView?.let {
+            it.removeAllPOIItems()
+            it.addPOIItems(
+                arrayOf(
+                    MapUtil.getMapPOIItem(
+                        viewModel.todayLocation.name,
+                        viewModel.todayLocation.latitude,
+                        viewModel.todayLocation.longitude,
+                    )
                 )
             )
-        )
+        }
     }
 
     override fun onStart() {

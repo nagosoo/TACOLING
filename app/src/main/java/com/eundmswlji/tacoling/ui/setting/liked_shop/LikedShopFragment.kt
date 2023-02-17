@@ -18,6 +18,7 @@ import com.eundmswlji.tacoling.util.Util.dp
 import com.eundmswlji.tacoling.util.Util.toast
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -39,8 +40,8 @@ class LikedShopFragment :
     private fun observer() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.myLikedList.collect { list ->
-                    adapter.submitList(list)
+                viewModel.myLikedList.collectLatest { list ->
+                    adapter.updateList(list)
                 }
             }
         }
@@ -88,13 +89,14 @@ class LikedShopFragment :
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.bindingAdapterPosition
-                val shop = viewModel.myLikedList.value[position]
-                viewModel.removeMyLikedList(position)
-                Snackbar.make(view, "찜한 가게가 삭제되었습니다.", Snackbar.LENGTH_SHORT).apply {
-                    setAction("되돌리기") {
-                        viewModel.addMyLikedList(position, shop.id, shop.name)
-                    }
-                }.show()
+                viewModel.myLikedList.value[position]?.let { shop ->
+                    viewModel.removeMyLikedList(position)
+                    Snackbar.make(view, "찜한 가게가 삭제되었습니다.", Snackbar.LENGTH_SHORT).apply {
+                        setAction("되돌리기") {
+                            viewModel.addMyLikedList(position, shop.id, shop.name)
+                        }
+                    }.show()
+                }
             }
         }
         ItemTouchHelper(itemTouchHelperCallback).apply {
@@ -102,7 +104,4 @@ class LikedShopFragment :
         }
     }
 
-//    private fun heartClickListener(shop: Int) {
-//        viewModel.removeMyLikedList(shop)
-//    }
 }

@@ -16,7 +16,7 @@ class SettingViewModel @Inject constructor(
     private val userRepository: UserRepository,
 ) : ViewModel() {
 
-     val isAlarmChecked = MutableLiveData<Boolean>()
+    val isAlarmChecked = MutableLiveData<Boolean>()
     private var userId: String? = null
 
     private val _toastHelper = MutableLiveData<Event<String>>()
@@ -40,7 +40,6 @@ class SettingViewModel @Inject constructor(
         }
     }
 
-    //서버에 패치 되기 전에 프래그먼트를 나가버리면?
     fun patchAlarm(isAlarmChecked: Boolean) = viewModelScope.launch {
         userId?.let { userId ->
             val response =
@@ -58,5 +57,6 @@ class SettingViewModel @Inject constructor(
                 _isUserDeletedSuccessful.postValue(true)
             } else _toastHelper.postValue(Event(response.errorBody()?.string() ?: "error"))
         }
+
     }
 }

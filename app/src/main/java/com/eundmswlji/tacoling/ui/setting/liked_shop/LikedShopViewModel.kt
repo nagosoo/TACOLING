@@ -1,5 +1,6 @@
 package com.eundmswlji.tacoling.ui.setting.liked_shop
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,8 +21,8 @@ class LikedShopViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    private val _myLikedList = MutableStateFlow<List<LikedShopX>>(emptyList())
-    val myLikedList: StateFlow<List<LikedShopX>> = _myLikedList
+    private val _likedList = MutableStateFlow<List<LikedShopX>>(emptyList())
+    val myLikedList: StateFlow<List<LikedShopX>> = _likedList
 
     private val _toastHelper = MutableLiveData<Event<String>>()
     val toastHelper: LiveData<Event<String>> = _toastHelper
@@ -41,8 +42,8 @@ class LikedShopViewModel @Inject constructor(
             viewModelScope.launch {
                 userRepository.getUserLikedShops(userId).apply {
                     stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-                }.collect {
-                    _myLikedList.value = it
+                }.collect { list ->
+                    _likedList.value = list
                 }
             }
         }
@@ -53,7 +54,6 @@ class LikedShopViewModel @Inject constructor(
             viewModelScope.launch {
                 val response = userRepository.deleteLikedShop(userId, shopIndex)
                 if (response.isSuccessful) {
-
                 } else {
                     _toastHelper.postValue(Event(response.errorBody()?.string() ?: "error"))
                 }
@@ -64,10 +64,11 @@ class LikedShopViewModel @Inject constructor(
     fun addMyLikedList(shopIndex: Int, shopId: Int, shopName: String) {
         userId?.let { userId ->
             viewModelScope.launch {
+                val shop = LikedShopX(shopId, shopName)
                 val response =
-                    userRepository.addLikedShop(userId, shopIndex, LikedShopX(shopId, shopName))
+                    userRepository.addLikedShop(userId, shopIndex, shop)
                 if (response.isSuccessful) {
-                //왜 되돌리기가 안대지     getLikedShops()
+                    getLikedShops()
                 } else {
                     _toastHelper.postValue(Event(response.errorBody()?.string() ?: "error"))
                 }

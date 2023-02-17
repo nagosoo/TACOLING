@@ -101,6 +101,16 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="text15Black" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="text15Grey" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/textGrey</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
     <style name="styleDays" parent="Widget.AppCompat.CompoundButton.RadioButton">
         <item name="android:button">@null</item>
         <item name="android:background">@drawable/selector_days</item>

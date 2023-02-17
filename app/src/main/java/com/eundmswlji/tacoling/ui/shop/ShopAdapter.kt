@@ -3,11 +3,19 @@ package com.eundmswlji.tacoling.ui.shop
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.eundmswlji.tacoling.util.Util.wonFormat
-import com.eundmswlji.tacoling.data.model.Menu
+import com.eundmswlji.tacoling.data.model.MenuX
 import com.eundmswlji.tacoling.databinding.ItemMenuBinding
+import com.eundmswlji.tacoling.util.Ext.wonFormat
 
-class ShopAdapter(private val menuList: List<Menu>) : RecyclerView.Adapter<ShopAdapter.MyViewHolder>() {
+class ShopAdapter : RecyclerView.Adapter<ShopAdapter.MyViewHolder>() {
+
+    lateinit var menuList: MutableList<MenuX>
+
+    fun updateList(list: List<MenuX>) {
+        menuList.addAll(list)
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemMenuBinding.inflate(inflater, parent, false)
@@ -18,15 +26,14 @@ class ShopAdapter(private val menuList: List<Menu>) : RecyclerView.Adapter<ShopA
         holder.bind()
     }
 
-    override fun getItemCount(): Int {
-        return menuList.size
-    }
+    override fun getItemCount(): Int = menuList.size
 
-    inner class MyViewHolder(private val binding: ItemMenuBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MyViewHolder(private val binding: ItemMenuBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind() {
             val item = menuList[absoluteAdapterPosition]
             binding.tvMenu.text = item.name
-            binding.tvPrice.text = wonFormat.format(item.price)
+            binding.tvPrice.text = item.price.wonFormat()
         }
     }
 }

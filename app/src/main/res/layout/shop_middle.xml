@@ -1,143 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.eundmswlji.tacoling.ui.shop.ShopViewModel" />
     </data>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:background="@drawable/bg_white_4"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:background="@drawable/bg_white_4"
         android:paddingStart="25dp"
         android:paddingTop="16dp"
         android:paddingEnd="25dp"
         android:paddingBottom="16dp">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
             android:text="출몰지역"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/flow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <TableLayout
-            android:id="@+id/tl"
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/flow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            app:constraint_referenced_ids="tv_title_mon,tv_location_mon,tv_title_thue,tv_location_thue,tv_title_wed,tv_location_wed,tv_title_thur,tv_location_thur,tv_title_fri,tv_location_fri,tv_title_sat,tv_location_sat,tv_title_sun,tv_location_sun"
+            app:flow_horizontalGap="20dp"
+            app:flow_horizontalStyle="packed"
+            app:flow_maxElementsWrap="2"
+            app:flow_verticalGap="5dp"
+            app:flow_wrapMode="chain"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+        <TextView
+            android:id="@+id/tv_title_mon"
+            style="@style/text15Black"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="월"
+            app:layout_constraintStart_toStartOf="parent" />
 
-            <TableRow android:layout_marginBottom="13dp">
+        <TextView
+            app:location="@{viewModel.shopInfo.location[0]}"
+            android:id="@+id/tv_location_mon"
+            style="@style/text15Grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="만촌아파트 앞 18:00~20:00" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_marginEnd="20dp"
-                    android:text="월"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
+        <TextView
+            android:id="@+id/tv_title_thue"
+            style="@style/text15Black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="화"
+            app:layout_constraintStart_toStartOf="parent" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvMon"
-                    android:textColor="@color/textGrey"
-                    android:textSize="15sp"
-                    tools:text="만촌아파트 앞 18:00~20:00" />
-            </TableRow>
+        <TextView
+            app:location="@{viewModel.shopInfo.location[1]}"
+            android:id="@+id/tv_location_thue"
+            style="@style/text15Grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="만촌아파트 앞 18:00~20:00" />
 
-            <TableRow android:layout_marginBottom="13dp">
+        <TextView
+            android:id="@+id/tv_title_wed"
+            style="@style/text15Black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="수"
+            app:layout_constraintStart_toStartOf="parent" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_marginEnd="20dp"
-                    android:text="화"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvTue"
-                    android:textColor="@color/textGrey"
-                    android:textSize="15sp"
-                    tools:text="만촌아파트 앞 18:00~20:00" />
-            </TableRow>
-
-            <TableRow android:layout_marginBottom="13dp">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_marginEnd="20dp"
-                    android:text="수"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvWed"
-                    android:textColor="@color/textGrey"
-                    android:textSize="15sp"
-                    tools:text="만촌아파트 앞 18:00~20:00" />
-            </TableRow>
-
-            <TableRow android:layout_marginBottom="13dp">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_marginEnd="20dp"
-                    android:text="목"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvThu"
-                    android:textColor="@color/textGrey"
-                    android:textSize="15sp"
-                    tools:text="만촌아파트 앞 18:00~20:00" />
-            </TableRow>
-
-            <TableRow android:layout_marginBottom="13dp">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_marginEnd="20dp"
-                    android:text="금"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvFri"
-                    android:textColor="@color/textGrey"
-                    android:textSize="15sp"
-                    tools:text="만촌아파트 앞 18:00~20:00" />
-            </TableRow>
-
-            <TableRow android:layout_marginBottom="13dp">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_marginEnd="20dp"
-                    android:text="토"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvSat"
-                    android:textColor="@color/textGrey"
-                    android:textSize="15sp"
-                    tools:text="만촌아파트 앞 18:00~20:00" />
-            </TableRow>
-
-            <TableRow>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_marginEnd="20dp"
-                    android:text="일"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvSun"
-                    android:textColor="@color/textGrey"
-                    android:textSize="15sp"
-                    tools:text="휴무" />
-            </TableRow>
+        <TextView
+            app:location="@{viewModel.shopInfo.location[2]}"
+            android:id="@+id/tv_location_wed"
+            style="@style/text15Grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="만촌아파트 앞 18:00~20:00" />
 
 
-        </TableLayout>
+        <TextView
+            android:id="@+id/tv_title_thur"
+            style="@style/text15Black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="목"
+            app:layout_constraintStart_toStartOf="parent" />
 
+        <TextView
+            app:location="@{viewModel.shopInfo.location[3]}"
+            android:id="@+id/tv_location_thur"
+            style="@style/text15Grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="만촌아파트 앞 18:00~20:00" />
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        <TextView
+            android:id="@+id/tv_title_fri"
+            style="@style/text15Black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="금"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            app:location="@{viewModel.shopInfo.location[4]}"
+            android:id="@+id/tv_location_fri"
+            style="@style/text15Grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="만촌아파트 앞 18:00~20:00" />
+
+        <TextView
+            android:id="@+id/tv_title_sat"
+            style="@style/text15Black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="토"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            app:location="@{viewModel.shopInfo.location[5]}"
+            android:id="@+id/tv_location_sat"
+            style="@style/text15Grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="만촌아파트 앞 18:00~20:00" />
+
+        <TextView
+            android:id="@+id/tv_title_sun"
+            style="@style/text15Black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="일"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            app:location="@{viewModel.shopInfo.location[6]}"
+            android:id="@+id/tv_location_sun"
+            style="@style/text15Grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="휴무" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

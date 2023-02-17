@@ -12,7 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
+import java.util.*
 
 
 object Util {
@@ -46,11 +46,18 @@ object Util {
     }
 
     fun Fragment.hideKeyboard(view: View) {
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
         imm?.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    class ImageGetter(private val context: Context, private val width: Int, private val height: Int) : Html.ImageGetter {
+    val todayDate = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+
+    class ImageGetter(
+        private val context: Context,
+        private val width: Int,
+        private val height: Int
+    ) : Html.ImageGetter {
         override fun getDrawable(source: String?): Drawable {
             val resID = context.resources.getIdentifier(
                 source,
@@ -62,8 +69,5 @@ object Util {
             return d
         }
     }
-
-    val wonFormat = DecimalFormat("#,###원")
-
 }
 
