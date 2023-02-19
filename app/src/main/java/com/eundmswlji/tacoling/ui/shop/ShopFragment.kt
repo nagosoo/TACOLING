@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.EventObserver
@@ -19,8 +18,10 @@ import com.eundmswlji.tacoling.ui.decoration.VerticalItemDecoration
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
 import com.eundmswlji.tacoling.util.LinkUtil
 import com.eundmswlji.tacoling.util.MapUtil
+import com.eundmswlji.tacoling.util.MapUtil.getCurrentLocation
 import com.eundmswlji.tacoling.util.Util.dp
 import com.eundmswlji.tacoling.util.Util.toast
+import com.google.android.gms.tasks.Tasks.call
 import dagger.hilt.android.AndroidEntryPoint
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
@@ -33,14 +34,22 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
     private val viewModel: ShopViewModel by viewModels()
     private val adapter by lazy { ShopAdapter() }
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (shopId == null) return
+
+        viewModel.getShopInLikedList(shopId!!)
+        viewModel.getKmToShop(getCurrentLocation(requireContext()))
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
             viewModel = this@ShopFragment.viewModel
+            lifecycleOwner = viewLifecycleOwner
         }
-
-        if (shopId == null) return
 
         setAppBar()
         setOnClickListener()
@@ -55,64 +64,85 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
             toast(it)
         })
 
-        viewModel.shopInfo.observe(viewLifecycleOwner) {
-            adapter.updateList(it.menu)
-            setPOIItem()
+        viewModel.kmToShop.observe(viewLifecycleOwner){
+            binding.shopTop.tvLocation.text = it.toString()
         }
     }
 
     private fun setOnClickListener() {
         binding.shopTop.buttonLike.setOnClickListener {
-            NormalDialog(
-                title = "단골가게 찜",
-                message = getString(R.string.dialog_add_like),
-                positiveMessage = getString(R.string.dialog_add_like),
-                negativeMessage = "닫기",
-                positiveButtonListener = {}).show(childFragmentManager, null)
+            showDialog(viewModel.isLikedShop.value ?: false)
         }
-
         binding.shopTop.buttonShare.setOnClickListener {
             share()
         }
-
         binding.shopTop.buttonCall.setOnClickListener {
+            call()
+        }
+    }
+
+    private fun call() {
+        if (viewModel.shopInfo.value != null) {
             val intent = Intent(Intent.ACTION_DIAL).apply {
-                data = Uri.parse("tel:" + viewModel.shopInfo.value?.phoneNumber)
+                data = Uri.parse("tel:" + viewModel.shopInfo.value!!.phoneNumber)
             }
             intent.resolveActivity(requireActivity().packageManager)?.let {
                 startActivity(intent)
             }
+        } else {
+            toast("가게 정보를 불러오지 못했습니다.")
         }
+    }
+
+    private fun showDialog(isLikedShop: Boolean) {
+        NormalDialog(
+            title = if (isLikedShop) getString(R.string.dialog_remove_title)
+            else getString(R.string.dialog_add_like_title),
+            message = if (isLikedShop) getString(R.string.dialog_remove_like_message)
+            else getString(R.string.dialog_add_like_message),
+            positiveMessage = if (isLikedShop) getString(R.string.dialog_remove_like_button)
+            else getString(R.string.dialog_add_like_button),
+            negativeMessage = "닫기",
+            positiveButtonListener = {
+                if (isLikedShop) viewModel.removeMyLikedList() else viewModel.addLikedShop(shopId!!)
+            })
+            .show(childFragmentManager, null)
     }
 
     private fun share() {
-        LinkUtil.setDynamicLinks(shopId!!, "타코왕")?.let { shortLink ->
+        viewModel.shopInfo.value?.name?.let { shopName ->
+            LinkUtil.setDynamicLinks(shopId!!, shopName)?.let { shortLink ->
+                val share = Intent.createChooser(Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, shortLink.toString())
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TITLE, "'$shopName'을 소개해보세요!")
+                }, null)
 
-            val share = Intent.createChooser(Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, shortLink.toString())
-                type = "text/plain"
-                putExtra(Intent.EXTRA_TITLE, "'타코왕'을 소개해보세요!")
-            }, null)
-
-            try {
-                startActivity(share)
-            } catch (e: ActivityNotFoundException) {
-                toast("공유 가능한 앱이 없습니다.")
+                try {
+                    startActivity(share)
+                } catch (e: ActivityNotFoundException) {
+                    toast("공유 가능한 앱이 없습니다.")
+                }
             }
+            return
         }
+        toast("가게 정보를 불러오지 못했습니다.")
     }
 
-
     private fun setRecyclerView() {
-        binding.shopBottom.recyclerView.adapter = adapter
-        binding.shopBottom.recyclerView.addItemDecoration(
-            VerticalItemDecoration(
-                requireContext().dp(
-                    16
-                ), requireContext().dp(16), requireContext().dp(8), 0, 0
+        binding.shopBottom.recyclerView.apply {
+            adapter = this@ShopFragment.adapter
+            addItemDecoration(
+                VerticalItemDecoration(
+                    requireContext().dp(16),
+                    requireContext().dp(16),
+                    requireContext().dp(8),
+                    0,
+                    0
+                )
             )
-        )
+        }
     }
 
     private fun setAppBar() {
@@ -122,9 +152,13 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initMap() {
-        val centerPoint = MapPoint.mapPointWithGeoCoord(35.86401751026963, 128.6485239265323)
-        mapView = MapView(requireContext()).apply {
-            setMapCenterPointAndZoomLevel(centerPoint, 2, false)
+        val mapPoint = MapPoint.mapPointWithGeoCoord(
+            viewModel.todayLocation.latitude,
+            viewModel.todayLocation.longitude
+        )
+        mapView = MapView(requireActivity()).apply {
+            currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
+            setMapCenterPointAndZoomLevel(mapPoint, 2, false)
             setOnTouchListener { _, event ->
                 when (event.action) {
                     MotionEvent.ACTION_MOVE -> parent.requestDisallowInterceptTouchEvent(true)
@@ -134,10 +168,9 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
                 }
                 onTouchEvent(event)
             }
-            currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
         }
         binding.mapViewContainer.addView(mapView)
-        //   setPOIItem()
+        setPOIItem()
     }
 
 
@@ -158,7 +191,10 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
 
     override fun onStart() {
         super.onStart()
-        initMap()
+        viewModel.shopInfo.observe(viewLifecycleOwner) {
+            adapter.updateList(it.menu)
+            initMap()
+        }
     }
 
     override fun onStop() {

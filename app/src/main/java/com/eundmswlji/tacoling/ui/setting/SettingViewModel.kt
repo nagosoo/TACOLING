@@ -26,8 +26,10 @@ class SettingViewModel @Inject constructor(
     val isUserDeletedSuccessful: LiveData<Boolean> = _isUserDeletedSuccessful
 
     init {
-        viewModelScope.launch {
-            userId = userRepository.getUserId()
+        if (userId == null) {
+            viewModelScope.launch {
+                userId = userRepository.getUserId()
+            }
         }
     }
 

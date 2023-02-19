@@ -9,9 +9,10 @@ import com.eundmswlji.tacoling.util.Ext.wonFormat
 
 class ShopAdapter : RecyclerView.Adapter<ShopAdapter.MyViewHolder>() {
 
-    lateinit var menuList: MutableList<MenuX>
+    private val menuList: MutableList<MenuX> = mutableListOf()
 
     fun updateList(list: List<MenuX>) {
+        menuList.clear()
         menuList.addAll(list)
         notifyDataSetChanged()
     }

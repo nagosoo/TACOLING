@@ -7,10 +7,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,16 +15,14 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
 import androidx.paging.PagingData
 import com.eundmswlji.tacoling.EventObserver
 import com.eundmswlji.tacoling.R
-import com.eundmswlji.tacoling.data.model.UserInfo
 import com.eundmswlji.tacoling.databinding.FragmentMapBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.map.GpsPermissionUtil.checkGPS
-import com.eundmswlji.tacoling.util.MapUtil.geoToKm
+import com.eundmswlji.tacoling.util.MapUtil.getKmFromHereToShop
 import com.eundmswlji.tacoling.util.MapUtil.getMapPOIItem
 import com.eundmswlji.tacoling.util.Util
 import com.eundmswlji.tacoling.util.Util.hideKeyboard
@@ -36,8 +31,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
@@ -134,7 +127,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
         MapView.setMapTilePersistentCacheEnabled(true)
         mapView = MapView(requireActivity())
         binding.mapViewContainer.addView(mapView)
-        //Log.d("LOGGING","${mapView.hashCode()}")
         mapView?.apply {
             setZoomLevel(2, true)
             setMapViewEventListener(this@MapFragment)
@@ -248,12 +240,13 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
         if (currentPoint == null) return emptyList()
         val myLatitude = currentPoint.mapPointGeoCoord.latitude
         val myLongitude = currentPoint.mapPointGeoCoord.longitude
-        return mapPOIItem.filter {
-            val itemLatitude = it.mapPoint.mapPointGeoCoord.latitude //위도
-            val itemLongitude = it.mapPoint.mapPointGeoCoord.longitude //경도
-            val distance = geoToKm(myLatitude, itemLatitude, myLongitude, itemLongitude)
-            distance <= 9 //현재위치에서 3km 이내인것 보여주기
-        }
+        return mapPOIItem
+//        return mapPOIItem.filter {
+//            val itemLatitude = it.mapPoint.mapPointGeoCoord.latitude //위도
+//            val itemLongitude = it.mapPoint.mapPointGeoCoord.longitude //경도
+//            val distance = getKmFromHereToShop(myLatitude, itemLatitude, myLongitude, itemLongitude)
+//            distance <= 9 //현재위치에서 3km 이내인것 보여주기
+//        }
     }
 
     private fun setPOIItemsIn3Km(centerPoint: MapPoint?) {

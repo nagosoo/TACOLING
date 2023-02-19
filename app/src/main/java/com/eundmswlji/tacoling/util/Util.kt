@@ -51,7 +51,7 @@ object Util {
         imm?.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    val todayDate = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+    val todayDate = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)-1
 
     class ImageGetter(
         private val context: Context,

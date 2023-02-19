@@ -1,6 +1,5 @@
 package com.eundmswlji.tacoling.ui.setting.liked_shop
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,7 +21,7 @@ class LikedShopViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _likedList = MutableStateFlow<List<LikedShopX>>(emptyList())
-    val myLikedList: StateFlow<List<LikedShopX>> = _likedList
+    val likedList: StateFlow<List<LikedShopX>> = _likedList
 
     private val _toastHelper = MutableLiveData<Event<String>>()
     val toastHelper: LiveData<Event<String>> = _toastHelper
@@ -30,15 +29,18 @@ class LikedShopViewModel @Inject constructor(
     private var userId: String? = null
 
     init {
-        viewModelScope.launch {
-            userRepository.getUserId()?.let {
-                userId = it
+        if (userId == null) {
+            viewModelScope.launch {
+                userRepository.getUserId()?.let {
+                    userId = it
+                }
             }
         }
     }
 
     fun getLikedShops() {
         userId?.let { userId ->
+       //     _likedList.value = emptyList()
             viewModelScope.launch {
                 userRepository.getUserLikedShops(userId).apply {
                     stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -49,10 +51,10 @@ class LikedShopViewModel @Inject constructor(
         }
     }
 
-    fun removeMyLikedList(shopIndex: Int) {
+    fun removeMyLikedList(shopId: Int) {
         userId?.let { userId ->
             viewModelScope.launch {
-                val response = userRepository.deleteLikedShop(userId, shopIndex)
+                val response = userRepository.deleteLikedShop(userId, shopId)
                 if (response.isSuccessful) {
                 } else {
                     _toastHelper.postValue(Event(response.errorBody()?.string() ?: "error"))

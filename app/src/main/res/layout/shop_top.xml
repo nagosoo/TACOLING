@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.eundmswlji.tacoling.ui.shop.ShopViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,6 +19,7 @@
         android:paddingBottom="32dp">
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:text="@{viewModel.shopInfo.name}"
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -71,6 +74,7 @@
             app:layout_constraintTop_toTopOf="@id/tvLocation" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            app:zeroWaste="@{viewModel.shopInfo.zeroWaste}"
             android:id="@+id/tvZeroWaste"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,9 +87,10 @@
             tools:text="용기내챌린지 미참여" />
 
         <androidx.appcompat.widget.AppCompatButton
+            app:likedButtonName="@{viewModel.isLikedShop}"
             android:id="@+id/buttonLike"
             style="@style/pinkLightButton"
-            android:text="@string/LikedWithRedHeart"
+            tools:text="단골가게로 찜❤️"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/space2"
             app:layout_constraintHorizontal_chainStyle="packed"

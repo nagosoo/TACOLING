@@ -109,4 +109,7 @@ dependencies {
 
     //recyclerview
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
+
+    //gms
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 }

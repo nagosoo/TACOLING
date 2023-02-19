@@ -13,6 +13,7 @@ class LikedShopAdapter(
     private val likedShopList = mutableListOf<LikedShopX>()
 
     fun updateList(list: List<LikedShopX>) {
+        likedShopList.clear()
         likedShopList.addAll(list)
         notifyDataSetChanged()
     }

@@ -39,8 +39,8 @@ class LikedShopFragment :
 
     private fun observer() {
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.myLikedList.collectLatest { list ->
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.likedList.collectLatest { list ->
                     adapter.updateList(list)
                 }
             }
@@ -89,14 +89,13 @@ class LikedShopFragment :
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.bindingAdapterPosition
-                viewModel.myLikedList.value[position]?.let { shop ->
-                    viewModel.removeMyLikedList(position)
-                    Snackbar.make(view, "찜한 가게가 삭제되었습니다.", Snackbar.LENGTH_SHORT).apply {
-                        setAction("되돌리기") {
-                            viewModel.addMyLikedList(position, shop.id, shop.name)
-                        }
-                    }.show()
-                }
+                val shop = viewModel.likedList.value[position]
+                viewModel.removeMyLikedList(shop.id)
+                Snackbar.make(view, "찜한 가게가 삭제되었습니다.", Snackbar.LENGTH_SHORT).apply {
+                    setAction("되돌리기") {
+                        viewModel.addMyLikedList(position, shop.id, shop.name)
+                    }
+                }.show()
             }
         }
         ItemTouchHelper(itemTouchHelperCallback).apply {
