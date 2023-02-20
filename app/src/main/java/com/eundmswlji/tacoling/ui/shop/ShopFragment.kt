@@ -18,10 +18,8 @@ import com.eundmswlji.tacoling.ui.decoration.VerticalItemDecoration
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
 import com.eundmswlji.tacoling.util.LinkUtil
 import com.eundmswlji.tacoling.util.MapUtil
-import com.eundmswlji.tacoling.util.MapUtil.getCurrentLocation
-import com.eundmswlji.tacoling.util.Util.dp
+import com.eundmswlji.tacoling.util.Util.toPx
 import com.eundmswlji.tacoling.util.Util.toast
-import com.google.android.gms.tasks.Tasks.call
 import dagger.hilt.android.AndroidEntryPoint
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
@@ -40,7 +38,7 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
         if (shopId == null) return
 
         viewModel.getShopInLikedList(shopId!!)
-        viewModel.getKmToShop(getCurrentLocation(requireContext()))
+        viewModel.getShopInfo(shopId!!)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,7 +53,6 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
         setOnClickListener()
         observer()
         setRecyclerView()
-        viewModel.getShopInfo(shopId!!)
         (activity as? MainActivity)?.hideBottomNav()
     }
 
@@ -64,8 +61,8 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
             toast(it)
         })
 
-        viewModel.kmToShop.observe(viewLifecycleOwner){
-            binding.shopTop.tvLocation.text = it.toString()
+        viewModel.kmToShop.observe(viewLifecycleOwner) {
+            binding.shopTop.tvLocation.text = it
         }
     }
 
@@ -112,11 +109,12 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
     private fun share() {
         viewModel.shopInfo.value?.name?.let { shopName ->
             LinkUtil.setDynamicLinks(shopId!!, shopName)?.let { shortLink ->
+
                 val share = Intent.createChooser(Intent().apply {
-                    action = Intent.ACTION_SEND
+                    action = Intent.ACTION_SEND_MULTIPLE
+                    putExtra(Intent.EXTRA_TITLE, "'$shopName'을 소개해보세요!")
                     putExtra(Intent.EXTRA_TEXT, shortLink.toString())
                     type = "text/plain"
-                    putExtra(Intent.EXTRA_TITLE, "'$shopName'을 소개해보세요!")
                 }, null)
 
                 try {
@@ -135,11 +133,10 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
             adapter = this@ShopFragment.adapter
             addItemDecoration(
                 VerticalItemDecoration(
-                    requireContext().dp(16),
-                    requireContext().dp(16),
-                    requireContext().dp(8),
-                    0,
-                    0
+                    requireContext().toPx(16),
+                    requireContext().toPx(16),
+                    requireContext().toPx(5),
+                    0, 0
                 )
             )
         }
@@ -172,7 +169,6 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
         binding.mapViewContainer.addView(mapView)
         setPOIItem()
     }
-
 
     private fun setPOIItem() {
         mapView?.let {

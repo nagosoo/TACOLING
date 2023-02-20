@@ -14,7 +14,6 @@ import com.eundmswlji.tacoling.databinding.FragmentLikedShopBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.decoration.VerticalItemDecoration
-import com.eundmswlji.tacoling.util.Util.dp
 import com.eundmswlji.tacoling.util.Util.toast
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,9 +56,9 @@ class LikedShopFragment :
 
     private fun setAdapter() {
         val itemDecoration = VerticalItemDecoration(
-            top = requireContext().dp(30),
+            top = 0,
             bottom = 0,
-            between = requireContext().dp(12),
+            between = 12,
             left = 0,
             right = 0
         )

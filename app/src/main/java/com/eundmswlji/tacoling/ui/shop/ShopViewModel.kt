@@ -1,8 +1,9 @@
 package com.eundmswlji.tacoling.ui.shop
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eundmswlji.tacoling.Event
 import com.eundmswlji.tacoling.data.model.LikedShopX
@@ -19,8 +20,9 @@ import javax.inject.Inject
 @HiltViewModel
 class ShopViewModel @Inject constructor(
     private val shopRepository: ShopRepository,
-    private val userRepository: UserRepository
-) : ViewModel() {
+    private val userRepository: UserRepository,
+    app: Application
+) : AndroidViewModel(app) {
 
     private val _toastHelper = MutableLiveData<Event<String>>()
     val toastHelper: LiveData<Event<String>> = _toastHelper
@@ -31,8 +33,8 @@ class ShopViewModel @Inject constructor(
     private val _isLikedShop = MutableLiveData<Boolean>()
     val isLikedShop: LiveData<Boolean> = _isLikedShop
 
-    private val _kmToShop = MutableLiveData<Int>()
-    val kmToShop: LiveData<Int> = _kmToShop
+    private val _kmToShop = MutableLiveData<String>()
+    val kmToShop: LiveData<String> = _kmToShop
 
     lateinit var todayLocation: Location
     private var userId: String? = null
@@ -48,18 +50,29 @@ class ShopViewModel @Inject constructor(
         }
     }
 
-    fun getKmToShop(currentLocation: Pair<Double?, Double?>) =
+    private fun getDistanceToShop() {
+        MapUtil.getCurrentLocation(
+            getApplication<Application>().applicationContext,
+            ::getDistanceFromHereToShop
+        )
+    }
+
+    private fun getDistanceFromHereToShop(
+        currentLatitude: Double,
+        currentLongitude: Double
+    ) {
         viewModelScope.launch {
-            val km = if (currentLocation.first == null || currentLocation.second == null) 0
-            else MapUtil.getKmFromHereToShop(
-                currentLocation.first!!,
+            val meter = MapUtil.distanceCalculate(
                 todayLocation.latitude,
-                currentLocation.second!!,
-                todayLocation.longitude
+                todayLocation.longitude,
+                currentLatitude,
+                currentLongitude
             )
+
+            val km = if (meter < 3000) "${meter}m" else "${meter / 1000}km"
             _kmToShop.postValue(km)
         }
-
+    }
 
     fun getShopInfo(shopId: Int) {
         viewModelScope.launch {
@@ -68,6 +81,7 @@ class ShopViewModel @Inject constructor(
                 response.body()?.let { shopInfo ->
                     _shopInfo.postValue(shopInfo)
                     todayLocation = shopInfo.location[todayDate]
+                    getDistanceToShop()
                 }
             } else {
                 _toastHelper.postValue(Event(response.errorBody()?.string() ?: "error"))

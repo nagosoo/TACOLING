@@ -22,7 +22,6 @@ import com.eundmswlji.tacoling.databinding.FragmentMapBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.map.GpsPermissionUtil.checkGPS
-import com.eundmswlji.tacoling.util.MapUtil.getKmFromHereToShop
 import com.eundmswlji.tacoling.util.MapUtil.getMapPOIItem
 import com.eundmswlji.tacoling.util.Util
 import com.eundmswlji.tacoling.util.Util.hideKeyboard
