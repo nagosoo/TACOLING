@@ -9,14 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.eundmswlji.tacoling.data.model.Document
 import com.eundmswlji.tacoling.databinding.ItemAddressBinding
 
-class MapAdapter(private val clickListener: (x: Double, y: Double, address: String) -> (Unit)) :
-    PagingDataAdapter<Document, MapAdapter.MyViewHolder>(DIFF_CALLBACK) {
+class MapPagingAdapter(private val clickListener: (x: Double, y: Double, address: String) -> (Unit)) :
+    PagingDataAdapter<Document, MapPagingAdapter.MyViewHolder>(DIFF_CALLBACK) {
+
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.bind()
-        holder.itemView.setOnClickListener {
-            val item = getItem(position)!!
-            clickListener(item.x.toDouble(), item.y.toDouble(), item.addressName)
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -27,26 +24,31 @@ class MapAdapter(private val clickListener: (x: Double, y: Double, address: Stri
 
     inner class MyViewHolder(private val binding: ItemAddressBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         fun bind() {
             val item = getItem(absoluteAdapterPosition)
-            binding.tv.isVisible = item?.addressName.isNullOrEmpty().not()
-            binding.tv.text = item?.addressName
+
+            item?.let {
+                itemView.setOnClickListener {
+                    clickListener(item.x.toDouble(), item.y.toDouble(), item.addressName)
+                }
+
+                binding.textView.apply {
+                    isVisible = item.addressName.isNotEmpty()
+                    text = item.addressName
+                }
+            }
         }
     }
 
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Document>() {
             override fun areItemsTheSame(oldItem: Document, newItem: Document): Boolean {
-                return oldItem == newItem
+                return oldItem === newItem
             }
 
             override fun areContentsTheSame(oldItem: Document, newItem: Document): Boolean {
-                return oldItem.address == newItem.address &&
-                        oldItem.addressName == newItem.addressName &&
-                        oldItem.addressType == newItem.addressType &&
-                        oldItem.roadAddress == newItem.roadAddress &&
-                        oldItem.x == newItem.x &&
-                        oldItem.y == newItem.y
+                return oldItem == newItem
             }
         }
     }

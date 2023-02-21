@@ -26,7 +26,6 @@
             android:gravity="center"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            android:text="@{viewModel.currentAddress.peekContent()}"
             tools:text="영송로 85 한신중앙 아파트 " />
 
         <androidx.recyclerview.widget.RecyclerView

@@ -37,22 +37,6 @@ object Util {
         return (dp * (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
     }
 
-
-    fun <T> debounce(
-        waitMs: Long = 300L,
-        coroutineScope: CoroutineScope,
-        destinationFunction: (T) -> Unit
-    ): (T) -> Unit {
-        var debounceJob: Job? = null
-        return { param: T ->
-            debounceJob?.cancel()
-            debounceJob = coroutineScope.launch {
-                delay(waitMs)
-                destinationFunction(param)
-            }
-        }
-    }
-
     fun Fragment.hideKeyboard(view: View) {
         val imm =
             requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?

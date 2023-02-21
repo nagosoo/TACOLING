@@ -1,4 +1,4 @@
-package com.eundmswlji.tacoling.ui.map
+package com.eundmswlji.tacoling.util
 
 import android.app.Activity
 import android.content.IntentSender

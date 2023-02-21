@@ -3,6 +3,9 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.eundmswlji.tacoling.ui.map.MapViewModel" />
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -15,6 +18,7 @@
             android:id="@+id/radioGroup"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:checkedButton="@={viewModel._selectedDate}"
             android:orientation="horizontal"
             android:weightSum="7">
 

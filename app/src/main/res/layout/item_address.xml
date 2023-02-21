@@ -13,7 +13,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:background="@color/white"
-            android:id="@+id/tv"
+            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:ellipsize="end"
