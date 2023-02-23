@@ -1,7 +1,6 @@
 package com.eundmswlji.tacoling.ui.map
 
 import android.Manifest
-import android.app.appsearch.SearchResult
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -16,7 +15,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.paging.PagingData
+import androidx.paging.map
 import com.eundmswlji.tacoling.EventObserver
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.databinding.FragmentMapBinding
@@ -30,7 +29,6 @@ import com.eundmswlji.tacoling.util.Util.toast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import net.daum.mf.map.api.MapPOIItem
@@ -87,17 +85,11 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     private fun searchAddress() {
         binding.containerRecyclerview.editText.textChanges()
-
-//            .debounce(300)
-//         //   .onEach { viewModel.getAddress(it.toString()) }
-//            .onEach { Log.d("logging","${it.toString()}") }
             .filterNot { it.isNullOrBlank() }
             .debounce(300)
-            .distinctUntilChanged()
-
-            .onEach { Log.d("logging","${it.toString()}") }
-            .launchIn(lifecycleScope)
-          //  .catch { toast("error : ${it.message}") }
+            .onEach { if (!it.isNullOrEmpty()) viewModel.getAddress(it.toString()) }
+            .catch { toast("error : ${it.message}") }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun goToSettings() {
@@ -135,13 +127,12 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
 
     private fun setRecyclerView() {
         binding.containerRecyclerview.recyclerView.apply {
-            adapter = adapter
+            adapter = this@MapFragment.adapter
         }
 
         binding.containerRecyclerview.editText.setOnFocusChangeListener { v, hasFocus ->
+            binding.containerRecyclerview.recyclerView.isVisible = hasFocus
             if (hasFocus) {
-                binding.containerRecyclerview.recyclerView.isVisible = true
-            } else {
                 hideKeyboard(v)
             }
         }

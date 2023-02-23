@@ -21,13 +21,13 @@ class AddressPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Document> {
         val pageNumber = params.key ?: 1
         return try {
-            val response = addressDatasource.getAddress(query, pageNumber, params.loadSize)
+            val response = addressDatasource.getAddress(query, PAGING_SIZE, pageNumber)
             val data = response.body()?.documents!!
             val isEnd = response.body()?.meta?.isEnd!!
             LoadResult.Page(
                 data = data,
-                prevKey = if(pageNumber==1) null else pageNumber -1,
-                nextKey = if (isEnd) null else pageNumber+(params.loadSize/ PAGING_SIZE)
+                prevKey = if (pageNumber == 1) null else pageNumber - 1,
+                nextKey = if (isEnd) null else pageNumber + (params.loadSize / PAGING_SIZE)
             )
         } catch (exception: IOException) {
             LoadResult.Error(exception)
@@ -37,6 +37,6 @@ class AddressPagingSource(
     }
 
     companion object {
-        const val PAGING_SIZE = 15
+        const val PAGING_SIZE = 10
     }
 }

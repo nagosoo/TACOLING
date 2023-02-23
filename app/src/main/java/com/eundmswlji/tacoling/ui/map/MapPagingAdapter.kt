@@ -1,8 +1,8 @@
 package com.eundmswlji.tacoling.ui.map
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -10,19 +10,19 @@ import com.eundmswlji.tacoling.data.model.Document
 import com.eundmswlji.tacoling.databinding.ItemAddressBinding
 
 class MapPagingAdapter(private val clickListener: (x: Double, y: Double, address: String) -> (Unit)) :
-    PagingDataAdapter<Document, MapPagingAdapter.MyViewHolder>(DIFF_CALLBACK) {
+    PagingDataAdapter<Document, MapPagingAdapter.PagingViewHolder>(DIFF_CALLBACK) {
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PagingViewHolder, position: Int) {
         holder.bind()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PagingViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemAddressBinding.inflate(inflater, parent, false)
-        return MyViewHolder(binding)
+        return PagingViewHolder(binding)
     }
 
-    inner class MyViewHolder(private val binding: ItemAddressBinding) :
+    inner class PagingViewHolder(private val binding: ItemAddressBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind() {
@@ -34,9 +34,9 @@ class MapPagingAdapter(private val clickListener: (x: Double, y: Double, address
                 }
 
                 binding.textView.apply {
-                    isVisible = item.addressName.isNotEmpty()
                     text = item.addressName
                 }
+
             }
         }
     }

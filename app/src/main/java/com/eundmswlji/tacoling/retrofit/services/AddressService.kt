@@ -9,7 +9,7 @@ interface AddressService {
     @GET("/v2/local/search/address.json")
    suspend fun getAddress(
         @Query ("query") query : String,
-        @Query ("page") page : Int,
-        @Query ("size") size : Int
+        @Query ("size") size : Int,
+        @Query ("page") page : Int
     ) : Response<AddressFromKakao>
 }
