@@ -14,7 +14,10 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 android {
     compileSdk 33
 
-    buildFeatures { dataBinding = true }
+    buildFeatures {
+        viewBinding = true
+        dataBinding = true
+    }
 
     def major = 1
     def minor = 0

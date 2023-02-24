@@ -36,56 +36,23 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    private val _searchedAddress = MutableStateFlow<PagingData<Document>>(PagingData.empty())
-    val searchedAddress: StateFlow<PagingData<Document>> = _searchedAddress.asStateFlow()
-
     private val _toastEvent = MutableLiveData<Event<String>>()
     val toastEvent: LiveData<Event<String>> = _toastEvent
+
+    private val _currentAddress = MutableLiveData<String>().apply { value = "주소 검색 중" }
+    val currentAddress: LiveData<String> = _currentAddress
 
     private val _showZeroWasteShop = MutableLiveData<Boolean>(true)
     val showZeroWasteShop: LiveData<Boolean> = _showZeroWasteShop
 
     val _selectedDate = MutableLiveData<Int>().apply { value = setTodayDate() }
+
     fun toggleZeroWasteShop() {
         _showZeroWasteShop.value = !_showZeroWasteShop.value!!
     }
 
-    fun getAddress(query: String) {
-        viewModelScope.launch {
-            addressRepository.getAddress(query)
-                .cachedIn(viewModelScope)
-                .collectLatest { _searchedAddress.value = it }
-        }
-    }
-
-//    fun getAddressFromGeoCord(mapPoint: MapPoint?, activity: FragmentActivity?) {
-//        mapPoint?.let {
-//            val currentMapPoint = MapPoint.mapPointWithGeoCoord(
-//                mapPoint.mapPointGeoCoord.latitude,
-//                mapPoint.mapPointGeoCoord.longitude
-//            )
-//            MapReverseGeoCoder(
-//                BuildConfig.appKey,
-//                currentMapPoint,
-//                object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
-//                    override fun onReverseGeoCoderFoundAddress(
-//                        p0: MapReverseGeoCoder?,
-//                        address: String
-//                    ) {
-//                        _currentAddress.value = Event(address)
-//                    }
-//
-//                    override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
-//                        _toastEvent.value = Event("주소를 찾을 수 없습니다.")
-//                    }
-//                },
-//                activity
-//            ).startFindingAddress()
-//        }
-//    }
-
     fun setCurrentAddress(address: String) {
-        //    _currentAddress.value = Event(address)
+        _currentAddress.value = address
     }
 
 }

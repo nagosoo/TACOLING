@@ -9,30 +9,21 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.paging.map
+import com.eundmswlji.tacoling.BuildConfig
 import com.eundmswlji.tacoling.EventObserver
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.databinding.FragmentMapBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
-import com.eundmswlji.tacoling.util.Ext.textChanges
 import com.eundmswlji.tacoling.util.GpsPermissionUtil.checkGPS
 import com.eundmswlji.tacoling.util.MapUtil.getMapPOIItem
-import com.eundmswlji.tacoling.util.Util.hideKeyboard
 import com.eundmswlji.tacoling.util.Util.toast
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
+import net.daum.mf.map.api.MapReverseGeoCoder
 import net.daum.mf.map.api.MapView
 
 
@@ -63,7 +54,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
 
     private val viewModel: MapViewModel by viewModels()
     private var mapView: MapView? = null
-    private val adapter by lazy { MapPagingAdapter(::itemClickListener) }
     private val mapPOIItem = mutableListOf<MapPOIItem>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,21 +65,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
         }
 
         (requireActivity() as? MainActivity)?.showBottomNav()
-        setRecyclerView()
         setOnClickListener()
         setObserver()
-        showAddressSearchResult()
-        searchAddress()
-    }
-
-    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    private fun searchAddress() {
-        binding.containerRecyclerview.editText.textChanges()
-            .filterNot { it.isNullOrBlank() }
-            .debounce(300)
-            .onEach { if (!it.isNullOrEmpty()) viewModel.getAddress(it.toString()) }
-            .catch { toast("error : ${it.message}") }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun goToSettings() {
@@ -109,34 +86,11 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
         )
     }
 
-    private fun showAddressSearchResult() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.searchedAddress.collectLatest {
-                    adapter.submitData(it)
-                }
-            }
-        }
-    }
 
     private fun setObserver() {
         viewModel.toastEvent.observe(viewLifecycleOwner, EventObserver {
             toast(it)
         })
-    }
-
-    private fun setRecyclerView() {
-        binding.containerRecyclerview.recyclerView.apply {
-            adapter = this@MapFragment.adapter
-        }
-
-        binding.containerRecyclerview.editText.setOnFocusChangeListener { v, hasFocus ->
-            binding.containerRecyclerview.recyclerView.isVisible = hasFocus
-            if (hasFocus) {
-                hideKeyboard(v)
-            }
-        }
-
     }
 
     private fun test() {
@@ -147,7 +101,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
     private fun initMap() {
         MapView.setMapTilePersistentCacheEnabled(true)
         mapView = MapView(requireActivity())
-        binding.mapViewContainer.addView(mapView)
+        binding.mapviewContainer.addView(mapView)
         mapView?.apply {
             setZoomLevel(2, true)
             setMapViewEventListener(this@MapFragment)
@@ -163,22 +117,26 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
             setPOIItemEventListener(this@MapFragment)
         }
     }
-
-
-    private fun itemClickListener(x: Double, y: Double, address: String) {
-        trackingModeOff()
-        binding.containerRecyclerview.recyclerView.isVisible = false
-        viewModel.setCurrentAddress(address)
-        val mapPoint = MapPoint.mapPointWithGeoCoord(y, x)
-        mapView?.setMapCenterPoint(mapPoint, true)
-    }
+//
+//    private fun itemClickListener(x: Double, y: Double, address: String) {
+//        trackingModeOff()
+//        binding.recyclerView.isVisible = false
+//        viewModel.setCurrentAddress(address)
+//        val mapPoint = MapPoint.mapPointWithGeoCoord(y, x)
+//        mapView?.setMapCenterPoint(mapPoint, true)
+//    }
 
     private fun setOnClickListener() {
-        binding.buttonMyLocation.setOnClickListener {
+        binding.buttonLocation.setOnClickListener {
             checkGPS(requireActivity())
             requestLocationPermission()
         }
 
+        binding.textViewSearch.setOnClickListener {
+            val address = viewModel.currentAddress.value!!
+            val action = MapFragmentDirections.actionMapFragmentToAddressSearchFragment(address)
+            findNavController().navigate(action)
+        }
 
         binding.buttonResearch.setOnClickListener {
             val centerPoint = mapView?.mapCenterPoint
@@ -202,8 +160,31 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
     }
 
     private fun getAddressFromGeoCord(mapPoint: MapPoint?) {
-        //  viewModel.getAddressFromGeoCord(mapPoint, activity)
+        mapPoint?.let {
+            val currentMapPoint = MapPoint.mapPointWithGeoCoord(
+                mapPoint.mapPointGeoCoord.latitude,
+                mapPoint.mapPointGeoCoord.longitude
+            )
+            MapReverseGeoCoder(
+                BuildConfig.appKey,
+                currentMapPoint,
+                object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
+                    override fun onReverseGeoCoderFoundAddress(
+                        p0: MapReverseGeoCoder?,
+                        address: String
+                    ) {
+                        viewModel.setCurrentAddress(address)
+                    }
+
+                    override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
+                        toast("주소를 찾을 수 없습니다.")
+                    }
+                },
+                requireActivity()
+            ).startFindingAddress()
+        }
     }
+
 
     private fun getMapPOIItemsIn3Km(currentPoint: MapPoint?): List<MapPOIItem> {
         if (currentPoint == null) return emptyList()
@@ -251,11 +232,16 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
         requestLocationPermission()
         initMap()
         test()
+
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("address")
+            ?.observe(viewLifecycleOwner) {
+                Log.d("logging", it)
+            }
     }
 
     override fun onStop() {
         super.onStop()
-        binding.mapViewContainer.removeView(mapView)
+        binding.mapviewContainer.removeView(mapView)
         mapView = null
     }
 

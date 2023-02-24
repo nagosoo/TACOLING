@@ -24,6 +24,9 @@
         <action
             android:id="@+id/action_mapFragment_to_shopFragment"
             app:destination="@id/shopFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_addressSearchFragment"
+            app:destination="@id/addressSearchFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingFragment"
@@ -43,7 +46,7 @@
     <fragment
         android:id="@+id/likedShopFragment"
         android:name="com.eundmswlji.tacoling.ui.setting.liked_shop.LikedShopFragment"
-        android:label="MyLikedFragment"
+        android:label="likedShopFragment"
         tools:layout="@layout/fragment_liked_shop">
         <action
             android:id="@+id/action_likedShopFragment_to_shopFragment"
@@ -61,6 +64,15 @@
             android:id="@+id/deepLink"
             android:autoVerify="true"
             app:uri="tacoling.com/?shopId={shopId}" />
+    </fragment>
+    <fragment
+        android:id="@+id/addressSearchFragment"
+        android:name="com.eundmswlji.tacoling.ui.search.AddressSearchFragment"
+        android:label="AddressSearchFragment"
+        tools:layout="@layout/fragment_address_search">
+        <argument
+            android:name="address"
+            app:argType="string" />
     </fragment>
 
 

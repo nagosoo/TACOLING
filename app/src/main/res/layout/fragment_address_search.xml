@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/appBar"
+        layout="@layout/app_bar" />
+
+    <EditText
+        android:id="@+id/edit_text_search"
+        style="@style/text14Black"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_white_4_stroke_sub_red"
+        android:gravity="center"
+        android:hint="타코야키 트럭을 찾을 주소를 입력해 주세요."
+        android:importantForAutofill="no"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBar"
+        tools:text="영송로 85 한신중앙 아파트 " />
+
+    <ImageButton
+        android:id="@+id/button_clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="@color/transparent"
+        android:contentDescription="clear"
+        android:src="@drawable/ic_clear"
+        android:tint="@color/buttonGrey"
+        app:layout_constraintBottom_toBottomOf="@id/edit_text_search"
+        app:layout_constraintEnd_toEndOf="@id/edit_text_search"
+        app:layout_constraintTop_toTopOf="@id/edit_text_search"
+        tools:ignore="UseAppTint" />
+
+    <TextView
+        android:id="@+id/text_view_empty"
+        style="@style/text14Black"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:text="검색 결과가 없습니다."
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/edit_text_search"
+        app:layout_constraintStart_toStartOf="@id/edit_text_search"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_search" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/edit_text_search"
+        app:layout_constraintStart_toStartOf="@id/edit_text_search"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_search"
+        tools:itemCount="18"
+        tools:listitem="@layout/item_address" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

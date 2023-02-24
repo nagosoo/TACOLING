@@ -34,7 +34,8 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         installSplashScreen()
 
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
