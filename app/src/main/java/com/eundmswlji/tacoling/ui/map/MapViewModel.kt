@@ -3,20 +3,11 @@ package com.eundmswlji.tacoling.ui.map
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.eundmswlji.tacoling.Event
 import com.eundmswlji.tacoling.R
-import com.eundmswlji.tacoling.data.model.Document
 import com.eundmswlji.tacoling.data.repository.address.AddressRepository
 import com.eundmswlji.tacoling.util.Util.todayDate
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,6 +33,9 @@ class MapViewModel @Inject constructor(
     private val _currentAddress = MutableLiveData<String>().apply { value = "주소 검색 중" }
     val currentAddress: LiveData<String> = _currentAddress
 
+    private val _currentGeoCord = MutableLiveData<Map<String, Double>>()
+    val currentGeoCord: LiveData<Map<String, Double>> = _currentGeoCord
+
     private val _showZeroWasteShop = MutableLiveData<Boolean>(true)
     val showZeroWasteShop: LiveData<Boolean> = _showZeroWasteShop
 
@@ -53,6 +47,10 @@ class MapViewModel @Inject constructor(
 
     fun setCurrentAddress(address: String) {
         _currentAddress.value = address
+    }
+
+    fun setCurrentGeoCord(latitude: Double, longitude: Double) {
+        _currentGeoCord.value = mapOf("latitude" to latitude, "longitude" to longitude)
     }
 
 }

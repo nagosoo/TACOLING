@@ -2,13 +2,15 @@ package com.eundmswlji.tacoling.ui.map
 
 import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.BuildConfig
@@ -39,14 +41,11 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
             permissions.getOrDefault(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 false
-            ) -> trackingModeOn()
+            ) -> {
+                setMapCenter()
+            }
             else -> {
-                // No location access granted.
-                Toast.makeText(
-                    requireContext(),
-                    "위치권한을 허용 하지 않으면 내 주변 타코야키 트럭을 찾을 수 없습니다.\n설정에서 대략적인 위치권한과 정확한 위치권한 모두 설정해주세요.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                toast(getString(R.string.location_permission_request))
                 goToSettings()
             }
         }
@@ -78,12 +77,44 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
 
     private fun requestLocationPermission(
     ) {
-        locationResultLauncher.launch(
-            arrayOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
+
+        when {
+            ///권한 허용 되었을 때
+            ContextCompat.checkSelfPermission(
+                requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        )
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                setMapCenter()
+            }
+
+            //사용자에게 권한이 필요한 이유를 다시 알려주고 권한요청을 다시한다.
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) -> {
+                toast(getString(R.string.location_permission_request))
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    locationResultLauncher.launch(
+                        arrayOf(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        )
+                    )
+                }
+            }
+
+            //권한이 허용되지도 않고, 사용자가 명시적으로 거부하지도 않은 경우 - 권한 요청
+            else -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    locationResultLauncher.launch(
+                        arrayOf(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        )
+                    )
+                }
+            }
+        }
     }
 
 
@@ -91,6 +122,10 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
         viewModel.toastEvent.observe(viewLifecycleOwner, EventObserver {
             toast(it)
         })
+
+        viewModel.currentGeoCord.observe(viewLifecycleOwner) {
+            getAddressFromGeoCord()
+        }
     }
 
     private fun test() {
@@ -117,14 +152,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
             setPOIItemEventListener(this@MapFragment)
         }
     }
-//
-//    private fun itemClickListener(x: Double, y: Double, address: String) {
-//        trackingModeOff()
-//        binding.recyclerView.isVisible = false
-//        viewModel.setCurrentAddress(address)
-//        val mapPoint = MapPoint.mapPointWithGeoCoord(y, x)
-//        mapView?.setMapCenterPoint(mapPoint, true)
-//    }
 
     private fun setOnClickListener() {
         binding.buttonLocation.setOnClickListener {
@@ -133,20 +160,45 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
         }
 
         binding.textViewSearch.setOnClickListener {
-            val address = viewModel.currentAddress.value!!
-            val action = MapFragmentDirections.actionMapFragmentToAddressSearchFragment(address)
-            findNavController().navigate(action)
+            viewModel.currentAddress.value?.let { address ->
+                val action = MapFragmentDirections.actionMapFragmentToAddressSearchFragment(address)
+                findNavController().navigate(action)
+            }
         }
 
         binding.buttonResearch.setOnClickListener {
             val centerPoint = mapView?.mapCenterPoint
-            getAddressFromGeoCord(centerPoint)
-            setPOIItemsIn3Km(centerPoint)
+            centerPoint?.let {
+                viewModel.setCurrentGeoCord(
+                    it.mapPointGeoCoord.latitude,
+                    it.mapPointGeoCoord.longitude
+                )
+            }
         }
 
         binding.buttonZeroWaste.setOnClickListener {
             viewModel.toggleZeroWasteShop()
         }
+    }
+
+    private fun setMapCenter() {
+        val selectedAddress =
+            findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Map<String, String>>(
+                "address"
+            )
+
+        selectedAddress?.value?.let {
+            trackingModeOff()
+            val latitude = it["latitude"]!!.toDouble()
+            val longitude = it["longitude"]!!.toDouble()
+            mapView?.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(latitude, longitude), true)
+            viewModel.setCurrentGeoCord(latitude, longitude)
+            findNavController().currentBackStackEntry?.savedStateHandle?.remove<Map<String, String>>(
+                "address"
+            )
+            return
+        }
+        trackingModeOn()
     }
 
     private fun trackingModeOff() {
@@ -159,32 +211,30 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
             MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
     }
 
-    private fun getAddressFromGeoCord(mapPoint: MapPoint?) {
-        mapPoint?.let {
-            val currentMapPoint = MapPoint.mapPointWithGeoCoord(
-                mapPoint.mapPointGeoCoord.latitude,
-                mapPoint.mapPointGeoCoord.longitude
-            )
-            MapReverseGeoCoder(
-                BuildConfig.appKey,
-                currentMapPoint,
-                object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
-                    override fun onReverseGeoCoderFoundAddress(
-                        p0: MapReverseGeoCoder?,
-                        address: String
-                    ) {
-                        viewModel.setCurrentAddress(address)
-                    }
+    private fun getAddressFromGeoCord() {
+        viewModel.currentGeoCord.value?.get("latitude")?.let { lat ->
+            viewModel.currentGeoCord.value?.get("longitude")?.let { lon ->
+                val currentMapPoint = MapPoint.mapPointWithGeoCoord(lat, lon)
+                MapReverseGeoCoder(
+                    BuildConfig.appKey,
+                    currentMapPoint,
+                    object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
+                        override fun onReverseGeoCoderFoundAddress(
+                            p0: MapReverseGeoCoder?,
+                            address: String
+                        ) {
+                            viewModel.setCurrentAddress(address)
+                        }
 
-                    override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
-                        toast("주소를 찾을 수 없습니다.")
-                    }
-                },
-                requireActivity()
-            ).startFindingAddress()
+                        override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
+                            toast("주소를 찾을 수 없습니다.")
+                        }
+                    },
+                    requireActivity()
+                ).startFindingAddress()
+            }
         }
     }
-
 
     private fun getMapPOIItemsIn3Km(currentPoint: MapPoint?): List<MapPOIItem> {
         if (currentPoint == null) return emptyList()
@@ -209,9 +259,15 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
         trackingModeOff()
     }
 
+    //단말의 위치가 변화 되었을 때, trackingModeOn
     override fun onCurrentLocationUpdate(p0: MapView?, currentPoint: MapPoint?, p2: Float) {
-        getAddressFromGeoCord(currentPoint)
-        setPOIItemsIn3Km(currentPoint)
+        currentPoint?.let {
+            viewModel.setCurrentGeoCord(
+                it.mapPointGeoCoord.latitude,
+                it.mapPointGeoCoord.longitude
+            )
+            setPOIItemsIn3Km(it)
+        }
     }
 
     override fun onCurrentLocationUpdateFailed(p0: MapView?) {
@@ -229,14 +285,9 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
 
     override fun onStart() {
         super.onStart()
-        requestLocationPermission()
         initMap()
+        requestLocationPermission()
         test()
-
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("address")
-            ?.observe(viewLifecycleOwner) {
-                Log.d("logging", it)
-            }
     }
 
     override fun onStop() {

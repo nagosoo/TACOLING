@@ -14,14 +14,12 @@ import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.map.MapPagingAdapter
 import com.eundmswlji.tacoling.util.Ext.textChanges
-import com.eundmswlji.tacoling.util.Util.hideKeyboard
 import com.eundmswlji.tacoling.util.Util.toast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import net.daum.mf.map.api.MapPoint
 
 @AndroidEntryPoint
 class AddressSearchFragment :
@@ -47,14 +45,17 @@ class AddressSearchFragment :
     private fun setAppbar() {
         binding.appBar.apply {
             buttonBack.setOnClickListener {
-                findNavController().previousBackStackEntry?.savedStateHandle?.set("address", address)
+                findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                    "address",
+                    address
+                )
                 findNavController().popBackStack()
             }
             tv.text = "주소 검색"
         }
     }
 
-    private fun setOnClickListener(){
+    private fun setOnClickListener() {
         binding.buttonClear.setOnClickListener {
             binding.editTextSearch.setText("")
         }
@@ -98,10 +99,14 @@ class AddressSearchFragment :
     }
 
 
-    private fun itemClickListener(x: Double, y: Double, address: String) {
-        findNavController().previousBackStackEntry?.savedStateHandle?.set("address", address)
+    private fun itemClickListener(longitude: Double, latitude: Double, address: String) {
+        val map = mapOf<String, String>(
+            "longitude" to longitude.toString(),
+            "latitude" to latitude.toString(),
+            "address" to address
+        )
+        findNavController().previousBackStackEntry?.savedStateHandle?.set("address", map)
         findNavController().popBackStack()
-        val mapPoint = MapPoint.mapPointWithGeoCoord(y, x)
     }
 
 }
