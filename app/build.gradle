@@ -6,6 +6,7 @@ plugins {
     id 'com.google.gms.google-services'
     id 'androidx.navigation.safeargs.kotlin'
     id 'kotlinx-serialization'
+    id 'kotlin-parcelize'
 }
 
 def Properties properties = new Properties()
@@ -115,4 +116,8 @@ dependencies {
 
     //gms
     implementation 'com.google.android.gms:play-services-location:21.0.1'
+
+    //lottie
+    implementation "com.airbnb.android:lottie:5.2.0"
+
 }

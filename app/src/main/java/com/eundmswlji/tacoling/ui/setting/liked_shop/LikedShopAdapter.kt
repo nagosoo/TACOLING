@@ -7,7 +7,7 @@ import com.eundmswlji.tacoling.data.model.LikedShopX
 import com.eundmswlji.tacoling.databinding.ItemShopBinding
 
 class LikedShopAdapter(
-    private val onItemClickListener: (Int) -> (Unit),
+    private val onItemClickListener: (Int) -> (Unit)
 ) : RecyclerView.Adapter<LikedShopAdapter.LikedShopViewHolder>() {
 
     private val likedShopList = mutableListOf<LikedShopX>()
@@ -35,7 +35,6 @@ class LikedShopAdapter(
         fun bind() {
             val item = likedShopList[absoluteAdapterPosition]
             binding.tvName.text = item.name
-
             itemView.setOnClickListener {
                 onItemClickListener(item.id)
             }

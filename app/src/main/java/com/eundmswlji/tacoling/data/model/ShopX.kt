@@ -1,9 +1,8 @@
 package com.eundmswlji.tacoling.data.model
 
+import android.content.ClipData
 
-import kotlinx.serialization.Serializable
-
-@Serializable
+@kotlinx.serialization.Serializable
 data class ShopX(
-    val shop: List<ShopXX>
+    val item: List<ShopItem>
 )

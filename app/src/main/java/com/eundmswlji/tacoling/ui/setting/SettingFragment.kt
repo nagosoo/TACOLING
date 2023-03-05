@@ -85,7 +85,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
     private fun sendEmailToAdmin() {
         val intent = Intent(Intent.ACTION_SENDTO)
         intent.apply {
-            data = Uri.parse("mailto:") // only email apps should handle this. no message, sns app
+            data = Uri.parse("mailto:")
             putExtra(Intent.EXTRA_SUBJECT, "건의하기")
             putExtra(Intent.EXTRA_EMAIL, arrayOf("nagosoo@kakao.com"))
             putExtra(

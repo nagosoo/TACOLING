@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.EventObserver
@@ -60,6 +61,11 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
         viewModel.toastHelper.observe(viewLifecycleOwner, EventObserver {
             toast(it)
         })
+
+        viewModel.isOff.observe(viewLifecycleOwner) { isOff ->
+            binding.mapViewContainer.isVisible = !isOff
+            binding.shopOff.root.isVisible = isOff
+        }
 
         viewModel.kmToShop.observe(viewLifecycleOwner) {
             binding.shopTop.tvLocation.text = it
@@ -179,6 +185,8 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
                         viewModel.todayLocation.name,
                         viewModel.todayLocation.latitude,
                         viewModel.todayLocation.longitude,
+                        viewModel.shopInfo.value?.zeroWaste ?: false,
+                        viewModel.shopInfo.value?.id ?: -100
                     )
                 )
             )

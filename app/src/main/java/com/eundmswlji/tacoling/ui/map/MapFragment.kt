@@ -16,11 +16,12 @@ import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.BuildConfig
 import com.eundmswlji.tacoling.EventObserver
 import com.eundmswlji.tacoling.R
+import com.eundmswlji.tacoling.data.model.MapViewLocation
 import com.eundmswlji.tacoling.databinding.FragmentMapBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
+import com.eundmswlji.tacoling.ui.dialog.MapLoadingDialog
 import com.eundmswlji.tacoling.util.GpsPermissionUtil.checkGPS
-import com.eundmswlji.tacoling.util.MapUtil.getMapPOIItem
 import com.eundmswlji.tacoling.util.Util.toast
 import dagger.hilt.android.AndroidEntryPoint
 import net.daum.mf.map.api.MapPOIItem
@@ -51,9 +52,14 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
         }
     }
 
+    private val loadingDialog by lazy { MapLoadingDialog() }
     private val viewModel: MapViewModel by viewModels()
     private var mapView: MapView? = null
-    private val mapPOIItem = mutableListOf<MapPOIItem>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.getShopList()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -125,12 +131,44 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
 
         viewModel.currentGeoCord.observe(viewLifecycleOwner) {
             getAddressFromGeoCord()
+            viewModel.getDailyShopList()
+        }
+
+        viewModel.currentAddress.observe(viewLifecycleOwner) {
+            dismissLoadingDialog()
+        }
+
+        viewModel.dailyShopList.observe(viewLifecycleOwner) {
+            viewModel.getShopIn3Km()
+        }
+
+        viewModel.dailyShopIn3KmList.observe(viewLifecycleOwner) {
+            showShopPOIITem()
+        }
+
+        viewModel.selectedDate.observe(viewLifecycleOwner) {
+            val date = viewModel.setTodayDateIndex()
+            viewModel.getDailyShopList(date)
+        }
+
+        viewModel.showOnlyZeroWasteShop.observe(viewLifecycleOwner) {
+            showShopPOIITem()
         }
     }
 
-    private fun test() {
-        mapPOIItem.add(getMapPOIItem("ㅌㅅㅌ", 35.86401751026963, 128.6485239265323))
-        mapPOIItem.add(getMapPOIItem("ㅌㅅㅌ", 35.85881638638933, 128.6356195137821))
+    private fun showShopPOIITem() {
+        filterShopByZeroWaste(viewModel.showOnlyZeroWasteShop.value ?: false)?.let {
+            mapView?.removeAllPOIItems()
+            mapView?.addPOIItems(it.toTypedArray())
+        }
+    }
+
+    private fun filterShopByZeroWaste(enableZeroWaste: Boolean): List<MapPOIItem>? {
+        return viewModel.dailyShopIn3KmList.value?.filter {
+            val enableZeroWasteShop = it.userObject
+            if (enableZeroWaste) enableZeroWasteShop == enableZeroWaste
+            else true
+        }
     }
 
     private fun initMap() {
@@ -161,7 +199,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
 
         binding.textViewSearch.setOnClickListener {
             viewModel.currentAddress.value?.let { address ->
-                val action = MapFragmentDirections.actionMapFragmentToAddressSearchFragment(address)
+                val action =
+                    MapFragmentDirections.actionMapFragmentToAddressSearchFragment(address)
                 findNavController().navigate(action)
             }
         }
@@ -182,18 +221,19 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
     }
 
     private fun setMapCenter() {
+        showLoadingDialog()
         val selectedAddress =
-            findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Map<String, String>>(
+            findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<MapViewLocation>(
                 "address"
             )
 
         selectedAddress?.value?.let {
             trackingModeOff()
-            val latitude = it["latitude"]!!.toDouble()
-            val longitude = it["longitude"]!!.toDouble()
+            val latitude = it.coordinates.latitude
+            val longitude = it.coordinates.longitude
             mapView?.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(latitude, longitude), true)
             viewModel.setCurrentGeoCord(latitude, longitude)
-            findNavController().currentBackStackEntry?.savedStateHandle?.remove<Map<String, String>>(
+            findNavController().currentBackStackEntry?.savedStateHandle?.remove<MapViewLocation>(
                 "address"
             )
             return
@@ -212,47 +252,39 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
     }
 
     private fun getAddressFromGeoCord() {
-        viewModel.currentGeoCord.value?.get("latitude")?.let { lat ->
-            viewModel.currentGeoCord.value?.get("longitude")?.let { lon ->
-                val currentMapPoint = MapPoint.mapPointWithGeoCoord(lat, lon)
-                MapReverseGeoCoder(
-                    BuildConfig.appKey,
-                    currentMapPoint,
-                    object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
-                        override fun onReverseGeoCoderFoundAddress(
-                            p0: MapReverseGeoCoder?,
-                            address: String
-                        ) {
-                            viewModel.setCurrentAddress(address)
-                        }
+        viewModel.currentGeoCord.value?.let {
+            val currentMapPoint = MapPoint.mapPointWithGeoCoord(it.latitude, it.longitude)
+            MapReverseGeoCoder(
+                BuildConfig.appKey,
+                currentMapPoint,
+                object : MapReverseGeoCoder.ReverseGeoCodingResultListener {
+                    override fun onReverseGeoCoderFoundAddress(
+                        p0: MapReverseGeoCoder?,
+                        address: String
+                    ) {
+                        viewModel.setCurrentAddress(address)
+                    }
 
-                        override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
-                            toast("주소를 찾을 수 없습니다.")
-                        }
-                    },
-                    requireActivity()
-                ).startFindingAddress()
-            }
+                    override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
+                        dismissLoadingDialog()
+                        toast("주소를 찾을 수 없습니다.")
+                    }
+                },
+                requireActivity()
+            ).startFindingAddress()
         }
     }
 
-    private fun getMapPOIItemsIn3Km(currentPoint: MapPoint?): List<MapPOIItem> {
-        if (currentPoint == null) return emptyList()
-        val myLatitude = currentPoint.mapPointGeoCoord.latitude
-        val myLongitude = currentPoint.mapPointGeoCoord.longitude
-        return mapPOIItem
-//        return mapPOIItem.filter {
-//            val itemLatitude = it.mapPoint.mapPointGeoCoord.latitude //위도
-//            val itemLongitude = it.mapPoint.mapPointGeoCoord.longitude //경도
-//            val distance = getKmFromHereToShop(myLatitude, itemLatitude, myLongitude, itemLongitude)
-//            distance <= 9 //현재위치에서 3km 이내인것 보여주기
-//        }
+    private fun dismissLoadingDialog() {
+        if (loadingDialog.isResumed) {
+            loadingDialog.dismiss()
+        }
     }
 
-    private fun setPOIItemsIn3Km(centerPoint: MapPoint?) {
-        val mapPOIListIn3Km = getMapPOIItemsIn3Km(centerPoint)
-        mapView?.removeAllPOIItems()
-        mapView?.addPOIItems(mapPOIListIn3Km.toTypedArray())
+    private fun showLoadingDialog() {
+        if (!loadingDialog.isResumed) {
+            loadingDialog.show(childFragmentManager, null)
+        }
     }
 
     override fun onMapViewCenterPointMoved(p0: MapView?, currentPoint: MapPoint?) {
@@ -266,20 +298,21 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
                 it.mapPointGeoCoord.latitude,
                 it.mapPointGeoCoord.longitude
             )
-            setPOIItemsIn3Km(it)
         }
     }
 
     override fun onCurrentLocationUpdateFailed(p0: MapView?) {
+        dismissLoadingDialog()
         toast("주소를 찾을 수 없습니다.")
     }
 
     override fun onCalloutBalloonOfPOIItemTouched(
         p0: MapView?,
-        p1: MapPOIItem?,
+        shop: MapPOIItem,
         p2: MapPOIItem.CalloutBalloonButtonType?
     ) {
-        val action = MapFragmentDirections.actionMapFragmentToShopFragment(1)
+        val shopId = shop.tag
+        val action = MapFragmentDirections.actionMapFragmentToShopFragment(shopId)
         findNavController().navigate(action)
     }
 
@@ -287,11 +320,11 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
         super.onStart()
         initMap()
         requestLocationPermission()
-        test()
     }
 
     override fun onStop() {
         super.onStop()
+        dismissLoadingDialog()
         binding.mapviewContainer.removeView(mapView)
         mapView = null
     }

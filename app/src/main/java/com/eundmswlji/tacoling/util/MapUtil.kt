@@ -17,9 +17,11 @@ import kotlin.math.*
 
 object MapUtil {
 
-    fun getMapPOIItem(name: String, latitude: Double, longitude: Double): MapPOIItem {
+    fun getMapPOIItem(name: String, latitude: Double, longitude: Double, enableZeroWaste: Boolean, id: Int): MapPOIItem {
         return MapPOIItem().apply {
             this.itemName = name
+            this.userObject = enableZeroWaste
+            this.tag = id
             this.mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude)
             this.markerType = MapPOIItem.MarkerType.CustomImage
             this.customImageResourceId = R.drawable.ic_takoyaki

@@ -19,31 +19,31 @@
         android:paddingBottom="32dp">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:text="@{viewModel.shopInfo.name}"
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{viewModel.shopInfo.name}"
             android:textColor="@color/black"
             android:textSize="28sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/tvLocation"
-            app:layout_constraintEnd_toStartOf="@id/buttonCall"
-            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintBottom_toTopOf="@id/buttonCall"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center_horizontal"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="타코왕" />
+            tools:text="타코왕타코왕타코왕타코왕타코왕타코왕" />
 
         <androidx.appcompat.widget.AppCompatImageButton
+            android:layout_marginTop="10dp"
             android:background="@null"
             android:id="@+id/buttonCall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:src="@drawable/ic_phone"
-            app:layout_constraintBottom_toBottomOf="@id/tvName"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tvName"
-            app:layout_constraintTop_toTopOf="@id/tvName" />
+            app:layout_constraintBottom_toTopOf="@id/tvLocation"
+            app:layout_constraintTop_toBottomOf="@id/tvName" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvLocation"
@@ -59,7 +59,7 @@
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             android:gravity="center_vertical"
-            app:layout_constraintTop_toBottomOf="@id/tvName"
+            app:layout_constraintTop_toBottomOf="@id/buttonCall"
             tools:text="55m" />
 
         <View

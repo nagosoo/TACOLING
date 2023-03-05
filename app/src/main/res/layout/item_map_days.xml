@@ -24,7 +24,7 @@
             android:layout_height="50dp"
             android:id="@+id/radioGroup"
             android:layout_width="0dp"
-            android:checkedButton="@={viewModel._selectedDate}"
+            android:checkedButton="@={viewModel.selectedDate}"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

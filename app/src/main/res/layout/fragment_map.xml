@@ -77,13 +77,13 @@
                 app:layout_constraintTop_toBottomOf="@id/button_research" />
 
 
-            <androidx.appcompat.widget.AppCompatImageButton
+            <CheckBox
                 android:id="@+id/button_zero_waste"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@color/transparent"
-                android:src="@drawable/ic_zero_waste"
+                android:button="@null"
+                android:background="@drawable/selector_zero_waste"
                 app:layout_constraintEnd_toEndOf="@id/button_location"
                 app:layout_constraintTop_toBottomOf="@id/button_location" />
 

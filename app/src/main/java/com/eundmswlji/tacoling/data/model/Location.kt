@@ -1,7 +1,6 @@
 package com.eundmswlji.tacoling.data.model
 
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable

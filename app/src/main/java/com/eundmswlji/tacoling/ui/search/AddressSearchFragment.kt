@@ -9,6 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import com.eundmswlji.tacoling.data.model.Coordinates
+import com.eundmswlji.tacoling.data.model.MapViewLocation
 import com.eundmswlji.tacoling.databinding.FragmentAddressSearchBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
@@ -45,10 +47,6 @@ class AddressSearchFragment :
     private fun setAppbar() {
         binding.appBar.apply {
             buttonBack.setOnClickListener {
-                findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                    "address",
-                    address
-                )
                 findNavController().popBackStack()
             }
             tv.text = "주소 검색"
@@ -100,12 +98,11 @@ class AddressSearchFragment :
 
 
     private fun itemClickListener(longitude: Double, latitude: Double, address: String) {
-        val map = mapOf<String, String>(
-            "longitude" to longitude.toString(),
-            "latitude" to latitude.toString(),
-            "address" to address
+        val mapViewLocation = MapViewLocation(Coordinates(latitude, longitude), address)
+        findNavController().previousBackStackEntry?.savedStateHandle?.set(
+            "address",
+            mapViewLocation
         )
-        findNavController().previousBackStackEntry?.savedStateHandle?.set("address", map)
         findNavController().popBackStack()
     }
 

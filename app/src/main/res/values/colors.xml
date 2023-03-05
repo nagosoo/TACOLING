@@ -15,5 +15,6 @@
     <color name="textGrey">#5E5D5D</color>
     <color name="buttonGrey">#BBBBBB</color>
     <color name="backgroundGrey">#F9F9F9</color>
+    <color name="backgroundGreyDark">#E5E5E5</color>
     <color name="transparent">#00000000</color>
 </resources>

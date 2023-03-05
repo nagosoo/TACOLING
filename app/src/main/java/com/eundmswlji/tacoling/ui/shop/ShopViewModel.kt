@@ -8,7 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.eundmswlji.tacoling.Event
 import com.eundmswlji.tacoling.data.model.LikedShopX
 import com.eundmswlji.tacoling.data.model.Location
-import com.eundmswlji.tacoling.data.model.ShopXX
+import com.eundmswlji.tacoling.data.model.ShopItem
+import com.eundmswlji.tacoling.data.model.ShopX
 import com.eundmswlji.tacoling.data.repository.shop.ShopRepository
 import com.eundmswlji.tacoling.data.repository.user.UserRepository
 import com.eundmswlji.tacoling.util.MapUtil
@@ -27,8 +28,8 @@ class ShopViewModel @Inject constructor(
     private val _toastHelper = MutableLiveData<Event<String>>()
     val toastHelper: LiveData<Event<String>> = _toastHelper
 
-    private val _shopInfo = MutableLiveData<ShopXX>()
-    val shopInfo: LiveData<ShopXX> = _shopInfo
+    private val _shopInfo = MutableLiveData<ShopItem>()
+    val shopInfo: LiveData<ShopItem> = _shopInfo
 
     private val _isLikedShop = MutableLiveData<Boolean>()
     val isLikedShop: LiveData<Boolean> = _isLikedShop
@@ -37,6 +38,10 @@ class ShopViewModel @Inject constructor(
     val kmToShop: LiveData<String> = _kmToShop
 
     lateinit var todayLocation: Location
+
+    private val _isOff = MutableLiveData<Boolean>()
+     val isOff : LiveData<Boolean> = _isOff
+
     private var userId: String? = null
 
 
@@ -81,6 +86,12 @@ class ShopViewModel @Inject constructor(
                 response.body()?.let { shopInfo ->
                     _shopInfo.postValue(shopInfo)
                     todayLocation = shopInfo.location[todayDate]
+                    if(todayLocation.longitude==0.0){
+                        _isOff.postValue(true)
+                        _kmToShop.postValue("오늘은 휴무입니다.")
+                        return@launch
+                    }
+                    _isOff.postValue(false)
                     getDistanceToShop()
                 }
             } else {

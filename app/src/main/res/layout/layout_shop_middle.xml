@@ -55,7 +55,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:text="@{viewModel.shopInfo.location[0].name}"
+            android:text="@{viewModel.shopInfo.location[1].name}"
             android:id="@+id/tv_location_mon"
             style="@style/text15Grey"
             android:layout_width="wrap_content"
@@ -71,7 +71,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:text="@{viewModel.shopInfo.location[1].name}"
+            android:text="@{viewModel.shopInfo.location[2].name}"
             android:id="@+id/tv_location_thue"
             style="@style/text15Grey"
             android:layout_width="wrap_content"
@@ -87,7 +87,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:text="@{viewModel.shopInfo.location[2].name}"
+            android:text="@{viewModel.shopInfo.location[3].name}"
             android:id="@+id/tv_location_wed"
             style="@style/text15Grey"
             android:layout_width="wrap_content"
@@ -104,7 +104,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:text="@{viewModel.shopInfo.location[3].name}"
+            android:text="@{viewModel.shopInfo.location[4].name}"
             android:id="@+id/tv_location_thur"
             style="@style/text15Grey"
             android:layout_width="wrap_content"
@@ -120,7 +120,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:text="@{viewModel.shopInfo.location[4].name}"
+            android:text="@{viewModel.shopInfo.location[5].name}"
             android:id="@+id/tv_location_fri"
             style="@style/text15Grey"
             android:layout_width="wrap_content"
@@ -136,7 +136,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:text="@{viewModel.shopInfo.location[5].name}"
+            android:text="@{viewModel.shopInfo.location[6].name}"
             android:id="@+id/tv_location_sat"
             style="@style/text15Grey"
             android:layout_width="wrap_content"
@@ -152,7 +152,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:text="@{viewModel.shopInfo.location[6].name}"
+            android:text="@{viewModel.shopInfo.location[0].name}"
             android:id="@+id/tv_location_sun"
             style="@style/text15Grey"
             android:layout_width="wrap_content"
