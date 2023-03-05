@@ -176,7 +176,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
         mapView = MapView(requireActivity())
         binding.mapviewContainer.addView(mapView)
         mapView?.apply {
-            setZoomLevel(2, true)
+            setZoomLevel(5, true)
             setMapViewEventListener(this@MapFragment)
             setCurrentLocationEventListener(this@MapFragment)
             setCustomCurrentLocationMarkerImage(
