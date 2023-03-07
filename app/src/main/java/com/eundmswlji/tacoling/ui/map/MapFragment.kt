@@ -221,12 +221,19 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
     }
 
     private fun setMapCenter() {
-        showLoadingDialog()
         val selectedAddress =
             findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<MapViewLocation>(
                 "address"
             )
 
+        //뒤로가기 눌러서 뒤로 왔을 때
+        if (selectedAddress?.value==null && viewModel.currentGeoCord.value != null) {
+            trackingModeOff()
+            return
+        }
+
+        showLoadingDialog()
+        //주소 클릭해서 뒤로왔을 때
         selectedAddress?.value?.let {
             trackingModeOff()
             val latitude = it.coordinates.latitude
@@ -238,6 +245,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
             )
             return
         }
+
         trackingModeOn()
     }
 
