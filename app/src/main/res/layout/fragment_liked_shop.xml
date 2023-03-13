@@ -53,6 +53,7 @@
             app:layout_constraintTop_toBottomOf="@id/appBar"
             app:layout_constraintBottom_toBottomOf="parent"
             android:drawableTop="@drawable/ic_taco_60"
+            android:drawablePadding="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"

@@ -1,6 +1,7 @@
 package com.eundmswlji.tacoling.ui.setting.liked_shop
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -18,6 +19,7 @@ import com.eundmswlji.tacoling.ui.decoration.VerticalItemDecoration
 import com.eundmswlji.tacoling.util.Util.toast
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -43,8 +45,8 @@ class LikedShopFragment :
                 viewModel.likedList.collectLatest { list ->
                     adapter.updateList(list)
                     binding.lottieLoading.visibility = View.GONE
+                    binding.tvEmpty.isVisible = viewModel.likedList.value.isEmpty()
                 }
-                binding.tvEmpty.isVisible = viewModel.likedList.value.isEmpty()
             }
         }
 

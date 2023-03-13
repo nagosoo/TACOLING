@@ -35,7 +35,7 @@ interface UserService {
     @PATCH("/user/{id}/liked_shops/{shopId}.json")
     suspend fun addLikedShop(
         @Path("id") userId: String,
-        @Path("shopId") shopIndex: Int,
+        @Path("shopId") shopIndex: Int, //가게아이디가 아니라 liked shop list index +1 로 해야됨
         @Body body: LikedShopX
     ): Response<AddLikedShopResponse>
 

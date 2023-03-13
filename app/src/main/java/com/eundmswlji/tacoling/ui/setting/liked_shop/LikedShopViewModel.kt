@@ -40,7 +40,6 @@ class LikedShopViewModel @Inject constructor(
 
     fun getLikedShops() {
         userId?.let { userId ->
-       //     _likedList.value = emptyList()
             viewModelScope.launch {
                 userRepository.getUserLikedShops(userId).apply {
                     stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -68,7 +67,7 @@ class LikedShopViewModel @Inject constructor(
             viewModelScope.launch {
                 val shop = LikedShopX(shopId, shopName)
                 val response =
-                    userRepository.addLikedShop(userId, shopIndex, shop)
+                    userRepository.addLikedShop(userId, shopIndex+1, shop)
                 if (response.isSuccessful) {
                     getLikedShops()
                 } else {
