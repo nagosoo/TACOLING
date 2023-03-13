@@ -1,22 +1,18 @@
 package com.eundmswlji.tacoling.ui
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
-import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.ktx.Firebase
@@ -67,19 +63,19 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         navController.setGraph(navGraph, null) //navController에 graph 설정
     }
 
-    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
-        if (event?.action == MotionEvent.ACTION_DOWN) {
-            val v: View? = currentFocus
-            if (v is EditText) {
-                val outRect = Rect()
-                v.getGlobalVisibleRect(outRect)
-                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
-                    v.clearFocus()
-                }
-            }
-        }
-        return super.dispatchTouchEvent(event)
-    }
+//    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+//        if (event?.action == MotionEvent.ACTION_DOWN) {
+//            val v: View? = currentFocus
+//            if (v is EditText) {
+//                val outRect = Rect()
+//                v.getGlobalVisibleRect(outRect)
+//                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+//                    v.clearFocus()
+//                }
+//            }
+//        }
+//        return super.dispatchTouchEvent(event)
+//    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -104,6 +100,11 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
                 return
             }
         }
+    }
+
+    fun setBottomNavClicked(index: Int) {
+        val bottomNav = binding.bottomNavView as BottomNavigationView
+        binding.bottomNavView.selectedItemId = bottomNav.menu.getItem(index).itemId
     }
 
     fun hideBottomNav() {

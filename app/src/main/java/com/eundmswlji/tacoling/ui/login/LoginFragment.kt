@@ -69,7 +69,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     private fun observe() {
         viewModel.loginSuccess.observe(viewLifecycleOwner) {
-            if (it) findNavController().navigate(R.id.mapFragment)
+            if (it) {
+              //  (activity as? MainActivity)?.setBottomNavClicked(0)
+                findNavController().navigate(R.id.action_loginFragment_to_mapFragment)
+            }
         }
     }
 }
