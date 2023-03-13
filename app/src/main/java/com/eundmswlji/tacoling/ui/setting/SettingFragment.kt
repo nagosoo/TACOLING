@@ -13,13 +13,13 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.eundmswlji.tacoling.BuildConfig
 import com.eundmswlji.tacoling.EventObserver
-import com.eundmswlji.tacoling.R
 import com.eundmswlji.tacoling.databinding.FragmentSettingBinding
 import com.eundmswlji.tacoling.ui.BaseFragment
 import com.eundmswlji.tacoling.ui.MainActivity
 import com.eundmswlji.tacoling.ui.dialog.NormalDialog
 import com.eundmswlji.tacoling.util.Util
 import com.eundmswlji.tacoling.util.Util.toast
+import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -111,8 +111,18 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             positiveMessage = "네",
             negativeMessage = "아니요",
             positiveButtonListener = {
-                viewModel.deleteUser()
+                disconnectKaKao()
             }).show(childFragmentManager, null)
+    }
+
+    private fun disconnectKaKao() {
+        UserApiClient.instance.unlink { error ->
+            if (error != null) {
+                toast("카카오 연결 해제에 실패했습니다.")
+            } else {
+                viewModel.deleteUser()
+            }
+        }
     }
 
 }
