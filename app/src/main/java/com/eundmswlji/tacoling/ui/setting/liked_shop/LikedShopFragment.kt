@@ -1,7 +1,6 @@
 package com.eundmswlji.tacoling.ui.setting.liked_shop
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -19,7 +18,6 @@ import com.eundmswlji.tacoling.ui.decoration.VerticalItemDecoration
 import com.eundmswlji.tacoling.util.Util.toast
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -43,11 +41,15 @@ class LikedShopFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.likedList.collectLatest { list ->
+                    binding.tvEmpty.isVisible = list.isEmpty()
                     adapter.updateList(list)
                     binding.lottieLoading.visibility = View.GONE
-                    binding.tvEmpty.isVisible = viewModel.likedList.value.isEmpty()
                 }
             }
+        }
+
+        viewModel.listUpdated.observe(viewLifecycleOwner){
+            adapter.updateList(viewModel.cachedLikedList)
         }
 
         viewModel.toastHelper.observe(viewLifecycleOwner, EventObserver {
@@ -97,7 +99,7 @@ class LikedShopFragment :
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.bindingAdapterPosition
                 val shop = viewModel.likedList.value[position]
-                viewModel.removeMyLikedList(shop.id)
+                viewModel.removeMyLikedList(shop.id,position)
                 Snackbar.make(view, "찜한 가게가 삭제되었습니다.", Snackbar.LENGTH_SHORT).apply {
                     setAction("되돌리기") {
                         viewModel.addMyLikedList(position, shop.id, shop.name)

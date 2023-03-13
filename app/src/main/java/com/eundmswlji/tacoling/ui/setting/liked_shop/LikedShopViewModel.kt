@@ -20,8 +20,12 @@ class LikedShopViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
+    lateinit var cachedLikedList: MutableList<LikedShopX>
+
     private val _likedList = MutableStateFlow<List<LikedShopX>>(emptyList())
     val likedList: StateFlow<List<LikedShopX>> = _likedList
+
+    val listUpdated: MutableLiveData<Int> = MutableLiveData()
 
     private val _toastHelper = MutableLiveData<Event<String>>()
     val toastHelper: LiveData<Event<String>> = _toastHelper
@@ -45,16 +49,18 @@ class LikedShopViewModel @Inject constructor(
                     stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
                 }.collect { list ->
                     _likedList.value = list
+                    cachedLikedList = list.toMutableList()
                 }
             }
         }
     }
 
-    fun removeMyLikedList(shopId: Int) {
+    fun removeMyLikedList(shopId: Int, position: Int) {
         userId?.let { userId ->
             viewModelScope.launch {
                 val response = userRepository.deleteLikedShop(userId, shopId)
                 if (response.isSuccessful) {
+                    cachedLikedList.removeAt(position)
                 } else {
                     _toastHelper.postValue(Event(response.errorBody()?.string() ?: "error"))
                 }
@@ -62,14 +68,17 @@ class LikedShopViewModel @Inject constructor(
         }
     }
 
+    //되돌리기 눌렀을 때
     fun addMyLikedList(shopIndex: Int, shopId: Int, shopName: String) {
         userId?.let { userId ->
             viewModelScope.launch {
                 val shop = LikedShopX(shopId, shopName)
                 val response =
-                    userRepository.addLikedShop(userId, shopIndex+1, shop)
+                    userRepository.addLikedShop(userId, shopIndex + 1, shop)
                 if (response.isSuccessful) {
-                    getLikedShops()
+                    // 그 포자션만 notify
+                    cachedLikedList.add(shopIndex, shop)
+                    listUpdated.postValue(shopIndex)
                 } else {
                     _toastHelper.postValue(Event(response.errorBody()?.string() ?: "error"))
                 }
