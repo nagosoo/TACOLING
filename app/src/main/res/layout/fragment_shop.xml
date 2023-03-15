@@ -30,7 +30,7 @@
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:visibility="invisible"
-                    android:id="@+id/mapViewContainer"
+                    android:id="@+id/mapview_container"
                     android:layout_width="match_parent"
                     android:layout_height="480dp"
                     android:overScrollMode="never"
@@ -40,7 +40,7 @@
 
                 <include
                     android:visibility="invisible"
-                    android:id="@+id/shopOff"
+                    android:id="@+id/shop_off"
                     layout="@layout/layout_shop_off"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
@@ -50,7 +50,7 @@
                     bind:viewModel="@{viewModel}" />
 
                 <include
-                    android:id="@+id/shopTop"
+                    android:id="@+id/shop_top"
                     layout="@layout/layout_shop_top"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -67,10 +67,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="mapViewContainer,shopOff" />
+                    app:constraint_referenced_ids="mapview_container,shop_off" />
 
                 <include
-                    android:id="@+id/shopMiddle"
+                    android:id="@+id/shop_middle"
                     layout="@layout/layout_shop_middle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -79,11 +79,11 @@
                     android:layout_marginEnd="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/shopTop"
+                    app:layout_constraintTop_toBottomOf="@id/shop_top"
                     bind:viewModel="@{viewModel}" />
 
                 <include
-                    android:id="@+id/shopBottom"
+                    android:id="@+id/shop_bottom"
                     layout="@layout/layout_shop_bottom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -92,14 +92,14 @@
                     android:layout_marginEnd="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/shopMiddle" />
+                    app:layout_constraintTop_toBottomOf="@id/shop_middle" />
 
                 <Space
                     android:layout_width="wrap_content"
                     android:layout_height="14dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/shopBottom" />
+                    app:layout_constraintTop_toBottomOf="@id/shop_bottom" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

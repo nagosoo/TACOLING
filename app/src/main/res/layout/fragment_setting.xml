@@ -23,40 +23,39 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/alarm"
-            style="@style/text14Black"
+            style="@style/TacolingSwitchStyle"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginBottom="12dp"
             android:background="@color/white"
+            android:layout_marginBottom="12dp"
             android:checked="@{viewModel.isAlarmChecked().booleanValue()}"
             android:gravity="center_vertical"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:text="알림 설정"
-            android:textOff=""
-            android:textOn=""
-            android:thumb="@drawable/sw_thumb"
-            app:switchMinWidth="55dp"
-            app:track="@drawable/selector_sw" />
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:text="알림 설정"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/myLiked"
+        <Button
+            android:layout_marginBottom="12dp"
+            android:id="@+id/button_liked"
             style="@style/settingButton"
             android:layout_width="match_parent"
-            android:layout_marginBottom="12dp"
             android:text="내가 찜한 가게" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/suggest"
+        <Button
+            android:layout_marginBottom="12dp"
+            android:id="@+id/button_suggest"
             style="@style/settingButton"
             android:layout_width="match_parent"
-            android:layout_marginBottom="12dp"
             android:text="건의하기" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/withdrawal"
+        <Button
+            android:layout_marginBottom="12dp"
+            android:id="@+id/button_withdrawal"
             style="@style/settingButton"
             android:layout_width="match_parent"
             android:text="탈퇴하기" />

@@ -10,12 +10,11 @@
     android:paddingTop="16dp"
     android:paddingEnd="25dp">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="메뉴"
-        android:textColor="@color/black"
-        android:textSize="16sp"
+        style="@style/text16Black"
         android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -25,6 +24,5 @@
         android:overScrollMode="never"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_menu" />
-
 
 </androidx.appcompat.widget.LinearLayoutCompat>

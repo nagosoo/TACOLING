@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvTitle"
+    <TextView
+        android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -15,36 +16,45 @@
         android:textColor="@color/mainRed"
         android:textSize="18dp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="단골가게 찜" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvMessage"
+    <TextView
+        android:id="@+id/tv_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:layout_marginBottom="20dp"
         android:bufferType="spannable"
+        style="@style/text15Black"
         android:gravity="center_horizontal"
-        android:textColor="@color/black"
-        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
         tools:text="가게의 상세 정보를 알려드립니다.\n알림은 마이페이지에서 끌 수 있습니다." />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="36dp"
-        android:orientation="horizontal">
+    <Button
+        android:id="@+id/button_positive"
+        style="@style/pinkButton"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button_negative"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_message"
+        tools:text="추가하기" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonPositive"
-            style="@style/pinkButton"
-            android:layout_marginEnd="8dp"
-            tools:text="추가하기" />
+    <Button
+        android:id="@+id/button_negative"
+        style="@style/greyButton"
+        app:layout_constraintBottom_toBottomOf="@id/button_positive"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/button_positive"
+        app:layout_constraintTop_toTopOf="@id/button_positive"
+        tools:text="닫기" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonNegative"
-            style="@style/greyButton"
-            tools:text="닫기" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-</androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>

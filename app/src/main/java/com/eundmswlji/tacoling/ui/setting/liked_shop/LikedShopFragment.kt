@@ -72,7 +72,7 @@ class LikedShopFragment :
             left = 0,
             right = 0
         )
-        binding.recyclerView.apply {
+        binding.recyclerview.apply {
             adapter = this@LikedShopFragment.adapter
             addItemDecoration(itemDecoration)
         }
@@ -108,7 +108,7 @@ class LikedShopFragment :
             }
         }
         ItemTouchHelper(itemTouchHelperCallback).apply {
-            attachToRecyclerView(binding.recyclerView)
+            attachToRecyclerView(binding.recyclerview)
         }
     }
 

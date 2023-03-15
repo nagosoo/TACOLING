@@ -40,13 +40,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appBar"
             tools:listitem="@layout/item_shop"
-            android:id="@+id/recyclerView"
+            android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvEmpty"
+        <TextView
+            android:id="@+id/tv_empty"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -58,8 +58,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="찜한 가게가 없습니다."
-            android:textColor="@color/black"
-            android:textSize="16sp"/>
+            style="@style/text16Black" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

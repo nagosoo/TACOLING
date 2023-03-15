@@ -41,9 +41,9 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
         (requireActivity() as? MainActivity)?.showBottomNav()
         observer()
         viewModel.getAlarmInfo()
-        binding.suggest.setOnClickListener(this)
-        binding.withdrawal.setOnClickListener(this)
-        binding.myLiked.setOnClickListener(this)
+        binding.buttonSuggest.setOnClickListener(this)
+        binding.buttonWithdrawal.setOnClickListener(this)
+        binding.buttonLiked.setOnClickListener(this)
         binding.alarm.setOnCheckedChangeListener(this)
     }
 
@@ -60,13 +60,13 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            binding.suggest.id -> {
+            binding.buttonSuggest.id -> {
                 sendEmailToAdmin()
             }
-            binding.withdrawal.id -> {
+            binding.buttonWithdrawal.id -> {
                 showWithdrawalDialog()
             }
-            binding.myLiked.id -> {
+            binding.buttonLiked.id -> {
                 val action = SettingFragmentDirections.actionSettingFragmentToLikedShopFragment()
                 findNavController().navigate(action)
             }

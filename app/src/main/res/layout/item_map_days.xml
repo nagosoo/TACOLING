@@ -30,37 +30,37 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <androidx.appcompat.widget.AppCompatRadioButton
+            <RadioButton
                 android:id="@+id/rbMon"
                 style="@style/styleDays"
                 android:text="월" />
 
-            <androidx.appcompat.widget.AppCompatRadioButton
+            <RadioButton
                 android:id="@+id/rbThu"
                 style="@style/styleDays"
                 android:text="화" />
 
-            <androidx.appcompat.widget.AppCompatRadioButton
+            <RadioButton
                 android:id="@+id/rbWed"
                 style="@style/styleDays"
                 android:text="수" />
 
-            <androidx.appcompat.widget.AppCompatRadioButton
+            <RadioButton
                 android:id="@+id/rbThr"
                 style="@style/styleDays"
                 android:text="목" />
 
-            <androidx.appcompat.widget.AppCompatRadioButton
+            <RadioButton
                 android:id="@+id/rbFri"
                 style="@style/styleDays"
                 android:text="금" />
 
-            <androidx.appcompat.widget.AppCompatRadioButton
+            <RadioButton
                 android:id="@+id/rbSat"
                 style="@style/styleDays"
                 android:text="토" />
 
-            <androidx.appcompat.widget.AppCompatRadioButton
+            <RadioButton
                 android:id="@+id/rbSun"
                 style="@style/styleDays"
                 android:text="일" />

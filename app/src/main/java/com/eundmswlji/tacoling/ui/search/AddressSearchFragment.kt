@@ -70,7 +70,7 @@ class AddressSearchFragment :
     }
 
     private fun setRecyclerView() {
-        binding.recyclerView.apply {
+        binding.recyclerview.apply {
             adapter = this@AddressSearchFragment.adapter
         }
         adapter.addLoadStateListener { combinedLoadStates ->
@@ -80,7 +80,7 @@ class AddressSearchFragment :
                     loadState.refresh is LoadState.NotLoading &&
                     loadState.append.endOfPaginationReached
 
-            binding.recyclerView.isVisible = !isListEmpty
+            binding.recyclerview.isVisible = !isListEmpty
             binding.textViewEmpty.isVisible = isListEmpty
 
         }

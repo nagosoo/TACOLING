@@ -18,35 +18,35 @@
         android:paddingTop="32dp"
         android:paddingBottom="32dp">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvName"
+        <TextView
+            android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{viewModel.shopInfo.name}"
             android:textColor="@color/black"
             android:textSize="28sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/buttonCall"
+            app:layout_constraintBottom_toTopOf="@id/button_call"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:gravity="center_horizontal"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="타코왕타코왕타코왕타코왕타코왕타코왕" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
+        <ImageButton
             android:layout_marginTop="10dp"
             android:background="@null"
-            android:id="@+id/buttonCall"
+            android:id="@+id/button_call"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_phone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/tvLocation"
-            app:layout_constraintTop_toBottomOf="@id/tvName" />
+            app:layout_constraintBottom_toTopOf="@id/tv_location"
+            app:layout_constraintTop_toBottomOf="@id/tv_name" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvLocation"
+        <TextView
+            android:id="@+id/tv_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -54,12 +54,12 @@
             android:layout_marginBottom="40dp"
             android:drawableStart="@drawable/ic_my_location_without_round"
             style="@style/text14Black"
-            app:layout_constraintBottom_toTopOf="@id/buttonLike"
+            app:layout_constraintBottom_toTopOf="@id/button_like"
             app:layout_constraintEnd_toStartOf="@id/view"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             android:gravity="center_vertical"
-            app:layout_constraintTop_toBottomOf="@id/buttonCall"
+            app:layout_constraintTop_toBottomOf="@id/button_call"
             tools:text="55m" />
 
         <View
@@ -69,51 +69,43 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:background="#a4a4a4"
-            app:layout_constraintEnd_toStartOf="@id/tvZeroWaste"
-            app:layout_constraintStart_toEndOf="@id/tvLocation"
-            app:layout_constraintTop_toTopOf="@id/tvLocation" />
+            app:layout_constraintEnd_toStartOf="@id/tv_zero_waste"
+            app:layout_constraintStart_toEndOf="@id/tv_location"
+            app:layout_constraintTop_toTopOf="@id/tv_location" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             app:zeroWaste="@{viewModel.shopInfo.zeroWaste}"
-            android:id="@+id/tvZeroWaste"
+            android:id="@+id/tv_zero_waste"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/text14Black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@id/view"
-            app:layout_constraintTop_toTopOf="@id/tvLocation"
-            app:layout_constraintBottom_toBottomOf="@id/tvLocation"
+            app:layout_constraintTop_toTopOf="@id/tv_location"
+            app:layout_constraintBottom_toBottomOf="@id/tv_location"
             tools:text="용기내챌린지 미참여" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             app:likedButtonName="@{viewModel.isLikedShop}"
-            android:id="@+id/buttonLike"
+            android:id="@+id/button_like"
             style="@style/pinkLightButton"
             tools:text="단골가게로 찜❤️"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/space2"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvLocation" />
-
-        <Space
-            android:id="@+id/space2"
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@id/buttonShare"
-            app:layout_constraintStart_toEndOf="@id/buttonLike"
-            app:layout_constraintTop_toTopOf="@id/buttonLike" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_location" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:drawableEnd="@drawable/ic_share"
             android:id="@+id/buttonShare"
             style="@style/pinkLightButton"
-            android:drawablePadding="-20dp"
-            android:paddingEnd="23dp"
+            android:drawablePadding="10dp"
             android:text="공유하기"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/space2"
-            app:layout_constraintTop_toTopOf="@id/buttonLike" />
+            app:layout_constraintStart_toEndOf="@id/button_like"
+            app:layout_constraintTop_toTopOf="@id/button_like" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

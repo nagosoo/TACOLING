@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Tacoling" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Theme.Tacoling" parent="Theme.Material3.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -23,17 +23,19 @@
         <item name="postSplashScreenTheme">@style/Theme.Tacoling</item>
     </style>
 
-    <style name="pinkLightButton" parent="Widget.AppCompat.Button.Borderless">
+    <style name="pinkLightButton" parent="Widget.Material3.Button">
+        <item name="materialThemeOverlay">@style/PinkLightButtonThemeOverlay</item>
         <item name="elevation">0dp</item>
         <item name="android:layout_height">47dp</item>
-        <item name="android:layout_width">115dp</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:background">@drawable/bg_pink_light_4</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="pinkButton" parent="Widget.AppCompat.Button.Borderless">
+    <style name="pinkButton" parent="Widget.Material3.Button">
+        <item name="materialThemeOverlay">@style/PinkButtonThemeOverlay</item>
         <item name="elevation">0dp</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_height">36dp</item>
@@ -44,18 +46,20 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="pinkButton25" parent="Widget.AppCompat.Button.Borderless">
+    <style name="pinkButton25" parent="Widget.Material3.Button">
         <item name="elevation">0dp</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_height">40dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:background">@drawable/bg_pink_25</item>
+        <item name="materialThemeOverlay">@style/PinkButtonThemeOverlay</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="greyButton" parent="Widget.AppCompat.Button.Borderless">
+    <style name="greyButton" parent="Widget.Material3.Button">
+        <item name="materialThemeOverlay">@style/GreyButtonThemeOverlay</item>
         <item name="elevation">0dp</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_height">36dp</item>
@@ -66,7 +70,7 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="DialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
+    <style name="DialogStyle" parent="Theme.Material3.Light.BottomSheetDialog">
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
         <item name="windowNoTitle">true</item>
@@ -74,7 +78,7 @@
         <item name="android:windowIsFloating">true</item>
     </style>
 
-    <style name="DialogStyleHeight180" parent="Theme.Design.Light.BottomSheetDialog">
+    <style name="DialogStyleHeight180" parent="Theme.Material3.Light.BottomSheetDialog">
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
         <item name="android:minHeight">180dp</item>
@@ -83,35 +87,41 @@
         <item name="android:windowIsFloating">true</item>
     </style>
 
-    <style name="settingButton">
+    <style name="settingButton" parent="Widget.Material3.Button">
         <item name="android:paddingEnd">12dp</item>
         <item name="android:paddingStart">12dp</item>
         <item name="android:stateListAnimator">@null</item>
         <item name="android:layout_height">50dp</item>
-        <item name="android:background">@color/white</item>
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:maxLines">1</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/bg_white</item>
+        <item name="materialThemeOverlay">@style/WhiteButtonThemeOverlay</item>
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="text14Black" parent="Widget.AppCompat.TextView">
+    <style name="text14Black" parent="Widget.MaterialComponents.TextView">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="text15Black" parent="Widget.AppCompat.TextView">
+    <style name="text15Black" parent="Widget.MaterialComponents.TextView">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">15sp</item>
     </style>
 
-    <style name="text15Grey" parent="Widget.AppCompat.TextView">
+    <style name="text15Grey" parent="Widget.MaterialComponents.TextView">
         <item name="android:textColor">@color/textGrey</item>
         <item name="android:textSize">15sp</item>
     </style>
 
-    <style name="styleDays" parent="Widget.AppCompat.CompoundButton.RadioButton">
+    <style name="text16Black" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="styleDays" parent="Widget.Material3.CompoundButton.RadioButton">
         <item name="android:button">@null</item>
         <item name="android:background">@drawable/selector_days</item>
         <item name="android:layout_width">0dp</item>
@@ -121,6 +131,35 @@
         <item name="android:textColor">@color/selector_days</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+
+    <style name="WhiteButtonThemeOverlay" parent="ThemeOverlay.Material3.Button">
+        <!-- Background color -->
+        <item name="colorPrimary">@color/white</item>
+        <!-- Text color -->
+        <item name="colorOnPrimary">@color/black</item>
+    </style>
+
+    <style name="GreyButtonThemeOverlay" parent="ThemeOverlay.Material3.Button">
+        <item name="colorPrimary">@color/buttonGrey</item>
+        <item name="colorOnPrimary">@color/black</item>
+    </style>
+
+    <style name="PinkButtonThemeOverlay" parent="ThemeOverlay.Material3.Button">
+        <item name="colorPrimary">@color/pink</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+    <style name="PinkLightButtonThemeOverlay" parent="ThemeOverlay.Material3.Button">
+        <item name="colorPrimary">@color/pinkLight</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+    <style name="TacolingSwitchStyle" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="thumbTint">@color/selector_switch_thumb_tint</item>
+        <item name="trackTint">@color/selector_switch_track_tint</item>
+        <item name="switchMinWidth">55dp</item>
     </style>
 
 </resources>

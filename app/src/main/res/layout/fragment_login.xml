@@ -6,7 +6,7 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -15,14 +15,14 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginBottom="25dp"
         android:src="@drawable/ic_taco" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/buttonKakao"
+    <ImageButton
+        android:id="@+id/button_kakao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
@@ -31,13 +31,13 @@
         android:minHeight="0dp"
         android:src="@drawable/ic_kakao_sign_in" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/buttonGoogle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/transparent"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
-        android:src="@drawable/ic_google_sign_in" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/button_google"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@color/transparent"-->
+<!--        android:minWidth="0dp"-->
+<!--        android:minHeight="0dp"-->
+<!--        android:src="@drawable/ic_google_sign_in" />-->
 
 </androidx.appcompat.widget.LinearLayoutCompat>

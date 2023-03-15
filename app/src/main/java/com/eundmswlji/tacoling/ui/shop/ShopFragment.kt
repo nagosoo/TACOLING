@@ -63,7 +63,7 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
         })
 
         viewModel.isOff.observe(viewLifecycleOwner) { isOff ->
-            binding.mapViewContainer.isVisible = !isOff
+            binding.mapviewContainer.isVisible = !isOff
             binding.shopOff.root.isVisible = isOff
         }
 
@@ -172,7 +172,7 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
                 onTouchEvent(event)
             }
         }
-        binding.mapViewContainer.addView(mapView)
+        binding.mapviewContainer.addView(mapView)
         setPOIItem()
     }
 
@@ -203,7 +203,7 @@ class ShopFragment : BaseFragment<FragmentShopBinding>(FragmentShopBinding::infl
 
     override fun onStop() {
         super.onStop()
-        binding.mapViewContainer.removeView(mapView)
+        binding.mapviewContainer.removeView(mapView)
         mapView = null
     }
 

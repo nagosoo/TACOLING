@@ -5,8 +5,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvMenu"
+    <TextView
+        android:id="@+id/tv_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
@@ -18,11 +18,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvPrice"
+    <TextView
+        android:id="@+id/tv_price"
+        style="@style/text15Grey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/textGrey"
-        android:textSize="15sp"
         tools:text="3,000원" />
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -54,7 +54,7 @@
                 app:layout_constraintTop_toBottomOf="@id/text_view_search"
                 bind:viewModel="@{viewModel}" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/button_research"
                 style="@style/pinkButton25"
                 android:layout_width="200dp"
@@ -64,7 +64,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_days" />
 
-            <androidx.appcompat.widget.AppCompatImageButton
+            <ImageButton
                 android:id="@+id/button_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -75,7 +75,6 @@
                 app:layout_constraintBottom_toTopOf="@id/button_zero_waste"
                 app:layout_constraintEnd_toEndOf="@id/layout_days"
                 app:layout_constraintTop_toBottomOf="@id/button_research" />
-
 
             <CheckBox
                 android:id="@+id/button_zero_waste"
