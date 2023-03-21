@@ -103,6 +103,8 @@ dependencies {
     //firebase dynamic link
     implementation 'com.google.firebase:firebase-dynamic-links-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    //fcm
+    implementation 'com.google.firebase:firebase-messaging'
 
     //serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0-RC"

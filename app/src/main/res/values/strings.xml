@@ -8,4 +8,7 @@
     <string name="dialog_remove_like_button">찜 해지하기</string>
 
     <string name="location_permission_request">위치권한을 허용 하지 않으면 내 주변 타코야키 트럭을 찾을 수 없습니다.\n대락적인 위치권한과 정확한 위치권한 모두 허용해주세요.</string>
+
+    <string name="channel_id">일반알림</string>
+    <string name="channel_description">일반알림 채널입니다</string>
 </resources>
