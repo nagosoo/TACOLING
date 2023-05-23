@@ -45,6 +45,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
             ) -> {
                 setMapCenter()
             }
+
             else -> {
                 toast(getString(R.string.location_permission_request))
                 goToSettings()
@@ -82,6 +83,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
     }
 
     private fun requestLocationPermission(
+        forceFindMyLocation: Boolean = false
     ) {
 
         when {
@@ -90,7 +92,10 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED -> {
-                setMapCenter()
+                if (forceFindMyLocation) {
+                    showLoadingDialog()
+                    trackingModeOn()
+                } else setMapCenter()
             }
 
             //사용자에게 권한이 필요한 이유를 다시 알려주고 권한요청을 다시한다.
@@ -193,8 +198,11 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
 
     private fun setOnClickListener() {
         binding.buttonLocation.setOnClickListener {
+            findNavController().currentBackStackEntry?.savedStateHandle?.remove<MapViewLocation>(
+                "address"
+            )
             checkGPS(requireActivity())
-            requestLocationPermission()
+            requestLocationPermission(true)
         }
 
         binding.textViewSearch.setOnClickListener {
@@ -227,7 +235,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::inflate
             )
 
         //뒤로가기 눌러서 뒤로 왔을 때
-        if (selectedAddress?.value==null && viewModel.currentGeoCord.value != null) {
+        if (selectedAddress?.value == null && viewModel.currentGeoCord.value != null) {
             trackingModeOff()
             return
         }
