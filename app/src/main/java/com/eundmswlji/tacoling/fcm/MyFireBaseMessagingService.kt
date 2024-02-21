@@ -22,7 +22,6 @@ import com.google.firebase.messaging.RemoteMessage
 import kotlin.random.Random
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
-
     private val TAG = "LOGGING"
 
     //백그라운드에서 푸시 알림을 받을때 포그라운드와 동일한 처리를 해주고 싶으면 handleIntent를 override 해야함

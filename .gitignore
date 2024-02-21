@@ -150,7 +150,7 @@ obj/
 .idea/assetWizardSettings.xml
 .idea/gradle.xml
 .idea/jarRepositories.xml
-.idea/navEditor.xml
+.idea/navEditor.xml.view.entry.EntryActivity
 
 # Legacy Eclipse project files
 .classpath
