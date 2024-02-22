@@ -2,13 +2,13 @@ package com.eundmswlji.tacoling.data.repository.address
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.eundmswlji.tacoling.data.model.Document
-import com.eundmswlji.tacoling.data.source.remote.address.AddressDatasource
+import com.eundmswlji.tacoling.data.model.address.Document
+import com.eundmswlji.tacoling.data.source.remote.address.AddressDataSource
 import retrofit2.HttpException
 import java.io.IOException
 
 class AddressPagingSource(
-    private val addressDatasource: AddressDatasource,
+    private val addressDatasource: AddressDataSource,
     private val query: String
 ) : PagingSource<Int, Document>() {
     override fun getRefreshKey(state: PagingState<Int, Document>): Int? {

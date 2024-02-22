@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable
-            name="viewModel"
-            type="com.eundmswlji.tacoling.ui.shop.ShopViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +20,6 @@
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.shopInfo.name}"
             android:textColor="@color/black"
             android:textSize="28sp"
             android:textStyle="bold"
@@ -74,7 +71,6 @@
             app:layout_constraintTop_toTopOf="@id/tv_location" />
 
         <TextView
-            app:zeroWaste="@{viewModel.shopInfo.zeroWaste}"
             android:id="@+id/tv_zero_waste"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -87,7 +83,6 @@
             tools:text="용기내챌린지 미참여" />
 
         <Button
-            app:likedButtonName="@{viewModel.isLikedShop}"
             android:id="@+id/button_like"
             style="@style/pinkLightButton"
             tools:text="단골가게로 찜❤️"

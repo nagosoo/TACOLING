@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.eundmswlji.tacoling.ui.shop.ShopViewModel" />
+            type="com.eundmswlji.tacoling.presentation.ui.shop.ShopViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,7 +54,8 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:text="@{viewModel.shopInfo.location[1].name}"
+            app:uiState="@{viewModel.uiState}"
+            date="@{1}"
             android:id="@+id/tv_location_mon"
             style="@style/text15Grey"
             android:layout_width="wrap_content"
@@ -70,7 +71,8 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:text="@{viewModel.shopInfo.location[2].name}"
+            app:uiState="@{viewModel.uiState}"
+            date="@{2}"
             android:id="@+id/tv_location_thue"
             style="@style/text15Grey"
             android:layout_width="wrap_content"
@@ -86,7 +88,8 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:text="@{viewModel.shopInfo.location[3].name}"
+            app:uiState="@{viewModel.uiState}"
+            date="@{3}"
             android:id="@+id/tv_location_wed"
             style="@style/text15Grey"
             android:layout_width="wrap_content"
@@ -103,7 +106,8 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:text="@{viewModel.shopInfo.location[4].name}"
+            app:uiState="@{viewModel.uiState}"
+            date="@{4}"
             android:id="@+id/tv_location_thur"
             style="@style/text15Grey"
             android:layout_width="wrap_content"
@@ -119,7 +123,8 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:text="@{viewModel.shopInfo.location[5].name}"
+            app:uiState="@{viewModel.uiState}"
+            date="@{5}"
             android:id="@+id/tv_location_fri"
             style="@style/text15Grey"
             android:layout_width="wrap_content"
@@ -135,7 +140,8 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:text="@{viewModel.shopInfo.location[6].name}"
+            app:uiState="@{viewModel.uiState}"
+            date="@{6}"
             android:id="@+id/tv_location_sat"
             style="@style/text15Grey"
             android:layout_width="wrap_content"
@@ -151,7 +157,8 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:text="@{viewModel.shopInfo.location[0].name}"
+            app:uiState="@{viewModel.uiState}"
+            date="@{0}"
             android:id="@+id/tv_location_sun"
             style="@style/text15Grey"
             android:layout_width="wrap_content"

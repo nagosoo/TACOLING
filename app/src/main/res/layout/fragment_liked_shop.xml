@@ -4,10 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        <variable
-            name="viewModel"
-            type="com.eundmswlji.tacoling.ui.setting.liked_shop.LikedShopViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

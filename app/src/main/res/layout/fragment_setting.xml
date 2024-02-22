@@ -4,9 +4,6 @@
 
     <data>
 
-        <variable
-            name="viewModel"
-            type="com.eundmswlji.tacoling.ui.setting.SettingViewModel" />
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -30,7 +27,6 @@
             android:layout_height="50dp"
             android:background="@color/white"
             android:layout_marginBottom="12dp"
-            android:checked="@{viewModel.isAlarmChecked().booleanValue()}"
             android:gravity="center_vertical"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"

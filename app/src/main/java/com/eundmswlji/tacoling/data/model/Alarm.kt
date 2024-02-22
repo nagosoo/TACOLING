@@ -1,9 +1,13 @@
 package com.eundmswlji.tacoling.data.model
 
-import kotlinx.serialization.SerialName
+import com.eundmswlji.tacoling.domain.model.AlarmModel
+import kotlinx.serialization.Serializable
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class Alarm(
-    @SerialName("notification")
     val notification: Boolean
-)
+) : DataModelInterface<AlarmModel> {
+    override fun toDomainModel(): AlarmModel {
+        return AlarmModel(notification)
+    }
+}

@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.eundmswlji.tacoling.ui.login.LoginFragment"
+        android:name="com.eundmswlji.tacoling.presentation.ui.login.LoginFragment"
         android:label="loginFragment"
         tools:layout="@layout/fragment_login">
         <action
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.eundmswlji.tacoling.ui.map.MapFragment"
+        android:name="com.eundmswlji.tacoling.presentation.ui.map.MapFragment"
         android:label="MapFragment"
         tools:layout="@layout/fragment_map">
         <action
@@ -30,31 +30,31 @@
     </fragment>
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.eundmswlji.tacoling.ui.setting.SettingFragment"
+        android:name="com.eundmswlji.tacoling.presentation.ui.setting.SettingFragment"
         android:label="SettingFragment"
         tools:layout="@layout/fragment_setting">
         <action
             android:id="@+id/action_settingFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
         <action
-            android:id="@+id/action_settingFragment_to_likedShopFragment"
-            app:destination="@id/likedShopFragment" />
+            android:id="@+id/action_settingFragment_to_FavoriteShopFragment"
+            app:destination="@id/FavoriteShopFragment" />
         <action
             android:id="@+id/action_settingFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
     <fragment
-        android:id="@+id/likedShopFragment"
-        android:name="com.eundmswlji.tacoling.ui.setting.liked_shop.LikedShopFragment"
-        android:label="likedShopFragment"
+        android:id="@+id/FavoriteShopFragment"
+        android:name="com.eundmswlji.tacoling.presentation.ui.setting.favorite_shop.FavoriteShopFragment"
+        android:label="FavoriteShopFragment"
         tools:layout="@layout/fragment_liked_shop">
         <action
-            android:id="@+id/action_likedShopFragment_to_shopFragment"
+            android:id="@+id/action_FavoriteShopFragment_to_shopFragment"
             app:destination="@id/shopFragment" />
     </fragment>
     <fragment
         android:id="@+id/shopFragment"
-        android:name="com.eundmswlji.tacoling.ui.shop.ShopFragment"
+        android:name="com.eundmswlji.tacoling.presentation.ui.shop.ShopFragment"
         android:label="ShopFragment"
         tools:layout="@layout/fragment_shop">
         <argument
@@ -67,7 +67,7 @@
     </fragment>
     <fragment
         android:id="@+id/addressSearchFragment"
-        android:name="com.eundmswlji.tacoling.ui.search.AddressSearchFragment"
+        android:name="com.eundmswlji.tacoling.presentation.ui.search.AddressSearchFragment"
         android:label="AddressSearchFragment"
         tools:layout="@layout/fragment_address_search">
         <argument

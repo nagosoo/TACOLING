@@ -4,10 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="androidx.core.content.ContextCompat" />
-        <variable
-            name="viewModel"
-            type="com.eundmswlji.tacoling.ui.shop.ShopViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,8 +25,6 @@
 
         <TextView
             android:bufferType="spannable"
-            app:offText="@{viewModel.isOff()}"
-            app:context="@{context}"
             android:id="@+id/textview"
             android:layout_marginTop="15dp"
             app:layout_constraintStart_toStartOf="parent"

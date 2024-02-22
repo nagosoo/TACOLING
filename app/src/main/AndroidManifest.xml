@@ -24,7 +24,7 @@
         android:theme="@style/Theme.App.Splash"
         android:usesCleartextTraffic="true">
         <activity
-            android:name="com.eundmswlji.tacoling.ui.MainActivity"
+            android:name=".presentation.ui.MainActivity"
             android:exported="true">
             <nav-graph android:value="@navigation/nav_graph" />
             <intent-filter>
@@ -47,7 +47,7 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="563fe1f966e961f52948242b73c19cca" />
         <service
-            android:name=".fcm.MyFirebaseMessagingService"
+            android:name=".presentation.fcm.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

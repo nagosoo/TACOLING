@@ -5,9 +5,9 @@
 
     <data>
 
-        <variable
-            name="viewModel"
-            type="com.eundmswlji.tacoling.ui.map.MapViewModel" />
+<!--        <variable-->
+<!--            name="viewModel"-->
+<!--            type="com.eundmswlji.tacoling.ui.map.MapViewModel" />-->
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +24,6 @@
             android:layout_height="50dp"
             android:id="@+id/radioGroup"
             android:layout_width="0dp"
-            android:checkedButton="@={viewModel.selectedDate}"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
